@@ -1,0 +1,330 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Linux系统上常用软件集锦 | 麦溪·在路上</title><meta name="author" content="Frewen.Wang"><meta name="copyright" content="Frewen.Wang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Activity的生命周期完全解析"><link rel="shortcut icon" href="/img/frewen_tech.png"><link rel="canonical" href="http://www.frewen.wang/2020/07/20/01.AuraTechNotes/20.AILearning/09.OpenCV%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/03.OpenCV%E4%B9%8BMat%E5%AF%B9%E8%B1%A1%E8%AF%A6%E8%A7%A3/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script async="async" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: '',
+  enable_page_level_ads: 'true'
+});</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Linux系统上常用软件集锦',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-01-05 00:00:00'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/frewen_tech.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">858</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">146</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 文章标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 文章归类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 文章列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/page_img.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="麦溪·在路上"><span class="site-name">麦溪·在路上</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 文章标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 文章归类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 文章列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Linux系统上常用软件集锦</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-07-19T16:00:00.000Z" title="发表于 2020-07-20 00:00:00">2020-07-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-01-04T16:00:00.000Z" title="更新于 2022-01-05 00:00:00">2022-01-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Linux系统上常用软件集锦"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2020/07/20/01.AuraTechNotes/20.AILearning/09.OpenCV%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/03.OpenCV%E4%B9%8BMat%E5%AF%B9%E8%B1%A1%E8%AF%A6%E8%A7%A3/#post-comment" itemprop="discussionUrl"><span class="valine-comment-count" data-xid="/2020/07/20/01.AuraTechNotes/20.AILearning/09.OpenCV%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/03.OpenCV%E4%B9%8BMat%E5%AF%B9%E8%B1%A1%E8%AF%A6%E8%A7%A3/" itemprop="commentCount"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>[TOC]</p>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>文章参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/CV_Jason/article/details/54928920">https://blog.csdn.net/CV_Jason/article/details/54928920</a></p>
+<p>文章参考：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/265085433">https://zhuanlan.zhihu.com/p/265085433</a></p>
+<h2 id="概述-1"><a href="#概述-1" class="headerlink" title="概述"></a>概述</h2><p>OpenCV 作为强大的计算机视觉开源库，很大程度上参考了MatLab的实现细节和语法风格，比如说，在OpenCV2.x版本以后，越来越多的函数实现了MatLab所具有的功能，甚至干脆连函数名都一模一样（如 imread, imshow,imwriter等）。这一做法，不仅拉近了产品开发与学术研究的距离，并极大程度的提高了开发人员的研发效率，不得不说，Intel公司真的是一个伟大的公司。</p>
+<p>在计算机内存中，数字图像以矩阵的形式存储和运算，比如，在MatLab中，图像读取之后对应一个矩阵，在<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=OpenCV&spm=1001.2101.3001.7020">OpenCV</a>中，同样也是如此。</p>
+<p>在早期的OpenCV1.x版本中，图像的处理是通过IplImage（该名称源于Intel的另一个开源库Intel Image Processing Library ，缩写成IplImage）结构来实现的。早期的OpenCV是用C语言编写，因此提供的借口也是C语言接口，其源代码完全是C的编程风格。IplImage结构是OpenCV矩阵运算的基本数据结构。</p>
+<p>到OpenCV2.x版本，OpenCV开源库引入了面向对象编程思想，大量源代码用C++重写，Mat类 (Matrix的缩写) 是OpenCV用于处理图像而引入的一个封装类。从功能上讲，Mat类在IplImage结构的基础上进一步增强，并且，由于引入C++高级编程特性，Mat类的扩展性大大提高，Mat类的内容在后期的版本中不断丰富，如果你查看Mat类的定义的话（OpenCV3.1\sources\modules\core\include\opencv2\core\mat.hpp），会发现其设计实现十分全面而具体，基本覆盖计算机视觉对于图像处理的基本要求。</p>
+<p><img src="/images/20170208160746121.png" alt="img"></p>
+<p>因此，在当前的OpenCV开发中，Mat可以说是最最最常见的数据单元，深入了解Mat类对于OpenCV深入开发有着重大意义。</p>
+<h1 id="Mat类常用成员函数和成员变量"><a href="#Mat类常用成员函数和成员变量" class="headerlink" title="Mat类常用成员函数和成员变量"></a><strong>Mat类常用成员函数和成员变量</strong></h1><p>Mat类十分庞大，其所涉及的成员函数和变量难以一一细数，在这里，仅学习记录其最最最常见的部分，以便日常使用。</p>
+<h2 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h2><h4 id="默认构造函数"><a href="#默认构造函数" class="headerlink" title="默认构造函数"></a>默认构造函数</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cv::Mat::Mat()</span><br></pre></td></tr></table></figure>
+
+<p><strong>默认构造函数</strong>，生成一个矩阵并由OpenCV提供的函数(一般是Mat::create() 和 cv::imread() )来分配储存空间。</p>
+<p>Mat类可以分为两个部分：<strong>矩阵头</strong>和<strong>指向像素数据的矩阵指针</strong></p>
+<p>矩阵头 包括数字图像的矩阵尺寸、存储方法、存储地址和引用次数等，矩阵头的大小是一个常数，不会随着图像的大小而改变，但是保存图像像素数据的矩阵则会随着图像的大小而改变，通常数据量会很大，比矩阵头大几个数量级。这样，在图像复制和传递过程中，主要的开销是由存放图像像素的矩阵而引起的。因此，OpenCV使用了引用次数，当进行图像复制和传递时，不再复制整个Mat数据，而只是复制矩阵头和指向像素矩阵的指针，例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cv::Mat a ; <span class="comment">//默认构造函数，创建矩阵头</span></span><br><span class="line">a = cv::imread(<span class="string">&quot;test.jpg&quot;</span>);<span class="comment">//读入图像，矩阵指针指向该像素数据</span></span><br><span class="line">cv::Mat b = a ;<span class="comment">//复制　</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>上面的a，b有各自的矩阵头，但是其矩阵指针指向同一个矩阵，也就是其中任何一个改变了矩阵数据都会影响另外一个。<br>那么，多个Mat共用一个矩阵数据，最后谁来释放矩阵数据呢？<br>这就是引用计数的作用，当Mat对象每被复制一次时，就会将引用计数加1，而每销毁一个Mat对象（共用同一个矩阵数据）时引用计数会被减1，当引用计数为0时，矩阵数据会被清理。</p>
+<h2 id="type-函数"><a href="#type-函数" class="headerlink" title="type()函数"></a>type()函数</h2><p>cv::Mat 类的对象有一个成员函数 <code>type()</code> 用来返回矩阵元素的数据类型，返回值是 <code>int</code> 类型，不同的返回值代表不同的类型。OpenCV Reference Manual 中对 <code>type()</code> 的解释如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Mat::type</span><br><span class="line">C++: int Mat::type() const</span><br><span class="line">The method returns a matrix element type. This is an identifier compatible with the CvMat type system, like CV_16SC3 or 16-bit signed 3-channel array, and so on.</span><br></pre></td></tr></table></figure>
+
+
+
+<p>实际的代码如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cv::Mat haha = cv::Mat::zeros(3,3,CV_64F);</span><br><span class="line">int hahaType = haha.type();</span><br><span class="line">std::cout&lt;&lt;&quot;hahaType = &quot;&lt;&lt;hahaType&lt;&lt;std::endl;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>至此，知道了 <code>type()</code> 函数，下一步更关键的就是返回值和具体类型之间的对应关系了。文章《[LIST OF MAT TYPE IN OPENCV][LIST OF MAT TYPE IN OPENCV]》对此整理得非常清楚，具体如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>C1</th>
+<th>C2</th>
+<th>C3</th>
+<th>C4</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CV_8U</td>
+<td>0</td>
+<td>8</td>
+<td>16</td>
+<td>24</td>
+</tr>
+<tr>
+<td>CV_8S</td>
+<td>1</td>
+<td>9</td>
+<td>17</td>
+<td>25</td>
+</tr>
+<tr>
+<td>CV_16U</td>
+<td>2</td>
+<td>10</td>
+<td>18</td>
+<td>26</td>
+</tr>
+<tr>
+<td>CV_16S</td>
+<td>3</td>
+<td>11</td>
+<td>19</td>
+<td>27</td>
+</tr>
+<tr>
+<td>CV_32S</td>
+<td>4</td>
+<td>12</td>
+<td>20</td>
+<td>28</td>
+</tr>
+<tr>
+<td>CV_32F</td>
+<td>5</td>
+<td>13</td>
+<td>21</td>
+<td>29</td>
+</tr>
+<tr>
+<td>CV_64F</td>
+<td>6</td>
+<td>14</td>
+<td>22</td>
+<td>30</td>
+</tr>
+</tbody></table>
+<p>表头的 C1, C2, C3, C4 指的是通道(Channel)数，比如灰度图像只有 1 个通道，是 C1；JPEG格式 的 RGB 彩色图像就是 3 个通道，是 C3；PNG 格式的彩色图像除了 RGB 3个通道外，还有一个透明度通道，所以是 C4。大家还会发现 7 怎么没有被定义类型，这个可以看 <a target="_blank" rel="noopener" href="https://link.jianshu.com/?t=%5Bhttps://github.com/Itseez/opencv/blob/master/modules/core/include/opencv2/core/cvdef.h%5D(https://github.com/Itseez/opencv/blob/master/modules/core/include/opencv2/core/cvdef.h)">OpenCV 源码</a>，有如下所示的一行，说明 7 是用来给用户自定义的</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> CV_USRTYPE1 7</span></span><br></pre></td></tr></table></figure>
+
+<p>如果仅仅是为了在数值计算前明确数据类型，那么看到这里就可以了；如果是要使用 <code>at</code> 方法访问数据元素，那么还需要下面一步。因为以单通道为例，<code>at</code> 方法接受的是 <code>uchar</code> 这样的数据类型，而非 <code>CV_8U</code>。在已知通道数和每个通道数据类型的情况下，指定给 <code>at</code> 方法的数据类型如下表所示：</p>
+<p>只要认识到，最关键的数据类型其实只有0～6，其他的，都是从0～6扩展通道而已，至于扩展几维，按照你的实际情况来就好。这里再解释一下，0～6的数据类型对应的数据范围：</p>
+<p><strong>无符号8bit整型（最常用）：Unsigned 8bits uchar 0~255</strong><br>IplImage: IPL_DEPTH_8U<br>Mat: CV_8UC1, CV_8UC2, CV_8UC3, CV_8UC4</p>
+<p><strong>有符号8bit整型：Signed 8bits char -128~127</strong><br>IplImage: IPL_DEPTH_8S<br>Mat: CV_8SC1，CV_8SC2，CV_8SC3，CV_8SC4</p>
+<p><strong>无符号16bit整型：Unsigned 16bits ushort 0~65535</strong><br>IplImage: IPL_DEPTH_16U<br>Mat: CV_16UC1，CV_16UC2，CV_16UC3，CV_16UC4</p>
+<p><strong>有符号16bit整型：Signed 16bits short -32768~32767</strong><br>IplImage: IPL_DEPTH_16S<br>Mat: CV_16SC1，CV_16SC2，CV_16SC3，CV_16SC4</p>
+<p><strong>有符号32bit整型：Signed 32bits int -2147483648~2147483647</strong><br>IplImage: IPL_DEPTH_32S<br>Mat: CV_32SC1，CV_32SC2，CV_32SC3，CV_32SC4</p>
+<p><strong>32bit浮点数：Float 32bits float -1.18*10-38~3.40*10-38</strong><br>IplImage: IPL_DEPTH_32F<br>Mat: CV_32FC1，CV_32FC2，CV_32FC3，CV_32FC4</p>
+<p><strong>64bit浮点数：Double 64bits double</strong><br>Mat: CV_64FC1，CV_64FC2，CV_64FC3，CV_64FC4</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://www.frewen.wang">Frewen.Wang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://www.frewen.wang/2020/07/20/01.AuraTechNotes/20.AILearning/09.OpenCV%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/03.OpenCV%E4%B9%8BMat%E5%AF%B9%E8%B1%A1%E8%AF%A6%E8%A7%A3/">http://www.frewen.wang/2020/07/20/01.AuraTechNotes/20.AILearning/09.OpenCV%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/03.OpenCV%E4%B9%8BMat%E5%AF%B9%E8%B1%A1%E8%AF%A6%E8%A7%A3/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://www.frewen.wang" target="_blank">麦溪·在路上</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6/">四大组件</a><a class="post-meta__tags" href="/tags/Activity/">Activity</a><a class="post-meta__tags" href="/tags/Linux/">Linux</a></div><div class="post_share"><div class="social-share" data-image="/img/frewen_tech.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat_square.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat_square.jpg" alt="微信打赏"/></a><div class="post-qr-code-desc">微信打赏</div></li><li class="reward-item"><a href="/img/alipay_square.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay_square.jpg" alt="支付宝打赏"/></a><div class="post-qr-code-desc">支付宝打赏</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/07/20/01.AuraTechNotes/20.AILearning/09.OpenCV%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/02.OpenCV%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" title="Linux系统上常用软件集锦"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Linux系统上常用软件集锦</div></div></a></div><div class="next-post pull-right"><a href="/2020/07/20/01.AuraTechNotes/20.AILearning/09.OpenCV%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/04.OpenCV%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%BB%8B%E7%BB%8D/" title="Linux系统上常用软件集锦"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Linux系统上常用软件集锦</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2020/07/20/01.AuraTechNotes/18.Go/01.go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80%E7%AE%80%E4%BB%8B%E5%AD%A6%E4%B9%A0/" title="Linux系统上常用软件集锦"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-07-20</div><div class="title">Linux系统上常用软件集锦</div></div></a></div><div><a href="/2020/07/20/01.AuraTechNotes/18.Go/02.Go%E8%AF%AD%E8%A8%80%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" title="Go语言环境搭建"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-07-20</div><div class="title">Go语言环境搭建</div></div></a></div><div><a href="/2020/07/20/01.AuraTechNotes/18.Go/03.Go%E8%AF%AD%E8%A8%80%E9%9B%86%E6%88%90%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" title="Go语言集成开发环境"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-07-20</div><div class="title">Go语言集成开发环境</div></div></a></div><div><a href="/2020/07/20/01.AuraTechNotes/18.Go/05.Go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84%E6%A6%82%E8%BF%B0/" title="Go语言基础工程结构概述"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-07-20</div><div class="title">Go语言基础工程结构概述</div></div></a></div><div><a href="/2020/07/20/01.AuraTechNotes/18.Go/08.Go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/" title="Go语言基础工程结构概述"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-07-20</div><div class="title">Go语言基础工程结构概述</div></div></a></div><div><a href="/2020/07/20/01.AuraTechNotes/18.Go/07.Go%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%BC%96%E8%AF%91%E5%92%8C%E8%BF%90%E8%A1%8C/" title="Go语言基础工程结构概述"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-07-20</div><div class="title">Go语言基础工程结构概述</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Valine</span><span id="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/frewen_tech.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Frewen.Wang</div><div class="author-info__description">在青麦地上跑着,雪和太阳的光芒</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">858</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">146</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/FrewenWang"><i class="fab fa-github"></i><span>关注我</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/FrewenWang" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:frewen1225@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://plus.google.com/FrewenWong" target="_blank" title="Google"><i class="fa-brands fa-google"></i></a><a class="social-icon" href="https://twitter.com/FrewenWong" target="_blank" title="Twitter"><i class="fa-brands fa-twitter"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0-1"><span class="toc-number">1.1.</span> <span class="toc-text">概述</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Mat%E7%B1%BB%E5%B8%B8%E7%94%A8%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0%E5%92%8C%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F"><span class="toc-number">2.</span> <span class="toc-text">Mat类常用成员函数和成员变量</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="toc-number">2.1.</span> <span class="toc-text">构造函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%BB%98%E8%AE%A4%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="toc-number">2.1.0.1.</span> <span class="toc-text">默认构造函数</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#type-%E5%87%BD%E6%95%B0"><span class="toc-number">2.2.</span> <span class="toc-text">type()函数</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/28/01.AuraTechNotes/09.Python/12.python%E7%9A%84pycharm%E7%9A%84%E4%BD%BF%E7%94%A8/01.pycharm%E7%9A%84%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="无题">无题</a><time datetime="2023-07-28T11:06:28.000Z" title="发表于 2023-07-28 19:06:28">2023-07-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/27/01.AuraTechNotes/09.Python/11.python%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/01.python%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="无题">无题</a><time datetime="2023-07-27T02:02:00.000Z" title="发表于 2023-07-27 10:02:00">2023-07-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/20/01.AuraTechNotes/16.Linux/01.Linux%E4%B9%8B%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85/01.%E5%9F%BA%E4%BA%8EWindows11%E5%AE%89%E8%A3%85Ubuntu%E5%8F%8C%E7%B3%BB%E7%BB%9F/" title="基于Windows11安装Ubuntu双系统">基于Windows11安装Ubuntu双系统</a><time datetime="2023-07-19T16:00:00.000Z" title="发表于 2023-07-20 00:00:00">2023-07-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/17/01.AuraTechNotes/09.Python/01.python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E5%AD%A6%E4%B9%A0/12.%E6%90%AD%E5%BB%BAbaidu%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" title="无题">无题</a><time datetime="2023-07-17T12:35:38.000Z" title="发表于 2023-07-17 20:35:38">2023-07-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/06/13/01.AuraTechNotes/20.AILearning/06.%E6%B7%B1%E5%BA%A6%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E9%87%8F%E5%8C%96%E5%8A%A0%E9%80%9F/08.QNN%E6%8E%A8%E7%90%86%E9%87%8F%E5%8C%96%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" title="无题">无题</a><time datetime="2023-06-13T14:28:06.000Z" title="发表于 2023-06-13 22:28:06">2023-06-13</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By Frewen.Wang</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const initValine = () => {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  const loadValine = async () => {
+    if (typeof Valine === 'function') initValine()
+    else {
+      await getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js')
+      initValine()
+    }
+  }
+
+  if ('Valine' === 'Valine' || !false) {
+    if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+    else setTimeout(loadValine, 0)
+  } else {
+    window.loadOtherComment = loadValine
+  }
+})()</script><script>(() => {
+  const disqus_config = function () {
+    this.page.url = 'http://www.frewen.wang/2020/07/20/01.AuraTechNotes/20.AILearning/09.OpenCV%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/03.OpenCV%E4%B9%8BMat%E5%AF%B9%E8%B1%A1%E8%AF%A6%E8%A7%A3/'
+    this.page.identifier = '/2020/07/20/01.AuraTechNotes/20.AILearning/09.OpenCV%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/03.OpenCV%E4%B9%8BMat%E5%AF%B9%E8%B1%A1%E8%AF%A6%E8%A7%A3/'
+    this.page.title = 'Linux系统上常用软件集锦'
+  }
+
+  const disqusReset = () => {
+    window.DISQUS && window.DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addGlobalFn('themeChange', disqusReset, 'disqus')
+
+  const loadDisqus = () =>{
+    if (window.DISQUS) disqusReset()
+    else {
+      const script = document.createElement('script')
+      script.src = 'https://.disqus.com/embed.js'
+      script.setAttribute('data-timestamp', +new Date())
+      document.head.appendChild(script)
+    }
+  }
+
+  const getCount = async() => {
+    try {
+      const eleGroup = document.querySelector('#post-meta .disqus-comment-count')
+      if (!eleGroup) return
+      const cleanedLinks = eleGroup.href.replace(/#post-comment$/, '')
+
+      const res = await fetch(`https://disqus.com/api/3.0/threads/set.json?forum=&api_key=&thread:link=${cleanedLinks}`,{
+        method: 'GET'
+      })
+      const result = await res.json()
+
+      const count = result.response.length ? result.response[0].posts : 0
+      eleGroup.textContent = count
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  if ('Valine' === 'Disqus' || !false) {
+    if (false) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+    else {
+      loadDisqus()
+      GLOBAL_CONFIG_SITE.isPost && getCount()
+    }
+  } else {
+    window.loadOtherComment = loadDisqus
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>C++中高级面试题集锦 | 麦溪·在路上</title><meta name="author" content="Frewen.Wang"><meta name="copyright" content="Frewen.Wang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="页面描述"><link rel="shortcut icon" href="/img/frewen_tech.png"><link rel="canonical" href="http://www.frewen.wang/2022/01/05/01.AuraTechNotes/15.CLang/01.C++%E9%9D%A2%E8%AF%95%E9%A2%98/01.C++%E4%B8%AD%E9%AB%98%E7%BA%A7%E9%9D%A2%E8%AF%95%E9%A2%98%E9%9B%86%E9%94%A6/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script async="async" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: '',
+  enable_page_level_ads: 'true'
+});</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'C++中高级面试题集锦',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-01-05 00:00:00'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/frewen_tech.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">858</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">146</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 文章标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 文章归类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 文章列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/page_img.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="麦溪·在路上"><span class="site-name">麦溪·在路上</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 文章标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 文章归类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 文章列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">C++中高级面试题集锦</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-01-04T16:00:00.000Z" title="发表于 2022-01-05 00:00:00">2022-01-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-01-04T16:00:00.000Z" title="更新于 2022-01-05 00:00:00">2022-01-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="C++中高级面试题集锦"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2022/01/05/01.AuraTechNotes/15.CLang/01.C++%E9%9D%A2%E8%AF%95%E9%A2%98/01.C++%E4%B8%AD%E9%AB%98%E7%BA%A7%E9%9D%A2%E8%AF%95%E9%A2%98%E9%9B%86%E9%94%A6/#post-comment" itemprop="discussionUrl"><span class="valine-comment-count" data-xid="/2022/01/05/01.AuraTechNotes/15.CLang/01.C++%E9%9D%A2%E8%AF%95%E9%A2%98/01.C++%E4%B8%AD%E9%AB%98%E7%BA%A7%E9%9D%A2%E8%AF%95%E9%A2%98%E9%9B%86%E9%94%A6/" itemprop="commentCount"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>[TOC]</p>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>文章参考：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/B4zQhTxl8EL0astDch-G0w">https://mp.weixin.qq.com/s/B4zQhTxl8EL0astDch-G0w</a></p>
+<h2 id="C-是什么？"><a href="#C-是什么？" class="headerlink" title="C++ 是什么？"></a>C++ 是什么？</h2><p>C++是在C语言的基础上开发的一种面向对象编程语言，应用广泛。C++支持多种编程范式: 面向对象编程、泛型编程和过程化编程。 其编程领域众广，常用于系统开发，引擎开发等应用领域，是最受广大程序员受用的最强大编程语言之一,支持类：类、封装、重载等特性!</p>
+<h2 id="C和C-的区别？"><a href="#C和C-的区别？" class="headerlink" title="C和C++的区别？"></a>C和C++的区别？</h2><p>C++在C的基础上增添类，C是一个结构化语言，它的重点在于算法和数据结构。C程序的设计首要考虑的是如何通过一个过程，对输入（或环境条件）进行运算处理得到输出（或实现过程（事务）控制），而对于C++，首要考虑的是如何构造一个对象模型，让这个模型能够契合与之对应的问题域，这样就可以通过获取对象的状态信息得到输出或实现过程（事务）控制。</p>
+<h1 id="C-面向对象"><a href="#C-面向对象" class="headerlink" title="C++面向对象"></a>C++面向对象</h1><h2 id="什么是面向对象（OOP）？"><a href="#什么是面向对象（OOP）？" class="headerlink" title="什么是面向对象（OOP）？"></a>什么是面向对象（OOP）？</h2><p>面向对象是一种对现实世界理解和抽象的方法、思想，通过将需求要素转化为对象进行问题处理的一种思想。</p>
+<h2 id="C-面向对象的特点"><a href="#C-面向对象的特点" class="headerlink" title="C++面向对象的特点"></a>C++面向对象的特点</h2><p>封装、继承、多态</p>
+<h2 id="什么是多态？"><a href="#什么是多态？" class="headerlink" title="什么是多态？"></a>什么是多态？</h2><p>多态是指相同的操作或函数、过程可作用于多种类型的对象上并获得不同的结果。不同的对象，收到同一消息可以产生不同的结果，这种现象称为多态。</p>
+<h2 id="子类析构时要调用父类的析构函数吗？"><a href="#子类析构时要调用父类的析构函数吗？" class="headerlink" title="子类析构时要调用父类的析构函数吗？"></a>子类析构时要调用父类的析构函数吗？</h2><p>析构函数调用的次序是<strong>先派生类的析构后基类的析构</strong>，也就是说在基类的的析构调用的时候,派生类的信息已经全部销毁了。</p>
+<p>定义一个对象时先调用基类的构造函数、然后调用派生类的构造函数；析构的时候恰好相反：先调用派生类的析构函数、然后调用基类的析构函数。</p>
+<h2 id="多态、虚函数、纯虚函数"><a href="#多态、虚函数、纯虚函数" class="headerlink" title="多态、虚函数、纯虚函数"></a>多态、虚函数、纯虚函数</h2><p>多态：<strong>是对于不同对象接收相同消息时产生不同的动作</strong>。C++的多态性具体体现在运行和编译两个方面：在程序运行时的多态性通过继承和虚函数来体现；</p>
+<p>在程序编译时多态性体现在函数和运算符的重载上；</p>
+<p>虚函数：在基类中冠以关键字 virtual 的成员函数。它提供了一种接口界面。允许在派生类中对基类的虚函数重新定义。</p>
+<h2 id="STL库用过吗？常见的STL容器有哪些？算法用过哪几个？"><a href="#STL库用过吗？常见的STL容器有哪些？算法用过哪几个？" class="headerlink" title="STL库用过吗？常见的STL容器有哪些？算法用过哪几个？"></a>STL库用过吗？常见的STL容器有哪些？算法用过哪几个？</h2><p>STL包括两部分内容：容器和算法。（重要的还有融合这二者的迭代器）</p>
+<p>容器，即存放数据的地方。比如array等。</p>
+<p>在STL中，容器分为两类：序列式容器和关联式容器。</p>
+<p>序列式容器，其中的元素不一定有序，但都可以被排序。如：vector、list、deque、stack、queue、heap、priority_queue、slist；</p>
+<p>关联式容器，内部结构基本上是一颗平衡二叉树。所谓关联，指每个元素都有一个键值和一个实值，元素按照一定的规则存放。如：RB-tree、set、map、multiset、multimap、hashtable、hash_set、hash_map、hash_multiset、hash_multimap。</p>
+<p>下面各选取一个作为说明。</p>
+<p>vector：它是一个动态分配存储空间的容器。区别于c++中的array，array分配的空间是静态的，分配之后不能被改变，而vector会自动重分配（扩展）空间。</p>
+<p>set：其内部元素会根据元素的键值自动被排序。区别于map，它的键值就是实值，而map可以同时拥有不同的键值和实值。</p>
+<p>算法，如排序，复制……以及个容器特定的算法。这点不用过多介绍，主要看下面迭代器的内容。</p>
+<p>迭代器是STL的精髓，我们这样描述它：迭代器提供了一种方法，使它能够按照顺序访问某个容器所含的各个元素，但无需暴露该容器的内部结构。它将容器和算法分开，好让这二者独立设计。</p>
+<h2 id="const知道吗？解释其作用。"><a href="#const知道吗？解释其作用。" class="headerlink" title="const知道吗？解释其作用。"></a>const知道吗？解释其作用。</h2><h2 id="解释C-中静态函数和静态变量？"><a href="#解释C-中静态函数和静态变量？" class="headerlink" title="解释C++中静态函数和静态变量？"></a>解释C++中静态函数和静态变量？</h2><p>(1)类静态数据成员在编译时创建并初始化：在该类的任何对象建立之前就存在，不属于任何对象，而非静态类成员变量则是属于对象所有的。类静态数据成员只有一个拷贝，为所有此类的对象所共享。</p>
+<p>(2)类静态成员函数属于整个类，不属于某个对象，由该类所有对象共享。</p>
+<p>1、static 成员变量实现了同类对象间信息共享。</p>
+<p>2、static 成员类外存储，求类大小，并不包含在内。</p>
+<p>3、static 成员是命名空间属于类的全局变量，存储在 data 区的rw段。</p>
+<p>4、static 成员只能类外初始化。</p>
+<p>5、可以通过类名访问（无对象生成时亦可），也可以通过对象访问。</p>
+<h1 id="C-内存模型"><a href="#C-内存模型" class="headerlink" title="C++内存模型"></a>C++内存模型</h1><h2 id="说下你对C-中内存的了解？"><a href="#说下你对C-中内存的了解？" class="headerlink" title="说下你对C++中内存的了解？"></a>说下你对C++中内存的了解？</h2><ol>
+<li><p>栈 ：由编译器自动分配释放。在需要的时候由编译器自动分配空间，在不需要的时候由编译器自动释放空间。一般用于保存局部变量和函数参数。连续的内存空间，在函数调用的时候，首先入栈的主函数的下一条可执行指令的地址，然后是函数的哥哥参数。大多数编译器中，参数是从右向左入栈（原因是采用这种殊勋，是为了让程序员在使用C&#x2F;C++的函数参数长度可变这个特性时更加方便。如果是从左向右压栈第一个参数（即描述可变参数表各变量类型的哪个参数）将被放在占地，由于可变参数的函数第一步就需要解析可变参数表的各个参数类型，即第一步就需要得到上述参数，因此将他放在栈底是不方便的）本地函数调用结束时，局部变量先出站，然后是参数，最后是栈顶指针最开始存放的地址，程序由该点继续运行，不会产生碎片。栈是高地址向低地址扩展，栈底高地址，空间较小。</p>
+</li>
+<li><p>堆 ：一般由程序员分配释放，需要手动new malloc delete free进行分配和回收。若程序员不释放，会造成内存泄露的问题。不连续的空间，实际上系统中有一个空闲链表，当有程序申请的时候，系统会遍历空闲链表找到第一个大约等于申请大小的空间分配给程序，一般在分配程序的时候，也会空间头部写入内存大小，方便delete回收空间大小。当然，如果有剩余的，也会将剩余的插入到空闲链表中。这也是产生内存碎片的原因。</p>
+</li>
+<li><p>全局区(静态区)，全局变量和静态变量的存储是放在一块的，初始化的全局变量和静态变量在一块区域，未初始化的全局变量和未初始化的静态变量在相邻的另一块区域。- 程序结束释放</p>
+</li>
+<li><p>另外还有一个专门放常量的地方。- 程序结束释放</p>
+</li>
+<li><p>程序代码区，存放2进制代码。</p>
+</li>
+</ol>
+<p>在函数体中定义的变量通常是在栈上，用malloc， calloc， realloc等分配内存的函数分配得到的就是在堆上。在所有函数体外定义的是全局量，加了static修饰符后不管在哪里都存放在全局区(静态区)，在所有函数体外定义的static变量表示在该文件中有效，不能extern到别的文件用，在函数体内定义的static表示只在该函数体内有效。另外，函数中的”adgfdf”这样的字符串存放在常量区。</p>
+<h2 id="new和malloc的区别？"><a href="#new和malloc的区别？" class="headerlink" title="new和malloc的区别？"></a>new和malloc的区别？</h2><p>1、malloc与free是C++&#x2F;C语言的标准库函数，new&#x2F;delete是C++的运算符。它们都可用于申请动态内存和释放内存。</p>
+<p>2、对于非内部数据类型的对象而言，光用malloc&#x2F;free无法满足动态对象的要求。对象在创建的同时要自动执行构造函数，对象在消亡之前要自动执行析构函数。</p>
+<p>3、由于malloc&#x2F;free是库函数而不是运算符，不在编译器控制权限之内，不能够把执行构造函数和析构函数的任务强加于malloc&#x2F;free。因此C++语言需要一个能完成动态内存分配和初始化工作的运算符new，以一个能完成清理与释放内存工作的运算符delete。注意new&#x2F;delete不是库函数。</p>
+<p>4、C++程序经常要调用C函数，而C程序只能用malloc&#x2F;free管理动态内存。</p>
+<p>5、new可以认为是malloc加构造函数的执行。new出来的指针是直接带类型信息的。而malloc返回的都是void指针。</p>
+<h2 id="delete与delete-区别"><a href="#delete与delete-区别" class="headerlink" title="delete与delete[]区别"></a>delete与delete[]区别</h2><p><strong>delete只会调用一次析构函数，而delete[]会调用每一个成员的析构函数</strong>。</p>
+<p>在More Effective C++中有更为详细的解释：“当delete操作符用于数组时，它为每个数组元素调用析构函数，然后调用 operator delete 来释放内存。”delete与new配套，delete []与new []配套</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">MemTest *mTest1 = <span class="keyword">new</span> MemTest[<span class="number">10</span>];</span><br><span class="line"></span><br><span class="line">MemTest *mTest2 = <span class="keyword">new</span> MemTest;</span><br><span class="line"></span><br><span class="line">Int *pInt1 = <span class="keyword">new</span> <span class="type">int</span> [<span class="number">10</span>];</span><br><span class="line"></span><br><span class="line">Int *pInt2 = <span class="keyword">new</span> <span class="type">int</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">delete</span>[]pInt1; <span class="comment">//-1-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">delete</span>[]pInt2; <span class="comment">//-2-   // 内建的简单数据类型，delete和delete[]是一样的</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">delete</span>[]mTest1;<span class="comment">//-3-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">delete</span>[]mTest2;<span class="comment">//-4-</span></span><br></pre></td></tr></table></figure>
+
+<p>内建简单数据类型，delete和delete[]功能是相同的。</p>
+<p><strong>对于自定义的复杂数据类型，delete和delete[]不能互用。delete[]删除一个数组，delete删除一个指针。</strong></p>
+<p>简单来说，用new分配的内存用delete删除；用new[]分配的内存用delete[]删除。delete[]会调用数组元素的析构函数。</p>
+<p>内部数据类型没有析构函数，所以问题不大。如果你在用delete时没用括号，delete就会认为指向的是单个对象，否则，它就会认为指向的是一个数组。</p>
+<h1 id="C-智能指针"><a href="#C-智能指针" class="headerlink" title="C++智能指针"></a>C++智能指针</h1><h2 id="1-说一下你理解的C-四种智能指针"><a href="#1-说一下你理解的C-四种智能指针" class="headerlink" title="1. 说一下你理解的C++四种智能指针"></a>1. 说一下你理解的C++四种智能指针</h2><h2 id="2-C-指针和引用的区别"><a href="#2-C-指针和引用的区别" class="headerlink" title="2. C++指针和引用的区别"></a>2. C++指针和引用的区别</h2><p>指针和引用都是一种内存地址的概念，区别就是指针是一个实体，引用只是一个别名。</p>
+<p>在程序编译的时候，指针和引用会被添加到符号表中</p>
+<p>指针它指向一块内存，指针的内容就是它所指向的变量的内存地址，在编译的时候，则是将“指针变量名-指针变量地址”添加到符号表中。所以说，指针包含的内容其实是可以改变的，允许拷贝和赋值。有const和非const的区别，甚至可以为空。sizeof指针得到的就是指针类型的大小。</p>
+<p>而对于引用类说，他只是一块内存的别名，在添加符号表的时候，是将“应用变量名-引用对象地址”添加到符号表中，符号表一经完成不能改变，所以引用必须而且只能在定义的时候被绑定到一块内存上，后续不能更改，也不能为空。也没有const和非const区别。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://www.frewen.wang">Frewen.Wang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://www.frewen.wang/2022/01/05/01.AuraTechNotes/15.CLang/01.C++%E9%9D%A2%E8%AF%95%E9%A2%98/01.C++%E4%B8%AD%E9%AB%98%E7%BA%A7%E9%9D%A2%E8%AF%95%E9%A2%98%E9%9B%86%E9%94%A6/">http://www.frewen.wang/2022/01/05/01.AuraTechNotes/15.CLang/01.C++%E9%9D%A2%E8%AF%95%E9%A2%98/01.C++%E4%B8%AD%E9%AB%98%E7%BA%A7%E9%9D%A2%E8%AF%95%E9%A2%98%E9%9B%86%E9%94%A6/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://www.frewen.wang" target="_blank">麦溪·在路上</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/C/">C++</a><a class="post-meta__tags" href="/tags/C-%E5%9F%BA%E7%A1%80/">C++基础</a></div><div class="post_share"><div class="social-share" data-image="/img/frewen_tech.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat_square.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat_square.jpg" alt="微信打赏"/></a><div class="post-qr-code-desc">微信打赏</div></li><li class="reward-item"><a href="/img/alipay_square.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay_square.jpg" alt="支付宝打赏"/></a><div class="post-qr-code-desc">支付宝打赏</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/01/05/01.AuraTechNotes/04.Android/27.Android%E4%B9%8BGradle%E7%BC%96%E8%AF%91/05.Gradle%E7%BC%96%E8%AF%91%E6%88%90APK%E7%9A%84%E6%B5%81%E7%A8%8B/" title="Gradle编译成APK的流程"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Gradle编译成APK的流程</div></div></a></div><div class="next-post pull-right"><a href="/2022/01/05/01.AuraTechNotes/15.CLang/01.C++%E9%9D%A2%E8%AF%95%E9%A2%98/01.C++%E9%9D%A2%E8%AF%95%E9%A2%98%E5%A4%A7%E5%85%A8/" title="C++面试题大全"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">C++面试题大全</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/01/05/01.AuraTechNotes/15.CLang/04.C++%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E7%9B%B8%E5%85%B3/06.C++%E7%B3%BB%E7%BB%9F%E7%BA%A7%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7perf%E7%9A%84%E4%BB%8B%E7%BB%8D%E4%B8%8E%E4%BD%BF%E7%94%A8/" title="C++系统级性能分析工具perf的介绍与使用"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-05</div><div class="title">C++系统级性能分析工具perf的介绍与使用</div></div></a></div><div><a href="/2022/01/05/01.AuraTechNotes/15.CLang/04.C++%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E7%9B%B8%E5%85%B3/05.C++%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E6%8E%92%E6%9F%A5/" title="C++性能优化之内存泄漏排查"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-05</div><div class="title">C++性能优化之内存泄漏排查</div></div></a></div><div><a href="/2022/01/05/01.AuraTechNotes/15.CLang/04.C++%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E7%9B%B8%E5%85%B3/07.C++%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7Valgrind%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" title="C++性能分析工具Valgrind使用教程"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-05</div><div class="title">C++性能分析工具Valgrind使用教程</div></div></a></div><div><a href="/2021/06/05/01.AuraTechNotes/15.CLang/03.C++%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/01.C++%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/01.C++%E5%BC%80%E5%8F%91%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" title="01.C++开发之环境搭建"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-05</div><div class="title">01.C++开发之环境搭建</div></div></a></div><div><a href="/2021/06/05/01.AuraTechNotes/15.CLang/03.C++%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/01.C++%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/05.C++%E4%B8%ADconst%E5%85%B3%E9%94%AE%E5%AD%97%E5%9F%BA%E7%A1%80/" title="C++之const关键字基础"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-05</div><div class="title">C++之const关键字基础</div></div></a></div><div><a href="/2021/06/05/01.AuraTechNotes/15.CLang/03.C++%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/01.C++%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/05.C++%E5%9F%BA%E7%A1%80%E4%B9%8Bconst%E5%85%B3%E9%94%AE%E5%AD%97%E4%BD%9C%E7%94%A8%E5%AD%A6%E4%B9%A0/" title="C++基础之const关键字作用学习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-05</div><div class="title">C++基础之const关键字作用学习</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Valine</span><span id="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/frewen_tech.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Frewen.Wang</div><div class="author-info__description">在青麦地上跑着,雪和太阳的光芒</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">858</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">146</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/FrewenWang"><i class="fab fa-github"></i><span>关注我</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/FrewenWang" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:frewen1225@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://plus.google.com/FrewenWong" target="_blank" title="Google"><i class="fa-brands fa-google"></i></a><a class="social-icon" href="https://twitter.com/FrewenWong" target="_blank" title="Twitter"><i class="fa-brands fa-twitter"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#C-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">C++ 是什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#C%E5%92%8CC-%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-number">1.2.</span> <span class="toc-text">C和C++的区别？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1"><span class="toc-number">2.</span> <span class="toc-text">C++面向对象</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%EF%BC%88OOP%EF%BC%89%EF%BC%9F"><span class="toc-number">2.1.</span> <span class="toc-text">什么是面向对象（OOP）？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%89%B9%E7%82%B9"><span class="toc-number">2.2.</span> <span class="toc-text">C++面向对象的特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%A4%9A%E6%80%81%EF%BC%9F"><span class="toc-number">2.3.</span> <span class="toc-text">什么是多态？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%90%E7%B1%BB%E6%9E%90%E6%9E%84%E6%97%B6%E8%A6%81%E8%B0%83%E7%94%A8%E7%88%B6%E7%B1%BB%E7%9A%84%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0%E5%90%97%EF%BC%9F"><span class="toc-number">2.4.</span> <span class="toc-text">子类析构时要调用父类的析构函数吗？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E6%80%81%E3%80%81%E8%99%9A%E5%87%BD%E6%95%B0%E3%80%81%E7%BA%AF%E8%99%9A%E5%87%BD%E6%95%B0"><span class="toc-number">2.5.</span> <span class="toc-text">多态、虚函数、纯虚函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#STL%E5%BA%93%E7%94%A8%E8%BF%87%E5%90%97%EF%BC%9F%E5%B8%B8%E8%A7%81%E7%9A%84STL%E5%AE%B9%E5%99%A8%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F%E7%AE%97%E6%B3%95%E7%94%A8%E8%BF%87%E5%93%AA%E5%87%A0%E4%B8%AA%EF%BC%9F"><span class="toc-number">2.6.</span> <span class="toc-text">STL库用过吗？常见的STL容器有哪些？算法用过哪几个？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#const%E7%9F%A5%E9%81%93%E5%90%97%EF%BC%9F%E8%A7%A3%E9%87%8A%E5%85%B6%E4%BD%9C%E7%94%A8%E3%80%82"><span class="toc-number">2.7.</span> <span class="toc-text">const知道吗？解释其作用。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%87%8AC-%E4%B8%AD%E9%9D%99%E6%80%81%E5%87%BD%E6%95%B0%E5%92%8C%E9%9D%99%E6%80%81%E5%8F%98%E9%87%8F%EF%BC%9F"><span class="toc-number">2.8.</span> <span class="toc-text">解释C++中静态函数和静态变量？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#C-%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">C++内存模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%B4%E4%B8%8B%E4%BD%A0%E5%AF%B9C-%E4%B8%AD%E5%86%85%E5%AD%98%E7%9A%84%E4%BA%86%E8%A7%A3%EF%BC%9F"><span class="toc-number">3.1.</span> <span class="toc-text">说下你对C++中内存的了解？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#new%E5%92%8Cmalloc%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-number">3.2.</span> <span class="toc-text">new和malloc的区别？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#delete%E4%B8%8Edelete-%E5%8C%BA%E5%88%AB"><span class="toc-number">3.3.</span> <span class="toc-text">delete与delete[]区别</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#C-%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88"><span class="toc-number">4.</span> <span class="toc-text">C++智能指针</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E8%AF%B4%E4%B8%80%E4%B8%8B%E4%BD%A0%E7%90%86%E8%A7%A3%E7%9A%84C-%E5%9B%9B%E7%A7%8D%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88"><span class="toc-number">4.1.</span> <span class="toc-text">1. 说一下你理解的C++四种智能指针</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-C-%E6%8C%87%E9%92%88%E5%92%8C%E5%BC%95%E7%94%A8%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">4.2.</span> <span class="toc-text">2. C++指针和引用的区别</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/28/01.AuraTechNotes/09.Python/12.python%E7%9A%84pycharm%E7%9A%84%E4%BD%BF%E7%94%A8/01.pycharm%E7%9A%84%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="无题">无题</a><time datetime="2023-07-28T11:06:28.000Z" title="发表于 2023-07-28 19:06:28">2023-07-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/27/01.AuraTechNotes/09.Python/11.python%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/01.python%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="无题">无题</a><time datetime="2023-07-27T02:02:00.000Z" title="发表于 2023-07-27 10:02:00">2023-07-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/20/01.AuraTechNotes/16.Linux/01.Linux%E4%B9%8B%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85/01.%E5%9F%BA%E4%BA%8EWindows11%E5%AE%89%E8%A3%85Ubuntu%E5%8F%8C%E7%B3%BB%E7%BB%9F/" title="基于Windows11安装Ubuntu双系统">基于Windows11安装Ubuntu双系统</a><time datetime="2023-07-19T16:00:00.000Z" title="发表于 2023-07-20 00:00:00">2023-07-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/17/01.AuraTechNotes/09.Python/01.python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E5%AD%A6%E4%B9%A0/12.%E6%90%AD%E5%BB%BAbaidu%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" title="无题">无题</a><time datetime="2023-07-17T12:35:38.000Z" title="发表于 2023-07-17 20:35:38">2023-07-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/06/13/01.AuraTechNotes/20.AILearning/06.%E6%B7%B1%E5%BA%A6%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E9%87%8F%E5%8C%96%E5%8A%A0%E9%80%9F/08.QNN%E6%8E%A8%E7%90%86%E9%87%8F%E5%8C%96%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" title="无题">无题</a><time datetime="2023-06-13T14:28:06.000Z" title="发表于 2023-06-13 22:28:06">2023-06-13</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By Frewen.Wang</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const initValine = () => {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  const loadValine = async () => {
+    if (typeof Valine === 'function') initValine()
+    else {
+      await getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js')
+      initValine()
+    }
+  }
+
+  if ('Valine' === 'Valine' || !false) {
+    if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+    else setTimeout(loadValine, 0)
+  } else {
+    window.loadOtherComment = loadValine
+  }
+})()</script><script>(() => {
+  const disqus_config = function () {
+    this.page.url = 'http://www.frewen.wang/2022/01/05/01.AuraTechNotes/15.CLang/01.C++%E9%9D%A2%E8%AF%95%E9%A2%98/01.C++%E4%B8%AD%E9%AB%98%E7%BA%A7%E9%9D%A2%E8%AF%95%E9%A2%98%E9%9B%86%E9%94%A6/'
+    this.page.identifier = '/2022/01/05/01.AuraTechNotes/15.CLang/01.C++%E9%9D%A2%E8%AF%95%E9%A2%98/01.C++%E4%B8%AD%E9%AB%98%E7%BA%A7%E9%9D%A2%E8%AF%95%E9%A2%98%E9%9B%86%E9%94%A6/'
+    this.page.title = 'C++中高级面试题集锦'
+  }
+
+  const disqusReset = () => {
+    window.DISQUS && window.DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addGlobalFn('themeChange', disqusReset, 'disqus')
+
+  const loadDisqus = () =>{
+    if (window.DISQUS) disqusReset()
+    else {
+      const script = document.createElement('script')
+      script.src = 'https://.disqus.com/embed.js'
+      script.setAttribute('data-timestamp', +new Date())
+      document.head.appendChild(script)
+    }
+  }
+
+  const getCount = async() => {
+    try {
+      const eleGroup = document.querySelector('#post-meta .disqus-comment-count')
+      if (!eleGroup) return
+      const cleanedLinks = eleGroup.href.replace(/#post-comment$/, '')
+
+      const res = await fetch(`https://disqus.com/api/3.0/threads/set.json?forum=&api_key=&thread:link=${cleanedLinks}`,{
+        method: 'GET'
+      })
+      const result = await res.json()
+
+      const count = result.response.length ? result.response[0].posts : 0
+      eleGroup.textContent = count
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  if ('Valine' === 'Disqus' || !false) {
+    if (false) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+    else {
+      loadDisqus()
+      GLOBAL_CONFIG_SITE.isPost && getCount()
+    }
+  } else {
+    window.loadOtherComment = loadDisqus
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

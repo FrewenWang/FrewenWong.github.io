@@ -1,0 +1,325 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Android的View之ViewTreeObserver源码解析 | 麦溪·在路上</title><meta name="author" content="Frewen.Wang"><meta name="copyright" content="Frewen.Wang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Android的View之ViewTreeObserver源码解析"><link rel="shortcut icon" href="/img/frewen_tech.png"><link rel="canonical" href="http://www.frewen.wang/2022/01/05/01.AuraTechNotes/04.Android/09.Android%E4%B9%8BView%E7%B1%BB%E5%AD%A6%E4%B9%A0/03.View%E7%B1%BB%E7%9A%84%E7%9B%B8%E5%85%B3%E6%96%B9%E6%B3%95%E5%AD%A6%E4%B9%A0/08.Android%E7%9A%84View%E4%B9%8BViewTreeObserver%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script async="async" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: '',
+  enable_page_level_ads: 'true'
+});</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Android的View之ViewTreeObserver源码解析',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-01-05 00:00:00'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/frewen_tech.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">858</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">146</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 文章标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 文章归类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 文章列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/page_img.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="麦溪·在路上"><span class="site-name">麦溪·在路上</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 文章标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 文章归类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 文章列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Android的View之ViewTreeObserver源码解析</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-01-04T16:00:00.000Z" title="发表于 2022-01-05 00:00:00">2022-01-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-01-04T16:00:00.000Z" title="更新于 2022-01-05 00:00:00">2022-01-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>12分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Android的View之ViewTreeObserver源码解析"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2022/01/05/01.AuraTechNotes/04.Android/09.Android%E4%B9%8BView%E7%B1%BB%E5%AD%A6%E4%B9%A0/03.View%E7%B1%BB%E7%9A%84%E7%9B%B8%E5%85%B3%E6%96%B9%E6%B3%95%E5%AD%A6%E4%B9%A0/08.Android%E7%9A%84View%E4%B9%8BViewTreeObserver%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/#post-comment" itemprop="discussionUrl"><span class="valine-comment-count" data-xid="/2022/01/05/01.AuraTechNotes/04.Android/09.Android%E4%B9%8BView%E7%B1%BB%E5%AD%A6%E4%B9%A0/03.View%E7%B1%BB%E7%9A%84%E7%9B%B8%E5%85%B3%E6%96%B9%E6%B3%95%E5%AD%A6%E4%B9%A0/08.Android%E7%9A%84View%E4%B9%8BViewTreeObserver%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" itemprop="commentCount"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>[TOC]</p>
+<p>文章参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/whoami_I/article/details/102805969">https://blog.csdn.net/whoami_I/article/details/102805969</a></p>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>先说ViewTreeObserver是什么？</p>
+<p>ViewTreeObserver 是被用来注册监听视图树的观察者，在视图树发生全局改变时将收到通知。本文从 ViewTreeObserver 源码出发，带你剖析 ViewTreeObserver 的设计及使用，并间接体会观察者模式、Android消息传递机制在其中的使用。</p>
+<p>我们怎么去理解ViewTreeObserver呢？</p>
+<p>ViewTreeObserver，拆开来理解就是 ViewTree 和 Observer。</p>
+<p>ViewTree 就是我们常说的视图树，在Android中，所有视图都是由View及View的子类构成，ViewGroup 也是View的子类，它可以装载View或者ViewGroup，这样，一层层嵌套，就有了视图树的概念。</p>
+<p>Observer 即观察者的意思，其对应的观察者模式是软件设计模式的一种，在许多编程语言中被广泛运用。其核心在于：一个目标对象，我们称之为被观察者（Observable），管理着所有依附于它的观察者（Observers），当被观察者发生某种改变时（称为事件），被观察者调用对该事件感兴趣的观察者所提供的方法，主动通知观察者。</p>
+<p>总结起来就是三要素：观察者，被观察者，事件。</p>
+<p>至于在 ViewTreeObserver 中，观察者模式是如何工作的。涉及到 View 的 measure、layout 和 draw 等过程。</p>
+<h1 id="ViewTreeObserver说明"><a href="#ViewTreeObserver说明" class="headerlink" title="ViewTreeObserver说明"></a>ViewTreeObserver说明</h1><p>ViewTreeObserver 是被用来注册监听视图树的观察者，在视图树发生全局改变时将收到通知。这种全局事件包括但不限于：整个视图树的布局发生改变、在视图开始绘制之前、视图触摸模式改变时…</p>
+<p>了解了 ViewTreeObserver 之后，接下来说说如何获取 ViewTreeObserver 对象。我想大多数人会想到 new ViewTreeObserver()，因为这个我们最擅长了。</p>
+<p>但是，ViewTreeObserver 的构造方法明确声明了：This constructor should not be called。也就是我们没法调用，当我们尝试这么做时，IDE 会提示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x27;ViewTreeObserver()&#x27; is not public in &#x27;android.view.ViewTreeObserver&#x27;.Cannot be accessed from outside package</span><br></pre></td></tr></table></figure>
+
+<p>根据 ViewTreeObserver 类的注释可知，我们只能通过 View 的 getViewTreeObserver() 方法获取 ViewTreeObserver 对象，那么我们看一下 getViewTreeObserver() 方法的源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">// 代码位于：/frameworks/base/core/java/android/view/View.java</span></span><br><span class="line"><span class="keyword">public</span> ViewTreeObserver <span class="title function_">getViewTreeObserver</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (mAttachInfo != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> mAttachInfo.mTreeObserver;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (mFloatingTreeObserver == <span class="literal">null</span>) &#123;</span><br><span class="line">            mFloatingTreeObserver = <span class="keyword">new</span> <span class="title class_">ViewTreeObserver</span>(mContext);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> mFloatingTreeObserver;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>先介绍一下方法中的 AttachInfo，官方文档如此注释说明：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A set of information given to a view when it is attached to its parent</span><br></pre></td></tr></table></figure>
+
+<p>意思是：当这个 View 被附着到父窗口时，将会获得这一组信息。说的好抽象啊，还是自己这组信息都有啥吧。</p>
+<p>AttachInfo 是 View 类的内部类，找到这个类，浏览一遍，发现其含了一个 ViewTreeObserver 对象，以及该 View 所处的窗口(Window)、设备(Display)、根视图(rootView)等信息，信息量还是蛮大的，感兴趣的可以自己了解下，我们目前只关心这个 ViewTreeObserver 对象。</p>
+<p>下面分析方法的逻辑。这个方法首先判断 View 所持有的 mAttachInfo ，当 mAttachInfo 不为空时，直接返回 mAttachInfo 中的 ViewTreeObserver 对象；否则去判断 View 类的 ViewTreeObserver 对象 mFloatingTreeObserver，若 mFloatingTreeObserver 为空，则创建该对象，并返回。</p>
+<p>对于 mFloatingTreeObserver，官方注释为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Special tree observer used when mAttachInfo is null.</span><br></pre></td></tr></table></figure>
+
+<p>在View这个类的内部有一个AttachInfo的类，这个类主要是用来记录当整个view树attach到window时的信息，挑几个成员看看：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> IWindow mWindow;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* The top view of the hierarchy.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"> View mRootView;</span><br><span class="line"> <span class="comment">/**</span></span><br><span class="line"><span class="comment">* Left position of this view&#x27;s window</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">int</span> mWindowLeft;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* Top position of this view&#x27;s window</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="type">int</span> mWindowTop;</span><br><span class="line"><span class="keyword">final</span> ViewTreeObserver mTreeObserver;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* The view root impl.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">final</span> ViewRootImpl mViewRootImpl;</span><br></pre></td></tr></table></figure>
+
+<p>可以看出这些成员都是和window、ViewRootImpl相关的，其中就有mTreeObserver，然后在View内部有个AttachInfo类的引用mAttachInfo，因此View和ViewTreeObserver产生了联系。</p>
+<p>现在就来查找mAttachInfo是在哪里赋值的了，发现赋值的地方只有一个</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@UnsupportedAppUsage(maxTargetSdk = Build.VERSION_CODES.P)</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">dispatchAttachedToWindow</span><span class="params">(AttachInfo info, <span class="type">int</span> visibility)</span> &#123;</span><br><span class="line">        mAttachInfo = info;</span><br><span class="line">        <span class="keyword">if</span> (mOverlay != <span class="literal">null</span>) &#123;</span><br><span class="line">            mOverlay.getOverlayView().dispatchAttachedToWindow(info, visibility);</span><br><span class="line">        &#125;</span><br><span class="line">       ......</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>dispatchAttachedToWindow这个方法其实在ViewGroup中重载了，根据ViewGroup中代码的形式就能猜到这个过程和measure、layout、draw一模一样，就是递归调用view树，直到叶子结点。AttachInfo info这是作为一个参数传递过来的，那么就要找到第一个调用这个方法的位置，由于这东西是和window的attach相关的，那么可以肯定当把顶层view加入到window中，然后调用这个方法。具体的我们后面在进行分析。</p>
+<p>很明显，这是一个特殊的视图树观察者对象，只有当 mAttachInfo 为空时才会被使用。</p>
+<p>至此，我们成功的获取了 ViewTreeObserver 对象。</p>
+<h1 id="ViewTreeObserver使用"><a href="#ViewTreeObserver使用" class="headerlink" title="ViewTreeObserver使用"></a>ViewTreeObserver使用</h1><p>我们成功获取了 ViewTreeObserver 对象，当我们使用该 对象调用 addOnXxxListener 方法监听 View 的某个状态时，该方法总是首先调用 checkIsAlive() 方法，检测 View 的 ViewTreeObserver 对象是否存活(可用)。</p>
+<p>为什么要先去检测呢？官方文档给出的解释是：通过 View 的 getViewTreeObserver() 方法返回的 ViewTreeObserver ，在 View 的生命周期中不能保证始终有效。</p>
+<p>既然我如此，那么通过源码我们看一下 checkIsAlive() 都做了什么：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">// 代码位于：/frameworks/base/core/java/android/view/View.java</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">checkIsAlive</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!mAlive) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(</span><br><span class="line">                <span class="string">&quot;This ViewTreeObserver is not alive, call &quot;</span> + <span class="string">&quot;getViewTreeObserver() again&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>逻辑还是很简单的：如果 View 的 ViewTreeObserver 对象不可用，将抛出 IllegalStateException (非法状态异常)，并提示我们 重新调用 View 的 getViewTreeObserver() 方法获取对象。</p>
+<p>但是，我们能不能在调用 addOnXxxListener 之前，能否检测当前 View 的 ViewTreeObserver 对象是否可用呢，总不能每次等异常了才发现要去重新获取把？答案是肯定的！</p>
+<p>ViewTreeObserver 为我们提供了 isAlive() 方法，逻辑很简单，就一句代码“return mAlive”，mAlive 就是在 checkIsAlive() 方法中所判断的变量。该变量标记当前 View 的 ViewTreeObserver 对象是否可用。</p>
+<p>ViewTreeObserver 通过接口回调的方式实现观察者模式，当接收到通知后，通过接口的回调方法告知程序相应的事件发生了。在 ViewTreeObserver 中，包含了 11 个接口，对应着11中观察事件，如下图：</p>
+<p><img src="https://gitee.com/frewen1225/ImageUploader/raw/master/img/20210801154319.png" alt="image-20210801154316860"></p>
+<p>介绍完接口，下面总结一下 ViewTreeObserver 类的方法，大概分为以下四种类型。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 添加监听：</span></span><br><span class="line">addOnXxxListener(OnXxxListener)</span><br><span class="line"><span class="comment">// 移除监听：</span></span><br><span class="line">removeOnXxxListener(OnXxxListener)</span><br><span class="line"><span class="comment">// 分发事件：</span></span><br><span class="line">dispatchOnXxx()</span><br><span class="line"><span class="comment">// 其他方法：</span></span><br><span class="line">checkIsAlive()、isAlive()方法等</span><br></pre></td></tr></table></figure>
+
+<p>查看类可知，对于前面那张图所展示的每一个接口，都有与其对应的 add、remove、dispatch 方法。举个例子吧，以 OnGlobalLayoutListener（全局布局监听） 为例，那么与其对应的三类方法就是：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">addOnGlobalLayoutListener(OnGlobalLayoutListener listener);</span><br><span class="line"></span><br><span class="line">removeOnGlobalLayoutListener(OnGlobalLayoutListener victim);</span><br><span class="line"></span><br><span class="line">dispatchOnGlobalLayout();</span><br></pre></td></tr></table></figure>
+
+<p>这么说，一共有11个接口，那么与之对应的 add、remove、dispatch 方法也就分别有11个，没错，我们通过大纲查看时就是这样。这个大家自行去类中查看，或者根据上面举的例子类推一下，我就不再贴代码了。</p>
+<p>虽说 ViewTreeObserver 包含这么多方法，但是系统并没有对我们开放所有的API。我们可以验证一下，在程序代码中先通过 getViewTreeObserver() 获取 View 的 ViewTreeObserver 对象，然后使用该对象分别调用这几类方法，分别模糊匹配 add、remove 和 dispatch，然后查看IDE的智能提示。</p>
+<p>先看看调用 add 和 remove 方法：</p>
+<p><img src="https://gitee.com/frewen1225/ImageUploader/raw/master/img/20210801154520.png" alt="这里写图片描述"></p>
+<p><img src="https://gitee.com/frewen1225/ImageUploader/raw/master/img/20210801154532.png" alt="这里写图片描述"></p>
+<p>如图所示，add 和 remove 方法只分别只有8个，并没有11个。其中remove中最后一个方法removeGloableOnLayoutListener已经过时了，在 API 16 取代它的方法是removeOnGloableLayoutListener。查看removeGloableOnLayoutListener方法可知，其直接调用了removeOnGloableLayoutListener方法，功能上没区别。区别在于名字，肯定是初期方法命名不合理，后来想改，但又不能直接修改或删除。所以，在一开始就设计好一些规范，并在开发过程中按照代码规范开发，是有多重要…</p>
+<p>既然都是8个，那各自少掉的3个呢？进 ViewTreeObserver类一看，发现不让外部调用的是与OnWindowShownListener、OnComputeInternalInsetsListener、OnEnterAnimationCompleteListener接口对应的add、remove方法，这几个方法之所以在程序中无法访问，是因为被添加了 @hide标签，这是什么？</p>
+<p>@hide 意味着被其标记的方法、类或者变量，在自动生成文档时，将不会出现在API文档中对开发者开放，但是系统可以调用，这就解释了为什么我们只能访问其中8个方法了。其中有些要求对版本有要求，例如添加或移除 OnWindowAttachListener，需要 API 18 以上，而我们一版在开发时会选择最低适配 Android 4.0，也即是 API 为 14，这样一来就无法使用。</p>
+<p>其实，可以通过反射访问被 @hide 标记的域。但是不建议这么做，因为 Google 在添加该标记时解释道：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">We are not yet ready to commit to this API and support it,so @hide。</span><br></pre></td></tr></table></figure>
+
+<p>既然没有准备好提交这个API并支持他，也就意味着 Google 可能会随时修改这些方法（虽然可能性很小），所以出于保险还是不要通过反射使用的好（个人观点）。</p>
+<p>再来看看 dispatch 方法可用的有哪些：</p>
+<p><img src="https://gitee.com/frewen1225/ImageUploader/raw/master/img/20210801154711.png" alt="这里写图片描述"></p>
+<p>喔，居然只有3个！查看 ViewTreeObserver 类，发现其余8个不可访问的方法没有声明修饰符，那就是默认的 default 类型。我们知道，default 修饰的方法只能在同一包内可见，ViewTreeObserver.java 在 android.view 包下，我们在程序中显然无法访问。</p>
+<h1 id="ViewTreeObserver接口和方法"><a href="#ViewTreeObserver接口和方法" class="headerlink" title="ViewTreeObserver接口和方法"></a>ViewTreeObserver接口和方法</h1><p>我们看一下ViewTreeObserver中的接口和方法。看一下各自的作用。此处仍以 OnGlobalLayoutListener（全局布局监听） 接口对应的三个方法为例，其他接口的原理都一样，不再赘述。</p>
+<p><strong>OnGlobalLayoutListener 接口：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Interface definition for a callback to be invoked when the global layout</span></span><br><span class="line"><span class="comment"> * state or the visibility of views within the view tree changes.</span></span><br><span class="line"><span class="comment"> * 当全局布局状态或视图树中视图的可见性发生变化时调用回调的接口定义。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">OnGlobalLayoutListener</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Callback method to be invoked when the global layout state or the visibility</span></span><br><span class="line"><span class="comment">     * of views within the view tree changes</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onGlobalLayout</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>注释很精确的概括了其作用：当全局布局状态，或者视图树的子view可见性发生改变时，将调用该回调接口。</p>
+<p>该接口包含了一个回调方法 onGlobalLayout()，我们在程序中就是通过覆写该方法，实现自己的逻辑，具体使用将在实战部分介绍。</p>
+<p><strong>addOnGlobalLayoutListener 和 removeOnGlobalLayoutListener 方法</strong></p>
+<p>通过 add 方法添加一个对 view 布局发生改变的监听，传入 OnLayoutGlobalListener 接口对象，覆写接口的 onGlobalLayout() 方法，系统会将我们传入的 OnLayoutGlobalListener 存在集合中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Register a callback to be invoked when the global layout state or the</span></span><br><span class="line"><span class="comment">   * visibility of views within the view tree changes</span></span><br><span class="line"><span class="comment">   * 注册一个回调，当全局布局状态或视图树中视图的可见性改变时调用</span></span><br><span class="line"><span class="comment">   * </span></span><br><span class="line"><span class="comment">   * <span class="doctag">@param</span> listener The callback to add</span></span><br><span class="line"><span class="comment">   *</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@throws</span> IllegalStateException If &#123;<span class="doctag">@link</span> #isAlive()&#125; returns false</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addOnGlobalLayoutListener</span><span class="params">(OnGlobalLayoutListener listener)</span> &#123;</span><br><span class="line">      checkIsAlive();</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (mOnGlobalLayoutListeners == <span class="literal">null</span>) &#123;</span><br><span class="line">          mOnGlobalLayoutListeners = <span class="keyword">new</span> <span class="title class_">CopyOnWriteArray</span>&lt;OnGlobalLayoutListener&gt;();</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      mOnGlobalLayoutListeners.add(listener);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>当通过 add 监听之后，我们需要在适当的时候通过 remove 方法移除该监听，防止多次调用。通常在覆写的 onGlobalLayout() 时方法中调用 remove 方法移除监听。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Remove a previously installed global layout callback</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> victim The callback to remove</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> IllegalStateException If &#123;<span class="doctag">@link</span> #isAlive()&#125; returns false</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> #addOnGlobalLayoutListener(OnGlobalLayoutListener)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">removeOnGlobalLayoutListener</span><span class="params">(OnGlobalLayoutListener victim)</span> &#123;</span><br><span class="line">    checkIsAlive();</span><br><span class="line">    <span class="keyword">if</span> (mOnGlobalLayoutListeners == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    mOnGlobalLayoutListeners.remove(victim);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>dispatchOnGlobalLayout 方法</strong></p>
+<p>dispatch 方法一般都由系统调用，我们不需要去关心。在 dispatchOnGlobalLayout 方法中，会遍历存放 OnLayoutGlobalListener 对象的集合，然后调用 OnLayoutGlobalListener 对象的 onGlobalLayout() 方法，通知程序该事件发生了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public final void dispatchOnGlobalLayout() &#123;</span><br><span class="line">     // NOTE: because of the use of CopyOnWriteArrayList, we *must* use an iterator</span><br><span class="line">     // to</span><br><span class="line">     // perform the dispatching. The iterator is a safe guard against listeners that</span><br><span class="line">     // could mutate the list by calling the various add/remove methods. This</span><br><span class="line">     // prevents</span><br><span class="line">     // the array from being modified while we iterate it.</span><br><span class="line">     // 进行遍历所有的mOnGlobalLayoutListeners然后调用onGlobalLayout</span><br><span class="line">     final CopyOnWriteArray&lt;OnGlobalLayoutListener&gt; listeners = mOnGlobalLayoutListeners;</span><br><span class="line">     if (listeners != null &amp;&amp; listeners.size() &gt; 0) &#123;</span><br><span class="line">         CopyOnWriteArray.Access&lt;OnGlobalLayoutListener&gt; access = listeners.start();</span><br><span class="line">         try &#123;</span><br><span class="line">             int count = access.size();</span><br><span class="line">             for (int i = 0; i &lt; count; i++) &#123;</span><br><span class="line">                 access.get(i).onGlobalLayout();</span><br><span class="line">             &#125;</span><br><span class="line">         &#125; finally &#123;</span><br><span class="line">             listeners.end();</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>上述代码中存放 OnGlobalLayoutListener 的集合 CopyOnWriteArray，值得了解一下，会让你受益匪浅。本打算讲的，但限于篇幅只好作罢，感兴趣的可以上网了解一下。</p>
+<p>到目前为止，我们对 ViewTreeObserver 的认识仍停留在概念级别，终于等到了实战环节，验收自己学习成果的时刻到了。</p>
+<h1 id="调用时机"><a href="#调用时机" class="headerlink" title="调用时机"></a>调用时机</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 代码位于： framework/base/core/java/android/view/ViewRootImpl.java</span></span><br><span class="line"><span class="comment"> * 进行View的遍历</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">doTraversal</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (mTraversalScheduled) &#123;</span><br><span class="line">        mTraversalScheduled = <span class="literal">false</span>;</span><br><span class="line">        mHandler.getLooper().getQueue().removeSyncBarrier(mTraversalBarrier);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (mProfile) &#123;</span><br><span class="line">            Debug.startMethodTracing(<span class="string">&quot;ViewAncestor&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 开始执行遍历</span></span><br><span class="line">        performTraversals();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (mProfile) &#123;</span><br><span class="line">            Debug.stopMethodTracing();</span><br><span class="line">            mProfile = <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">performTraversals</span><span class="params">()</span>&#123;</span><br><span class="line">	.......</span><br><span class="line">	<span class="keyword">if</span> (mFirst) &#123;</span><br><span class="line">            mFullRedrawNeeded = <span class="literal">true</span>;</span><br><span class="line">            mLayoutRequested = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">final</span> <span class="type">Configuration</span> <span class="variable">config</span> <span class="operator">=</span> mContext.getResources().getConfiguration();</span><br><span class="line">            <span class="keyword">if</span> (shouldUseDisplaySize(lp)) &#123;</span><br><span class="line">	            ......</span><br><span class="line">	            <span class="comment">//host就是顶层view，即decorview</span></span><br><span class="line">                host.dispatchAttachedToWindow(mAttachInfo, <span class="number">0</span>);</span><br><span class="line">                ......</span><br><span class="line">             &#125;</span><br><span class="line">             ......</span><br><span class="line">             <span class="comment">//启动测量</span></span><br><span class="line">             performMeasure(childWidthMeasureSpec, childHeightMeasureSpec);</span><br><span class="line">             ......</span><br><span class="line">             <span class="comment">//启动layout</span></span><br><span class="line">             performLayout(lp, mWidth, mHeight);</span><br><span class="line">             ......</span><br><span class="line">             </span><br><span class="line">             <span class="comment">// 开始调用mAttachInfo.mTreeObserver.dispatchOnGlobalLayout()</span></span><br><span class="line">             <span class="keyword">if</span> (triggerGlobalLayoutListener) &#123;</span><br><span class="line">            	mAttachInfo.mRecomputeGlobalAttributes = <span class="literal">false</span>;</span><br><span class="line">            	mAttachInfo.mTreeObserver.dispatchOnGlobalLayout();</span><br><span class="line">            &#125;</span><br><span class="line">            .......</span><br><span class="line">            <span class="comment">// 开始调用mTreeObserver.dispatchOnPreDraw()</span></span><br><span class="line">            <span class="type">boolean</span> <span class="variable">cancelDraw</span> <span class="operator">=</span> mAttachInfo.mTreeObserver.dispatchOnPreDraw() || !isViewVisible;</span><br><span class="line">            ........</span><br><span class="line">            performDraw();</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>从上面的流程已经非常清楚整个过程了，首先dcrorview调用dispatchAttachedToWindow，将AttachInfo这个参数一直传递下去，使得整个view树中其实只有一个AttachInfo对象，然后measure、layout，接着就调用我们设置的监听了，因为是在layout之后，所有我们可以得到正确的宽高.</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://www.frewen.wang">Frewen.Wang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://www.frewen.wang/2022/01/05/01.AuraTechNotes/04.Android/09.Android%E4%B9%8BView%E7%B1%BB%E5%AD%A6%E4%B9%A0/03.View%E7%B1%BB%E7%9A%84%E7%9B%B8%E5%85%B3%E6%96%B9%E6%B3%95%E5%AD%A6%E4%B9%A0/08.Android%E7%9A%84View%E4%B9%8BViewTreeObserver%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/">http://www.frewen.wang/2022/01/05/01.AuraTechNotes/04.Android/09.Android%E4%B9%8BView%E7%B1%BB%E5%AD%A6%E4%B9%A0/03.View%E7%B1%BB%E7%9A%84%E7%9B%B8%E5%85%B3%E6%96%B9%E6%B3%95%E5%AD%A6%E4%B9%A0/08.Android%E7%9A%84View%E4%B9%8BViewTreeObserver%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://www.frewen.wang" target="_blank">麦溪·在路上</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Android/">Android</a><a class="post-meta__tags" href="/tags/View%E6%9C%BA%E5%88%B6/">View机制</a><a class="post-meta__tags" href="/tags/%E6%B8%B2%E6%9F%93%E6%9C%BA%E5%88%B6/">渲染机制</a></div><div class="post_share"><div class="social-share" data-image="/img/frewen_tech.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat_square.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat_square.jpg" alt="微信打赏"/></a><div class="post-qr-code-desc">微信打赏</div></li><li class="reward-item"><a href="/img/alipay_square.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay_square.jpg" alt="支付宝打赏"/></a><div class="post-qr-code-desc">支付宝打赏</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/01/05/01.AuraTechNotes/04.Android/09.Android%E4%B9%8BView%E7%B1%BB%E5%AD%A6%E4%B9%A0/02.Android%E4%B9%8BView%E7%9A%84%E5%9D%90%E6%A0%87%E7%B3%BB%E7%9B%B8%E5%85%B3%E5%AD%A6%E4%B9%A0/01.Android%E4%B9%8BView%E7%9A%84%E5%9D%90%E6%A0%87%E7%B3%BB%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" title="Android之View的坐标系基础知识"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Android之View的坐标系基础知识</div></div></a></div><div class="next-post pull-right"><a href="/2022/01/05/01.AuraTechNotes/04.Android/09.Android%E4%B9%8BView%E7%B1%BB%E5%AD%A6%E4%B9%A0/01.Android%E4%B9%8BView%E7%BB%98%E5%88%B6%E7%9A%84%E6%B5%81%E7%A8%8B/05.Android%E4%B9%8BView%E7%BB%98%E5%88%B6%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90%E4%B9%8Binvalidate%E5%92%8CpostInvalidate/" title="Android之View绘制深度解析之invalidate和postInvalidate"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Android之View绘制深度解析之invalidate和postInvalidate</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/01/05/01.AuraTechNotes/04.Android/09.Android%E4%B9%8BView%E7%B1%BB%E5%AD%A6%E4%B9%A0/01.Android%E4%B9%8BView%E7%BB%98%E5%88%B6%E7%9A%84%E6%B5%81%E7%A8%8B/01.Android%E4%B9%8BView%E7%BB%98%E5%88%B6%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/" title="Android之View绘制深度解析之工作原理探究"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-05</div><div class="title">Android之View绘制深度解析之工作原理探究</div></div></a></div><div><a href="/2022/01/05/01.AuraTechNotes/04.Android/09.Android%E4%B9%8BView%E7%B1%BB%E5%AD%A6%E4%B9%A0/01.Android%E4%B9%8BView%E7%BB%98%E5%88%B6%E7%9A%84%E6%B5%81%E7%A8%8B/04.Android%E4%B9%8BView%E7%BB%98%E5%88%B6%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90%E4%B9%8BDraw%E6%B5%81%E7%A8%8B/" title="Android之View绘制深度解析之Draw流程"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-05</div><div class="title">Android之View绘制深度解析之Draw流程</div></div></a></div><div><a href="/2022/01/05/01.AuraTechNotes/04.Android/09.Android%E4%B9%8BView%E7%B1%BB%E5%AD%A6%E4%B9%A0/01.Android%E4%B9%8BView%E7%BB%98%E5%88%B6%E7%9A%84%E6%B5%81%E7%A8%8B/06.Android%E4%B9%8BView%E7%BB%98%E5%88%B6%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90%E4%B9%8BrequestLayout/" title="Android之View绘制深度解析之requestLayout"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-05</div><div class="title">Android之View绘制深度解析之requestLayout</div></div></a></div><div><a href="/2022/01/05/01.AuraTechNotes/04.Android/09.Android%E4%B9%8BView%E7%B1%BB%E5%AD%A6%E4%B9%A0/01.Android%E4%B9%8BView%E7%BB%98%E5%88%B6%E7%9A%84%E6%B5%81%E7%A8%8B/12.%E9%9D%A2%E8%AF%95%E9%A2%98-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E8%83%BD%E5%9C%A8%E5%AD%90%E7%BA%BF%E7%A8%8B%E6%9B%B4%E6%96%B0UI/" title="面试题-为什么不能在子线程更新UI"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-05</div><div class="title">面试题-为什么不能在子线程更新UI</div></div></a></div><div><a href="/2022/01/05/01.AuraTechNotes/04.Android/09.Android%E4%B9%8BView%E7%B1%BB%E5%AD%A6%E4%B9%A0/01.Android%E4%B9%8BView%E7%BB%98%E5%88%B6%E7%9A%84%E6%B5%81%E7%A8%8B/05.Android%E4%B9%8BView%E7%BB%98%E5%88%B6%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90%E4%B9%8Binvalidate%E5%92%8CpostInvalidate/" title="Android之View绘制深度解析之invalidate和postInvalidate"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-05</div><div class="title">Android之View绘制深度解析之invalidate和postInvalidate</div></div></a></div><div><a href="/2022/01/05/01.AuraTechNotes/04.Android/09.Android%E4%B9%8BView%E7%B1%BB%E5%AD%A6%E4%B9%A0/04.Android%E4%B9%8BView%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%9C%BA%E5%88%B6%E5%AD%A6%E4%B9%A0/01.View%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%9C%BA%E5%88%B6%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/" title="View事件分发机制基础学习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-05</div><div class="title">View事件分发机制基础学习</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Valine</span><span id="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/frewen_tech.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Frewen.Wang</div><div class="author-info__description">在青麦地上跑着,雪和太阳的光芒</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">858</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">146</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/FrewenWang"><i class="fab fa-github"></i><span>关注我</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/FrewenWang" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:frewen1225@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://plus.google.com/FrewenWong" target="_blank" title="Google"><i class="fa-brands fa-google"></i></a><a class="social-icon" href="https://twitter.com/FrewenWong" target="_blank" title="Twitter"><i class="fa-brands fa-twitter"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ViewTreeObserver%E8%AF%B4%E6%98%8E"><span class="toc-number">2.</span> <span class="toc-text">ViewTreeObserver说明</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ViewTreeObserver%E4%BD%BF%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">ViewTreeObserver使用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ViewTreeObserver%E6%8E%A5%E5%8F%A3%E5%92%8C%E6%96%B9%E6%B3%95"><span class="toc-number">4.</span> <span class="toc-text">ViewTreeObserver接口和方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B0%83%E7%94%A8%E6%97%B6%E6%9C%BA"><span class="toc-number">5.</span> <span class="toc-text">调用时机</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/28/01.AuraTechNotes/09.Python/12.python%E7%9A%84pycharm%E7%9A%84%E4%BD%BF%E7%94%A8/01.pycharm%E7%9A%84%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="无题">无题</a><time datetime="2023-07-28T11:06:28.000Z" title="发表于 2023-07-28 19:06:28">2023-07-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/27/01.AuraTechNotes/09.Python/11.python%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/01.python%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="无题">无题</a><time datetime="2023-07-27T02:02:00.000Z" title="发表于 2023-07-27 10:02:00">2023-07-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/20/01.AuraTechNotes/16.Linux/01.Linux%E4%B9%8B%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85/01.%E5%9F%BA%E4%BA%8EWindows11%E5%AE%89%E8%A3%85Ubuntu%E5%8F%8C%E7%B3%BB%E7%BB%9F/" title="基于Windows11安装Ubuntu双系统">基于Windows11安装Ubuntu双系统</a><time datetime="2023-07-19T16:00:00.000Z" title="发表于 2023-07-20 00:00:00">2023-07-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/17/01.AuraTechNotes/09.Python/01.python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E5%AD%A6%E4%B9%A0/12.%E6%90%AD%E5%BB%BAbaidu%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" title="无题">无题</a><time datetime="2023-07-17T12:35:38.000Z" title="发表于 2023-07-17 20:35:38">2023-07-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/06/13/01.AuraTechNotes/20.AILearning/06.%E6%B7%B1%E5%BA%A6%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E9%87%8F%E5%8C%96%E5%8A%A0%E9%80%9F/08.QNN%E6%8E%A8%E7%90%86%E9%87%8F%E5%8C%96%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" title="无题">无题</a><time datetime="2023-06-13T14:28:06.000Z" title="发表于 2023-06-13 22:28:06">2023-06-13</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By Frewen.Wang</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const initValine = () => {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  const loadValine = async () => {
+    if (typeof Valine === 'function') initValine()
+    else {
+      await getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js')
+      initValine()
+    }
+  }
+
+  if ('Valine' === 'Valine' || !false) {
+    if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+    else setTimeout(loadValine, 0)
+  } else {
+    window.loadOtherComment = loadValine
+  }
+})()</script><script>(() => {
+  const disqus_config = function () {
+    this.page.url = 'http://www.frewen.wang/2022/01/05/01.AuraTechNotes/04.Android/09.Android%E4%B9%8BView%E7%B1%BB%E5%AD%A6%E4%B9%A0/03.View%E7%B1%BB%E7%9A%84%E7%9B%B8%E5%85%B3%E6%96%B9%E6%B3%95%E5%AD%A6%E4%B9%A0/08.Android%E7%9A%84View%E4%B9%8BViewTreeObserver%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/'
+    this.page.identifier = '/2022/01/05/01.AuraTechNotes/04.Android/09.Android%E4%B9%8BView%E7%B1%BB%E5%AD%A6%E4%B9%A0/03.View%E7%B1%BB%E7%9A%84%E7%9B%B8%E5%85%B3%E6%96%B9%E6%B3%95%E5%AD%A6%E4%B9%A0/08.Android%E7%9A%84View%E4%B9%8BViewTreeObserver%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/'
+    this.page.title = 'Android的View之ViewTreeObserver源码解析'
+  }
+
+  const disqusReset = () => {
+    window.DISQUS && window.DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addGlobalFn('themeChange', disqusReset, 'disqus')
+
+  const loadDisqus = () =>{
+    if (window.DISQUS) disqusReset()
+    else {
+      const script = document.createElement('script')
+      script.src = 'https://.disqus.com/embed.js'
+      script.setAttribute('data-timestamp', +new Date())
+      document.head.appendChild(script)
+    }
+  }
+
+  const getCount = async() => {
+    try {
+      const eleGroup = document.querySelector('#post-meta .disqus-comment-count')
+      if (!eleGroup) return
+      const cleanedLinks = eleGroup.href.replace(/#post-comment$/, '')
+
+      const res = await fetch(`https://disqus.com/api/3.0/threads/set.json?forum=&api_key=&thread:link=${cleanedLinks}`,{
+        method: 'GET'
+      })
+      const result = await res.json()
+
+      const count = result.response.length ? result.response[0].posts : 0
+      eleGroup.textContent = count
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  if ('Valine' === 'Disqus' || !false) {
+    if (false) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+    else {
+      loadDisqus()
+      GLOBAL_CONFIG_SITE.isPost && getCount()
+    }
+  } else {
+    window.loadOtherComment = loadDisqus
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

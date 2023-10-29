@@ -1,0 +1,283 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Jni学习之Java调用C++的代码 | 麦溪·在路上</title><meta name="author" content="Frewen.Wang"><meta name="copyright" content="Frewen.Wang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="[TOC] 概述当执行一个 Java 的 native 方法时，虚拟机是怎么知道该调用 so 中的哪个方法呢？ 我们肯定是要简历一个上层Java和底层C++的一个方法调用关系的映射。那么这个映射关系就是JNI开发中的方法注册。通过方法注册将指定的 native 方法和 so 中对应的方法绑定起来（函"><link rel="shortcut icon" href="/img/frewen_tech.png"><link rel="canonical" href="http://www.frewen.wang/2022/01/05/01.AuraTechNotes/04.Android/21.Android%E4%B9%8BNative%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF/01.Android%E4%B9%8BJNI%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/03.Jni%E5%AD%A6%E4%B9%A0%E4%B9%8BJava%E8%B0%83%E7%94%A8C++%E7%9A%84%E4%BB%A3%E7%A0%81/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script async="async" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: '',
+  enable_page_level_ads: 'true'
+});</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Jni学习之Java调用C++的代码',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-01-05 00:00:00'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/frewen_tech.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">858</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">146</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 文章标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 文章归类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 文章列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/page_img.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="麦溪·在路上"><span class="site-name">麦溪·在路上</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 文章标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 文章归类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 文章列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Jni学习之Java调用C++的代码</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-01-04T16:00:00.000Z" title="发表于 2022-01-05 00:00:00">2022-01-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-01-04T16:00:00.000Z" title="更新于 2022-01-05 00:00:00">2022-01-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>6分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Jni学习之Java调用C++的代码"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2022/01/05/01.AuraTechNotes/04.Android/21.Android%E4%B9%8BNative%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF/01.Android%E4%B9%8BJNI%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/03.Jni%E5%AD%A6%E4%B9%A0%E4%B9%8BJava%E8%B0%83%E7%94%A8C++%E7%9A%84%E4%BB%A3%E7%A0%81/#post-comment" itemprop="discussionUrl"><span class="valine-comment-count" data-xid="/2022/01/05/01.AuraTechNotes/04.Android/21.Android%E4%B9%8BNative%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF/01.Android%E4%B9%8BJNI%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/03.Jni%E5%AD%A6%E4%B9%A0%E4%B9%8BJava%E8%B0%83%E7%94%A8C++%E7%9A%84%E4%BB%A3%E7%A0%81/" itemprop="commentCount"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>[TOC]</p>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>当执行一个 Java 的 native 方法时，虚拟机是怎么知道该调用 so 中的哪个方法呢？</p>
+<p>我们肯定是要简历一个上层Java和底层C++的一个方法调用关系的映射。那么这个映射关系就是JNI开发中的方法注册。通过方法注册将指定的 native 方法和 so 中对应的方法绑定起来（函数映射表），这样就能够找到相应的方法了。</p>
+<h1 id="JNI用法"><a href="#JNI用法" class="headerlink" title="JNI用法"></a>JNI用法</h1><p>为了使用JNI，在调用本地方法前必须把C&#x2F;C++代码所在的动态库装载到进程的内存空间中。装载库文件调用的是System类的LoadLibrary()方法，原型如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="type">static</span> <span class="type">void</span> <span class="title">loadLibrary</span><span class="params">(String libName)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>loadLibrary()方法的参数是动态库文件名称的一部分。Android JNI动态库的名称必须以“lib”开头，这里传入的参数是去掉前缀“lib”，以及后缀“.so”的中间部分。例如，库文件名是libhello-jni.so，装载库的语句要写成loadLibrary(“hello-jni “)。这里为什么不使用全文件名呢？JNI原本是Java的产物，Java希望代码能跨平台使用，不同平台动态库的后缀并不一样，例如，Linux下是．so, windwos下是．dll。因此，为了适应不同的平台，这里传入的参数去掉了和系统相关的部分。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 加载loadLibrary</span></span><br><span class="line"><span class="comment">  * 用于在应用程序启动时加载“ hello-jni”库。</span></span><br><span class="line"><span class="comment">  * 用于在应用程序启动时加载&quot;dynamic-register-jni&quot;库。</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="type">static</span> &#123;</span><br><span class="line">  System.<span class="built_in">loadLibrary</span>(<span class="string">&quot;dynamic-register-jni&quot;</span>);</span><br><span class="line">  System.<span class="built_in">loadLibrary</span>(<span class="string">&quot;hello-jni&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用loadLibrary()方法不需要指定库文件所在的路径，Android会在几个系统目录下查找动态库。</p>
+<p>为了保证调用native方法前所需要的动态库已经加载，loadLibrary()的调用位置一般是放在类的static块中，这样进程初始化时就能执行装载语句了。</p>
+<p>JNI开发注册分为 <strong>静态注册</strong> 和 <strong>动态注册</strong> 两种。默认的实现方式即静态注册。</p>
+<h1 id="方法注册"><a href="#方法注册" class="headerlink" title="方法注册"></a>方法注册</h1><h2 id="静态注册"><a href="#静态注册" class="headerlink" title="静态注册"></a>静态注册</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>通过 JNIEXPORT 和 JNICALL 两个宏定义声明，在虚拟机加载 so 时发现上面两个宏定义的函数时就会链接到对应的 native 方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 加载loadLibrary</span></span><br><span class="line"><span class="comment"> * 用于在应用程序启动时加载“ hello-jni”库。</span></span><br><span class="line"><span class="comment"> * 用于在应用程序启动时加载&quot;dynamic-register-jni&quot;库。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">static</span> &#123;</span><br><span class="line">    System.loadLibrary(<span class="string">&quot;dynamic-register-jni&quot;</span>);</span><br><span class="line">    System.loadLibrary(<span class="string">&quot;hello-jni&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们在上层Java的文件中创建一个Native的方法声明。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * A native method that is implemented by the &#x27;hello-jni&#x27; native library,</span></span><br><span class="line"><span class="comment"> * which is packaged with this application.</span></span><br><span class="line"><span class="comment"> * 创建本地方法，标记这个一个C或者C++方法</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">native</span> String <span class="title function_">stringFromJNI</span><span class="params">()</span>;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以让Android Studio来自动帮我们生成一个stringFromJNIJni里面的方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ==============================Java调用C++的方法=================================================</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Java虚拟机调用Native方法，会传入两个对象</span></span><br><span class="line"><span class="comment"> * 命名规则：Java_包名_类名_方法名</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> env</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">extern <span class="string">&quot;C&quot;</span>   <span class="comment">//添加这句话表示我们想让这个方法按照C编译的方法进行编译</span></span><br><span class="line">JNIEXPORT jstring JNICALL   <span class="comment">//</span></span><br><span class="line">Java_com_frewen_android_demo_logic_samples_jni_HelloJNIActivity_stringFromJNI(JNIEnv *env,</span><br><span class="line">                                                                              jobject <span class="comment">/* this */</span>) &#123;</span><br><span class="line">    <span class="comment">// 实例化一个Hello的字符串</span></span><br><span class="line">    <span class="comment">// std::string hello = &quot;Hello from C++&quot;;</span></span><br><span class="line">    <span class="comment">// 我们这个HelloJni和Native的People关联之后，我们就可以访问C++的代码</span></span><br><span class="line">    People people;</span><br><span class="line">    <span class="keyword">return</span> env-&gt;NewStringUTF(people.getStringMsg().c_str());</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Java虚拟机调用 Native 方法，会传入两个对象。分别是JNIEnv的指针对象。还有一个是jobject对象。这两个对象我们后面再讲。</p>
+<p>我们先说一下，Android Studio 帮我们生成这个静态注册的Native层的JNI方法。这个方法遵循一个的命名规则。</p>
+<p><strong>Java_包名_类名_方法名</strong></p>
+<p>其中使用下划线将每部分隔开，包名也使用下划线隔开，如果名称中本来就包含下划线，将使用下划线加数字替换。</p>
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li>简单明了</li>
+</ul>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>必须遵循注册规则</li>
+<li>名字过长</li>
+<li>运行时去找效率不高</li>
+</ul>
+<h2 id="动态注册"><a href="#动态注册" class="headerlink" title="动态注册"></a>动态注册</h2><h3 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h3><p>通过 RegisterNatives 方法手动完成 native 方法和 so 中的方法的绑定，这样虚拟机就可以通过这个函数映射表直接找到相应的方法了。</p>
+<p>还是上面的方法。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * A native method that is implemented by the &#x27;hello-jni&#x27; native library,</span><br><span class="line"> * which is packaged with this application.</span><br><span class="line"> * 创建本地方法，标记这个一个C或者C++方法</span><br><span class="line"> */</span><br><span class="line">public native String stringFromJNI();</span><br><span class="line"></span><br><span class="line">public native String stringFromJNI2(String msg);</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="JNI-OnLoad-方法"><a href="#JNI-OnLoad-方法" class="headerlink" title="JNI_OnLoad 方法"></a>JNI_OnLoad 方法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">JNIEXPORT <span class="type">int</span> <span class="title function_">JNI_OnLoad</span><span class="params">(JavaVM *vm, <span class="keyword">void</span> *revered)</span> &#123;</span><br><span class="line">    <span class="comment">// env我们可以理解为一个函数表，通过他我们可以调用jni中为我们提供的所有的函数</span></span><br><span class="line">    JNIEnv *env = NULL;</span><br><span class="line">    <span class="comment">// Jni中，如果调用成功的话，我们就认为是JNI_OK。也就是为0</span></span><br><span class="line">    <span class="comment">// 这个VM是一个指针，我们通过这个VM指针调用他的GetEnv方法</span></span><br><span class="line">    <span class="keyword">if</span> (vm-&gt;GetEnv((<span class="keyword">void</span> **) &amp;env, JNI_VERSION_1_6) != JNI_OK) &#123;</span><br><span class="line">        <span class="keyword">return</span> JNI_FALSE;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 方法映射表的注册，就是把我们的方法注册到系统中去</span></span><br><span class="line">    <span class="comment">// </span></span><br><span class="line">    registerNativeMethods(env, JNI_CLASS_PATH, g_methods, sizeof(g_methods) / sizeof(g_methods[<span class="number">0</span>]));</span><br><span class="line">    <span class="comment">// LOG_D(&quot;JNI Native Methods Load Success&quot;)</span></span><br><span class="line">    <span class="comment">// TODO 这里为什么要返回JNI使用的版本</span></span><br><span class="line">    <span class="keyword">return</span> JNI_VERSION_1_6;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们看到代码第10行。调用 registerNativeMethods 的方法进行方法映射表的注册，就是把我们的方法注册到系统中去。</p>
+<h3 id="registerNativeMethods方法"><a href="#registerNativeMethods方法" class="headerlink" title="registerNativeMethods方法"></a>registerNativeMethods方法</h3><p><strong>定义：</strong> jint RegisterNatives(jclass clazz, const JNINativeMethod* methods, jint nMethods)</p>
+<p><strong>参数：</strong></p>
+<ul>
+<li>clazz：指定的类，即 native 方法所属的类</li>
+<li>methods：方法数组，这里需要了解一下 JNINativeMethod 结构体</li>
+<li>nMethods：方法数组的长度</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义JNI的Class的Path的字符串宏.后续我们再看看这个字符串宏是怎么生成的？？</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> JNI_CLASS_PATH <span class="string">&quot;com/frewen/android/demo/logic/samples/jni/HelloJNIActivity&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 通过signature来机型JNI函数的动态注册。</span></span><br><span class="line"><span class="comment"> * 什么是signature??</span></span><br><span class="line"><span class="comment"> * Java与C或者C++相互调用的时候的表示函数的参数的描述符</span></span><br><span class="line"><span class="comment"> * 输入参数放在括号()中,输出参数放在括号外边</span></span><br><span class="line"><span class="comment"> * 多个参数之前顺序存放，使用分号隔开</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 原始类型的Signature</span></span><br><span class="line"><span class="comment"> * boolean      Z</span></span><br><span class="line"><span class="comment"> * byte         B</span></span><br><span class="line"><span class="comment"> * char         C</span></span><br><span class="line"><span class="comment"> * short        S</span></span><br><span class="line"><span class="comment"> * int          I</span></span><br><span class="line"><span class="comment"> * long         L</span></span><br><span class="line"><span class="comment"> * float        F</span></span><br><span class="line"><span class="comment"> * double       D</span></span><br><span class="line"><span class="comment"> * void         V</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 类的Signature</span></span><br><span class="line"><span class="comment"> * Java对象参数 &quot;L包路径/类名&quot;  举例：(Ljava/lang/String;)Ljava/lang/String;</span></span><br><span class="line"><span class="comment"> * Java数组    &quot;[&quot;   举例：([Student;)[Lstudent;  -&gt; Student[]  Xxx(Student[])</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">static</span> JNINativeMethod g_methods[] = &#123;</span><br><span class="line">        &#123;</span><br><span class="line">                <span class="string">&quot;nativeAddVariable&quot;</span>,           <span class="comment">//Java中函数名</span></span><br><span class="line">                <span class="string">&quot;(II)I&quot;</span>,                    <span class="comment">// 方法输入参数是两个int所以是II 返回值是int 所以是I</span></span><br><span class="line">                (<span class="type">void</span> *) nativeAddVariable            <span class="comment">// Native的函数名称的函数指针，和Java中的函数名不需要一一对应</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">                <span class="string">&quot;getDynamicMsg&quot;</span>,           <span class="comment">//Java中函数名</span></span><br><span class="line">                <span class="comment">//这个方法输入参数为空。输出参数是String对象所以是：Ljava/lang/String;</span></span><br><span class="line">                <span class="string">&quot;()Ljava/lang/String;&quot;</span>,</span><br><span class="line">                (<span class="type">void</span> *) getDynamicMsg</span><br><span class="line">        &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="JNINativeMethod："><a href="#JNINativeMethod：" class="headerlink" title="JNINativeMethod："></a><strong>JNINativeMethod：</strong></h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    <span class="type">const</span> <span class="type">char</span>* name; <span class="comment">// native 的方法名</span></span><br><span class="line">    <span class="type">const</span> <span class="type">char</span>* signature; <span class="comment">// 方法签名，例如 ()Ljava/lang/String;</span></span><br><span class="line">    <span class="type">void</span>*       fnPtr; <span class="comment">// 函数指针</span></span><br><span class="line">&#125; JNINativeMethod;</span><br></pre></td></tr></table></figure>
+
+<p><strong>返回值：</strong>成功则返回 JNI_OK (0)，失败则返回一个负值。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://www.frewen.wang">Frewen.Wang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://www.frewen.wang/2022/01/05/01.AuraTechNotes/04.Android/21.Android%E4%B9%8BNative%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF/01.Android%E4%B9%8BJNI%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/03.Jni%E5%AD%A6%E4%B9%A0%E4%B9%8BJava%E8%B0%83%E7%94%A8C++%E7%9A%84%E4%BB%A3%E7%A0%81/">http://www.frewen.wang/2022/01/05/01.AuraTechNotes/04.Android/21.Android%E4%B9%8BNative%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF/01.Android%E4%B9%8BJNI%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/03.Jni%E5%AD%A6%E4%B9%A0%E4%B9%8BJava%E8%B0%83%E7%94%A8C++%E7%9A%84%E4%BB%A3%E7%A0%81/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://www.frewen.wang" target="_blank">麦溪·在路上</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Android/">Android</a><a class="post-meta__tags" href="/tags/Native%E5%BC%80%E5%8F%91/">Native开发</a><a class="post-meta__tags" href="/tags/JNI/">JNI</a></div><div class="post_share"><div class="social-share" data-image="/img/frewen_tech.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat_square.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat_square.jpg" alt="微信打赏"/></a><div class="post-qr-code-desc">微信打赏</div></li><li class="reward-item"><a href="/img/alipay_square.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay_square.jpg" alt="支付宝打赏"/></a><div class="post-qr-code-desc">支付宝打赏</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/01/05/01.AuraTechNotes/04.Android/21.Android%E4%B9%8BNative%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF/01.Android%E4%B9%8BJNI%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/04.Jni%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/" title="Jni学习之基础数据类型转换"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Jni学习之基础数据类型转换</div></div></a></div><div class="next-post pull-right"><a href="/2022/01/05/01.AuraTechNotes/04.Android/21.Android%E4%B9%8BNative%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF/01.Android%E4%B9%8BJNI%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/08.JNI%E5%AD%A6%E4%B9%A0%E4%B9%8B%E8%AE%BF%E9%97%AE%E6%95%B0%E6%8D%AE%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/" title="JNI学习之访问数据基础学习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">JNI学习之访问数据基础学习</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/01/05/01.AuraTechNotes/04.Android/21.Android%E4%B9%8BNative%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF/01.Android%E4%B9%8BJNI%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/02.Android%E4%B9%8BJNI%E5%AD%A6%E4%B9%A0%E4%B9%8BCMake%E7%BC%96%E8%AF%91%E5%9F%BA%E7%A1%80/" title="Android之JNI学习之CMake编译基础"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-05</div><div class="title">Android之JNI学习之CMake编译基础</div></div></a></div><div><a href="/2022/01/05/01.AuraTechNotes/04.Android/21.Android%E4%B9%8BNative%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF/01.Android%E4%B9%8BJNI%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/01.JNI%E5%AD%A6%E4%B9%A0%E4%B9%8BAndroid%20Studio%E9%9B%86%E6%88%90C++%E4%BB%A3%E7%A0%81/" title="Jni学习之Android Studio集成C++代码"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-05</div><div class="title">Jni学习之Android Studio集成C++代码</div></div></a></div><div><a href="/2022/01/05/01.AuraTechNotes/04.Android/21.Android%E4%B9%8BNative%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF/01.Android%E4%B9%8BJNI%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/04.Jni%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/" title="Jni学习之基础数据类型转换"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-05</div><div class="title">Jni学习之基础数据类型转换</div></div></a></div><div><a href="/2022/01/05/01.AuraTechNotes/04.Android/21.Android%E4%B9%8BNative%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF/01.Android%E4%B9%8BJNI%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/08.JNI%E5%AD%A6%E4%B9%A0%E4%B9%8B%E8%AE%BF%E9%97%AE%E6%95%B0%E6%8D%AE%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/" title="JNI学习之访问数据基础学习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-05</div><div class="title">JNI学习之访问数据基础学习</div></div></a></div><div><a href="/2022/01/05/01.AuraTechNotes/04.Android/21.Android%E4%B9%8BNative%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF/01.Android%E4%B9%8BJNI%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/05.JNI%E5%AD%A6%E4%B9%A0%E4%B9%8BC++%E8%B0%83%E7%94%A8Java%E5%B1%82%E7%9A%84%E4%BB%A3%E7%A0%81/" title="JNI学习之C++调用Java层的代码"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-05</div><div class="title">JNI学习之C++调用Java层的代码</div></div></a></div><div><a href="/2022/01/05/01.AuraTechNotes/04.Android/21.Android%E4%B9%8BNative%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF/01.Android%E4%B9%8BJNI%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/12.JNI%E5%AD%A6%E4%B9%A0%E4%B9%8BJNI%E7%8E%AF%E5%A2%83%E7%9A%84%E5%9F%BA%E7%A1%80/" title="JNI学习之JNI环境的基础"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-05</div><div class="title">JNI学习之JNI环境的基础</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Valine</span><span id="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/frewen_tech.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Frewen.Wang</div><div class="author-info__description">在青麦地上跑着,雪和太阳的光芒</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">858</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">146</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/FrewenWang"><i class="fab fa-github"></i><span>关注我</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/FrewenWang" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:frewen1225@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://plus.google.com/FrewenWong" target="_blank" title="Google"><i class="fa-brands fa-google"></i></a><a class="social-icon" href="https://twitter.com/FrewenWong" target="_blank" title="Twitter"><i class="fa-brands fa-twitter"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JNI%E7%94%A8%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">JNI用法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E6%B3%A8%E5%86%8C"><span class="toc-number">3.</span> <span class="toc-text">方法注册</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E6%B3%A8%E5%86%8C"><span class="toc-number">3.1.</span> <span class="toc-text">静态注册</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89"><span class="toc-number">3.1.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E7%82%B9"><span class="toc-number">3.1.2.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%BA%E7%82%B9"><span class="toc-number">3.1.3.</span> <span class="toc-text">缺点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E6%B3%A8%E5%86%8C"><span class="toc-number">3.2.</span> <span class="toc-text">动态注册</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89-1"><span class="toc-number">3.2.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JNI-OnLoad-%E6%96%B9%E6%B3%95"><span class="toc-number">3.2.2.</span> <span class="toc-text">JNI_OnLoad 方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#registerNativeMethods%E6%96%B9%E6%B3%95"><span class="toc-number">3.2.3.</span> <span class="toc-text">registerNativeMethods方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JNINativeMethod%EF%BC%9A"><span class="toc-number">3.2.4.</span> <span class="toc-text">JNINativeMethod：</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/28/01.AuraTechNotes/09.Python/12.python%E7%9A%84pycharm%E7%9A%84%E4%BD%BF%E7%94%A8/01.pycharm%E7%9A%84%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="无题">无题</a><time datetime="2023-07-28T11:06:28.000Z" title="发表于 2023-07-28 19:06:28">2023-07-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/27/01.AuraTechNotes/09.Python/11.python%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/01.python%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="无题">无题</a><time datetime="2023-07-27T02:02:00.000Z" title="发表于 2023-07-27 10:02:00">2023-07-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/20/01.AuraTechNotes/16.Linux/01.Linux%E4%B9%8B%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85/01.%E5%9F%BA%E4%BA%8EWindows11%E5%AE%89%E8%A3%85Ubuntu%E5%8F%8C%E7%B3%BB%E7%BB%9F/" title="基于Windows11安装Ubuntu双系统">基于Windows11安装Ubuntu双系统</a><time datetime="2023-07-19T16:00:00.000Z" title="发表于 2023-07-20 00:00:00">2023-07-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/17/01.AuraTechNotes/09.Python/01.python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E5%AD%A6%E4%B9%A0/12.%E6%90%AD%E5%BB%BAbaidu%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" title="无题">无题</a><time datetime="2023-07-17T12:35:38.000Z" title="发表于 2023-07-17 20:35:38">2023-07-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/06/13/01.AuraTechNotes/20.AILearning/06.%E6%B7%B1%E5%BA%A6%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E9%87%8F%E5%8C%96%E5%8A%A0%E9%80%9F/08.QNN%E6%8E%A8%E7%90%86%E9%87%8F%E5%8C%96%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" title="无题">无题</a><time datetime="2023-06-13T14:28:06.000Z" title="发表于 2023-06-13 22:28:06">2023-06-13</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By Frewen.Wang</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const initValine = () => {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  const loadValine = async () => {
+    if (typeof Valine === 'function') initValine()
+    else {
+      await getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js')
+      initValine()
+    }
+  }
+
+  if ('Valine' === 'Valine' || !false) {
+    if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+    else setTimeout(loadValine, 0)
+  } else {
+    window.loadOtherComment = loadValine
+  }
+})()</script><script>(() => {
+  const disqus_config = function () {
+    this.page.url = 'http://www.frewen.wang/2022/01/05/01.AuraTechNotes/04.Android/21.Android%E4%B9%8BNative%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF/01.Android%E4%B9%8BJNI%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/03.Jni%E5%AD%A6%E4%B9%A0%E4%B9%8BJava%E8%B0%83%E7%94%A8C++%E7%9A%84%E4%BB%A3%E7%A0%81/'
+    this.page.identifier = '/2022/01/05/01.AuraTechNotes/04.Android/21.Android%E4%B9%8BNative%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF/01.Android%E4%B9%8BJNI%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/03.Jni%E5%AD%A6%E4%B9%A0%E4%B9%8BJava%E8%B0%83%E7%94%A8C++%E7%9A%84%E4%BB%A3%E7%A0%81/'
+    this.page.title = 'Jni学习之Java调用C++的代码'
+  }
+
+  const disqusReset = () => {
+    window.DISQUS && window.DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addGlobalFn('themeChange', disqusReset, 'disqus')
+
+  const loadDisqus = () =>{
+    if (window.DISQUS) disqusReset()
+    else {
+      const script = document.createElement('script')
+      script.src = 'https://.disqus.com/embed.js'
+      script.setAttribute('data-timestamp', +new Date())
+      document.head.appendChild(script)
+    }
+  }
+
+  const getCount = async() => {
+    try {
+      const eleGroup = document.querySelector('#post-meta .disqus-comment-count')
+      if (!eleGroup) return
+      const cleanedLinks = eleGroup.href.replace(/#post-comment$/, '')
+
+      const res = await fetch(`https://disqus.com/api/3.0/threads/set.json?forum=&api_key=&thread:link=${cleanedLinks}`,{
+        method: 'GET'
+      })
+      const result = await res.json()
+
+      const count = result.response.length ? result.response[0].posts : 0
+      eleGroup.textContent = count
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  if ('Valine' === 'Disqus' || !false) {
+    if (false) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+    else {
+      loadDisqus()
+      GLOBAL_CONFIG_SITE.isPost && getCount()
+    }
+  } else {
+    window.loadOtherComment = loadDisqus
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

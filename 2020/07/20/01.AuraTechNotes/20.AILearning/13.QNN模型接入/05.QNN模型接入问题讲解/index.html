@@ -1,0 +1,340 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Linux系统上常用软件集锦 | 麦溪·在路上</title><meta name="author" content="Frewen.Wang"><meta name="copyright" content="Frewen.Wang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Activity的生命周期完全解析"><link rel="shortcut icon" href="/img/frewen_tech.png"><link rel="canonical" href="http://www.frewen.wang/2020/07/20/01.AuraTechNotes/20.AILearning/13.QNN%E6%A8%A1%E5%9E%8B%E6%8E%A5%E5%85%A5/05.QNN%E6%A8%A1%E5%9E%8B%E6%8E%A5%E5%85%A5%E9%97%AE%E9%A2%98%E8%AE%B2%E8%A7%A3/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script async="async" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: '',
+  enable_page_level_ads: 'true'
+});</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Linux系统上常用软件集锦',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-01-05 00:00:00'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/frewen_tech.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">858</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">146</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 文章标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 文章归类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 文章列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/page_img.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="麦溪·在路上"><span class="site-name">麦溪·在路上</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 文章标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 文章归类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 文章列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Linux系统上常用软件集锦</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-07-19T16:00:00.000Z" title="发表于 2020-07-20 00:00:00">2020-07-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-01-04T16:00:00.000Z" title="更新于 2022-01-05 00:00:00">2022-01-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>4分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Linux系统上常用软件集锦"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2020/07/20/01.AuraTechNotes/20.AILearning/13.QNN%E6%A8%A1%E5%9E%8B%E6%8E%A5%E5%85%A5/05.QNN%E6%A8%A1%E5%9E%8B%E6%8E%A5%E5%85%A5%E9%97%AE%E9%A2%98%E8%AE%B2%E8%A7%A3/#post-comment" itemprop="discussionUrl"><span class="valine-comment-count" data-xid="/2020/07/20/01.AuraTechNotes/20.AILearning/13.QNN%E6%A8%A1%E5%9E%8B%E6%8E%A5%E5%85%A5/05.QNN%E6%A8%A1%E5%9E%8B%E6%8E%A5%E5%85%A5%E9%97%AE%E9%A2%98%E8%AE%B2%E8%A7%A3/" itemprop="commentCount"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>[TOC]</p>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><h2 id="QNN框架量化文档"><a href="#QNN框架量化文档" class="headerlink" title="QNN框架量化文档"></a>QNN框架量化文档</h2><p>在量化或非量化模型之间进行选择：</p>
+<ul>
+<li>CPU - 选择非量化模型。量化模型目前与 CPU 后端不兼容。</li>
+<li>DSP - 选择一个量化模型。在 DSP 后端运行时需要量化模型。</li>
+<li>GPU - 选择非量化模型。量化模型目前与 GPU 后端不兼容。</li>
+<li>HTP - 选择一个量化模型。在 HTP 后端运行时需要量化模型。</li>
+<li>HTA - 选择一个量化模型。在 HTA 后端运行时需要量化模型。</li>
+</ul>
+<p>QNN 支持多种量化模式。此处描述了量化的基础知识，无论模式如何。</p>
+<ul>
+<li><p>量化使用提供的位宽将浮点数据转换为 Tensorflow 风格的定点格式。</p>
+</li>
+<li><p>满足以下要求：</p>
+<ul>
+<li><p>涵盖了所有输入值。</p>
+</li>
+<li><p>强制执行最小范围 0.01。</p>
+</li>
+<li><p>浮点零是完全可表示的。</p>
+</li>
+</ul>
+</li>
+<li><p>量化算法输入：</p>
+<ul>
+<li>要量化的浮点值集。</li>
+</ul>
+</li>
+<li><p>量化算法输出：</p>
+<ul>
+<li>一组 8 位定点值。</li>
+<li>编码参数：<ul>
+<li>encoding-min - 可表示的最小浮点值（通过定点值 0）</li>
+<li>encoding-max - 可表示的最大浮点值（定点值 255）</li>
+<li>scale - 给定范围的步长 (max - min) &#x2F; (2^bw-1)</li>
+<li>offset - 精确表示 0 的整数值。 round(-min&#x2F;scale)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>算法</p>
+<ol>
+<li>计算输入数据的真实范围（最小值、最大值）。</li>
+<li>计算 encoding-min 和 encoding-max。</li>
+<li>量化输入浮点值。</li>
+<li>输出：</li>
+</ol>
+<blockquote>
+<ul>
+<li>fixed point values</li>
+<li>encoding-min and encoding-max parameters</li>
+<li>scale and offset parameters</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<h3 id="量化模式"><a href="#量化模式" class="headerlink" title="量化模式"></a>量化模式</h3><p>QNN 支持四种量化模式：tf、对称、增强和调整。主要区别在于他们如何选择要使用的量化范围。</p>
+<h4 id="tf"><a href="#tf" class="headerlink" title="tf"></a>tf</h4><p>上面已经描述了默认模式，它使用被量化数据的真实最小值&#x2F;最大值，然后调整范围以确保最小范围并确保 0.0 可精确量化。</p>
+<h4 id="增强"><a href="#增强" class="headerlink" title="增强"></a>增强</h4><p>增强量化模式（通过将“增强”传递给<a href="tools.html">转换器</a><code>--param_quantizer</code>中的一个或<code>--act_quantizer</code>选项来调用）使用一种算法来尝试确定一组更好的量化参数以提高准确性。该算法可能会选择与默认量化器不同的最小&#x2F;最大值，并且在某些情况下，它可能会设置范围以使某些原始权重和&#x2F;或激活不能落入该范围。然而，这个范围确实比简单地使用真正的最小值&#x2F;最大值产生更好的准确度。通过在选项后附加“权重”或“激活”，可以为权重和激活独立启用增强的量化器。</p>
+<h3 id="如何量化"><a href="#如何量化" class="headerlink" title="如何量化"></a>如何量化</h3><p>要启用量化，只需将选项 –input_list 与包含原始数据输入的文本文件一起传递给网络。请注意，此文件中指定的输入应与转换生成的 .cpp 文件中的输入完全匹配。在大多数情况下，这些输入可以直接从源框架模型中获得。但是，在极少数情况下，例如当输入被转换器修剪时，这些输入可能会有所不同。该文件的格式对网络的每组输入使用一行：</p>
+<h2 id="QNN模型接入问题"><a href="#QNN模型接入问题" class="headerlink" title="QNN模型接入问题"></a>QNN模型接入问题</h2><ol>
+<li>排查量化损失导致问题，我们可以查找是weights还是activation导致的量化损失</li>
+</ol>
+<p><img src="/images/image-20220704112751364.png" alt="image-20220704112751364"></p>
+<h3 id="weights量化损失："><a href="#weights量化损失：" class="headerlink" title="weights量化损失："></a>weights量化损失：</h3><p>将模型抓化成dlc模型，再将模型运行在CPU上。</p>
+<h3 id="activation量化损失："><a href="#activation量化损失：" class="headerlink" title="activation量化损失："></a>activation量化损失：</h3><p>sqnr计算量化功能，和余弦相似度差不多</p>
+<h4 id="sqnr公式"><a href="#sqnr公式" class="headerlink" title="sqnr公式"></a>sqnr公式</h4><p>sqnr的值是比较合理的，大部分根据模型来定义。目标检测的的sqnr的</p>
+<h4 id="余弦相似度"><a href="#余弦相似度" class="headerlink" title="余弦相似度"></a>余弦相似度</h4><p>超级夜景需要保证小数点后面5个9. 其他的模型保证小数点后面3个9即可。</p>
+<p>根据模型计算，至少需要保证小数点后2个9即可。</p>
+<p>如果中间某个网络层出现比较低的余弦相似度，但是最后的余弦相似度输出比较高。这个也不是不太好的。比如如果最后一层输出的是二分类的问题。但是恰好的输出的值一致。</p>
+<h4 id="BN的公式"><a href="#BN的公式" class="headerlink" title="BN的公式"></a>BN的公式</h4><h3 id="设计成batchNormallization"><a href="#设计成batchNormallization" class="headerlink" title="设计成batchNormallization"></a>设计成batchNormallization</h3><p>使用batchNarmal的</p>
+<ol>
+<li>如果训练的代价不是很大，可以尝试把所有的batchNormalization的去掉。</li>
+<li>训练的时候，搜索算法的时候需要注意卷积的通道数据最好是32的整数倍否则效率会很低。例如10通道和32通道</li>
+<li>之前说卷积和BN拆开来计算，如果拆开之后，先计算卷积和在计算BN的</li>
+<li></li>
+</ol>
+<p>训练的时候主要通道数，</p>
+<p><img src="/images/image-20220704142109843.png" alt="image-20220704142109843"></p>
+<h2 id="QNN量化"><a href="#QNN量化" class="headerlink" title="QNN量化"></a>QNN量化</h2><img src="images/image-20220704153544933.png" alt="image-20220704153544933" style="zoom:50%;" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p>肯定是追求泛化效果，是对的。</p>
+<p>500张之后，应该是对一批的数据的余弦相似度的应该都是比较好的</p>
+<img src="images/image-20220704160255231.png" alt="image-20220704160255231" style="zoom:50%;" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 id="解决量化精度问题"><a href="#解决量化精度问题" class="headerlink" title="解决量化精度问题"></a>解决量化精度问题</h2><h3 id="采集实车数据"><a href="#采集实车数据" class="headerlink" title="采集实车数据"></a>采集实车数据</h3><p>工程现有的配置是根据算法一开始提供的500张图片，参与模型的量化输入的；如果把集度提供的这张图片放进去重新量化，就没有问题；问题本质就是QA同学一开始说的人脸miss，一个性质。就是通用数据进行量化的时候，其实不能完全兼容实车数据的图片范围，</p>
+<p>初步判断是模型量化后产生的精度损失，接下来需要针对集度实车camera采集各个场景下的少量数据集进行补充，通过实车量产状态下采集的图片数据、参与模型量化过程中激活层的配置，进一步提高量化后的精度；</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://www.frewen.wang">Frewen.Wang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://www.frewen.wang/2020/07/20/01.AuraTechNotes/20.AILearning/13.QNN%E6%A8%A1%E5%9E%8B%E6%8E%A5%E5%85%A5/05.QNN%E6%A8%A1%E5%9E%8B%E6%8E%A5%E5%85%A5%E9%97%AE%E9%A2%98%E8%AE%B2%E8%A7%A3/">http://www.frewen.wang/2020/07/20/01.AuraTechNotes/20.AILearning/13.QNN%E6%A8%A1%E5%9E%8B%E6%8E%A5%E5%85%A5/05.QNN%E6%A8%A1%E5%9E%8B%E6%8E%A5%E5%85%A5%E9%97%AE%E9%A2%98%E8%AE%B2%E8%A7%A3/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://www.frewen.wang" target="_blank">麦溪·在路上</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6/">四大组件</a><a class="post-meta__tags" href="/tags/Activity/">Activity</a><a class="post-meta__tags" href="/tags/Linux/">Linux</a></div><div class="post_share"><div class="social-share" data-image="/img/frewen_tech.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat_square.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat_square.jpg" alt="微信打赏"/></a><div class="post-qr-code-desc">微信打赏</div></li><li class="reward-item"><a href="/img/alipay_square.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay_square.jpg" alt="支付宝打赏"/></a><div class="post-qr-code-desc">支付宝打赏</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/07/20/01.AuraTechNotes/20.AILearning/13.QNN%E6%A8%A1%E5%9E%8B%E6%8E%A5%E5%85%A5/04.QNN%E5%BC%80%E5%8F%91%E4%B9%8B%E6%A8%A1%E5%9E%8B%E8%BD%AC%E5%8C%96%E6%AD%A5%E9%AA%A4%E8%AF%A6%E8%A7%A3/" title="QNN开发之模型转化步骤详解"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">QNN开发之模型转化步骤详解</div></div></a></div><div class="next-post pull-right"><a href="/2020/07/20/01.AuraTechNotes/20.AILearning/13.QNN%E6%A8%A1%E5%9E%8B%E6%8E%A5%E5%85%A5/13.QNN%E6%A8%A1%E5%9E%8BINT8%E9%87%8F%E5%8C%96%E4%B8%8E%E7%BD%91%E7%BB%9C%E7%B2%BE%E5%BA%A6%E5%AF%B9%E9%BD%90%E6%8C%87%E5%8D%97/" title="Linux系统上常用软件集锦"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Linux系统上常用软件集锦</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2020/07/20/01.AuraTechNotes/18.Go/01.go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80%E7%AE%80%E4%BB%8B%E5%AD%A6%E4%B9%A0/" title="Linux系统上常用软件集锦"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-07-20</div><div class="title">Linux系统上常用软件集锦</div></div></a></div><div><a href="/2020/07/20/01.AuraTechNotes/18.Go/02.Go%E8%AF%AD%E8%A8%80%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" title="Go语言环境搭建"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-07-20</div><div class="title">Go语言环境搭建</div></div></a></div><div><a href="/2020/07/20/01.AuraTechNotes/18.Go/03.Go%E8%AF%AD%E8%A8%80%E9%9B%86%E6%88%90%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" title="Go语言集成开发环境"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-07-20</div><div class="title">Go语言集成开发环境</div></div></a></div><div><a href="/2020/07/20/01.AuraTechNotes/18.Go/05.Go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84%E6%A6%82%E8%BF%B0/" title="Go语言基础工程结构概述"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-07-20</div><div class="title">Go语言基础工程结构概述</div></div></a></div><div><a href="/2020/07/20/01.AuraTechNotes/18.Go/08.Go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/" title="Go语言基础工程结构概述"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-07-20</div><div class="title">Go语言基础工程结构概述</div></div></a></div><div><a href="/2020/07/20/01.AuraTechNotes/18.Go/07.Go%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%BC%96%E8%AF%91%E5%92%8C%E8%BF%90%E8%A1%8C/" title="Go语言基础工程结构概述"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-07-20</div><div class="title">Go语言基础工程结构概述</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Valine</span><span id="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/frewen_tech.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Frewen.Wang</div><div class="author-info__description">在青麦地上跑着,雪和太阳的光芒</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">858</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">146</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/FrewenWang"><i class="fab fa-github"></i><span>关注我</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/FrewenWang" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:frewen1225@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://plus.google.com/FrewenWong" target="_blank" title="Google"><i class="fa-brands fa-google"></i></a><a class="social-icon" href="https://twitter.com/FrewenWong" target="_blank" title="Twitter"><i class="fa-brands fa-twitter"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#QNN%E6%A1%86%E6%9E%B6%E9%87%8F%E5%8C%96%E6%96%87%E6%A1%A3"><span class="toc-number">1.1.</span> <span class="toc-text">QNN框架量化文档</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8F%E5%8C%96%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.1.1.</span> <span class="toc-text">量化模式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#tf"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">tf</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A2%9E%E5%BC%BA"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">增强</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%87%8F%E5%8C%96"><span class="toc-number">1.1.2.</span> <span class="toc-text">如何量化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#QNN%E6%A8%A1%E5%9E%8B%E6%8E%A5%E5%85%A5%E9%97%AE%E9%A2%98"><span class="toc-number">1.2.</span> <span class="toc-text">QNN模型接入问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#weights%E9%87%8F%E5%8C%96%E6%8D%9F%E5%A4%B1%EF%BC%9A"><span class="toc-number">1.2.1.</span> <span class="toc-text">weights量化损失：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#activation%E9%87%8F%E5%8C%96%E6%8D%9F%E5%A4%B1%EF%BC%9A"><span class="toc-number">1.2.2.</span> <span class="toc-text">activation量化损失：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#sqnr%E5%85%AC%E5%BC%8F"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">sqnr公式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%99%E5%BC%A6%E7%9B%B8%E4%BC%BC%E5%BA%A6"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">余弦相似度</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#BN%E7%9A%84%E5%85%AC%E5%BC%8F"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">BN的公式</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1%E6%88%90batchNormallization"><span class="toc-number">1.2.3.</span> <span class="toc-text">设计成batchNormallization</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#QNN%E9%87%8F%E5%8C%96"><span class="toc-number">1.3.</span> <span class="toc-text">QNN量化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E9%87%8F%E5%8C%96%E7%B2%BE%E5%BA%A6%E9%97%AE%E9%A2%98"><span class="toc-number">1.4.</span> <span class="toc-text">解决量化精度问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%87%E9%9B%86%E5%AE%9E%E8%BD%A6%E6%95%B0%E6%8D%AE"><span class="toc-number">1.4.1.</span> <span class="toc-text">采集实车数据</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/28/01.AuraTechNotes/09.Python/12.python%E7%9A%84pycharm%E7%9A%84%E4%BD%BF%E7%94%A8/01.pycharm%E7%9A%84%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="无题">无题</a><time datetime="2023-07-28T11:06:28.000Z" title="发表于 2023-07-28 19:06:28">2023-07-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/27/01.AuraTechNotes/09.Python/11.python%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/01.python%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="无题">无题</a><time datetime="2023-07-27T02:02:00.000Z" title="发表于 2023-07-27 10:02:00">2023-07-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/20/01.AuraTechNotes/16.Linux/01.Linux%E4%B9%8B%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85/01.%E5%9F%BA%E4%BA%8EWindows11%E5%AE%89%E8%A3%85Ubuntu%E5%8F%8C%E7%B3%BB%E7%BB%9F/" title="基于Windows11安装Ubuntu双系统">基于Windows11安装Ubuntu双系统</a><time datetime="2023-07-19T16:00:00.000Z" title="发表于 2023-07-20 00:00:00">2023-07-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/17/01.AuraTechNotes/09.Python/01.python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E5%AD%A6%E4%B9%A0/12.%E6%90%AD%E5%BB%BAbaidu%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" title="无题">无题</a><time datetime="2023-07-17T12:35:38.000Z" title="发表于 2023-07-17 20:35:38">2023-07-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/06/13/01.AuraTechNotes/20.AILearning/06.%E6%B7%B1%E5%BA%A6%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E9%87%8F%E5%8C%96%E5%8A%A0%E9%80%9F/08.QNN%E6%8E%A8%E7%90%86%E9%87%8F%E5%8C%96%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" title="无题">无题</a><time datetime="2023-06-13T14:28:06.000Z" title="发表于 2023-06-13 22:28:06">2023-06-13</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By Frewen.Wang</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const initValine = () => {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  const loadValine = async () => {
+    if (typeof Valine === 'function') initValine()
+    else {
+      await getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js')
+      initValine()
+    }
+  }
+
+  if ('Valine' === 'Valine' || !false) {
+    if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+    else setTimeout(loadValine, 0)
+  } else {
+    window.loadOtherComment = loadValine
+  }
+})()</script><script>(() => {
+  const disqus_config = function () {
+    this.page.url = 'http://www.frewen.wang/2020/07/20/01.AuraTechNotes/20.AILearning/13.QNN%E6%A8%A1%E5%9E%8B%E6%8E%A5%E5%85%A5/05.QNN%E6%A8%A1%E5%9E%8B%E6%8E%A5%E5%85%A5%E9%97%AE%E9%A2%98%E8%AE%B2%E8%A7%A3/'
+    this.page.identifier = '/2020/07/20/01.AuraTechNotes/20.AILearning/13.QNN%E6%A8%A1%E5%9E%8B%E6%8E%A5%E5%85%A5/05.QNN%E6%A8%A1%E5%9E%8B%E6%8E%A5%E5%85%A5%E9%97%AE%E9%A2%98%E8%AE%B2%E8%A7%A3/'
+    this.page.title = 'Linux系统上常用软件集锦'
+  }
+
+  const disqusReset = () => {
+    window.DISQUS && window.DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addGlobalFn('themeChange', disqusReset, 'disqus')
+
+  const loadDisqus = () =>{
+    if (window.DISQUS) disqusReset()
+    else {
+      const script = document.createElement('script')
+      script.src = 'https://.disqus.com/embed.js'
+      script.setAttribute('data-timestamp', +new Date())
+      document.head.appendChild(script)
+    }
+  }
+
+  const getCount = async() => {
+    try {
+      const eleGroup = document.querySelector('#post-meta .disqus-comment-count')
+      if (!eleGroup) return
+      const cleanedLinks = eleGroup.href.replace(/#post-comment$/, '')
+
+      const res = await fetch(`https://disqus.com/api/3.0/threads/set.json?forum=&api_key=&thread:link=${cleanedLinks}`,{
+        method: 'GET'
+      })
+      const result = await res.json()
+
+      const count = result.response.length ? result.response[0].posts : 0
+      eleGroup.textContent = count
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  if ('Valine' === 'Disqus' || !false) {
+    if (false) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+    else {
+      loadDisqus()
+      GLOBAL_CONFIG_SITE.isPost && getCount()
+    }
+  } else {
+    window.loadOtherComment = loadDisqus
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

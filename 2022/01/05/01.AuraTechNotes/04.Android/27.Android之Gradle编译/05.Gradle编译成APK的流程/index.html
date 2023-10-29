@@ -1,0 +1,297 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Gradle编译成APK的流程 | 麦溪·在路上</title><meta name="author" content="Frewen.Wang"><meta name="copyright" content="Frewen.Wang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="页面描述"><link rel="shortcut icon" href="/img/frewen_tech.png"><link rel="canonical" href="http://www.frewen.wang/2022/01/05/01.AuraTechNotes/04.Android/27.Android%E4%B9%8BGradle%E7%BC%96%E8%AF%91/05.Gradle%E7%BC%96%E8%AF%91%E6%88%90APK%E7%9A%84%E6%B5%81%E7%A8%8B/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script async="async" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: '',
+  enable_page_level_ads: 'true'
+});</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Gradle编译成APK的流程',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-01-05 00:00:00'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/frewen_tech.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">858</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">146</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 文章标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 文章归类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 文章列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/page_img.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="麦溪·在路上"><span class="site-name">麦溪·在路上</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 文章标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 文章归类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 文章列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Gradle编译成APK的流程</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-01-04T16:00:00.000Z" title="发表于 2022-01-05 00:00:00">2022-01-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-01-04T16:00:00.000Z" title="更新于 2022-01-05 00:00:00">2022-01-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Gradle编译成APK的流程"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2022/01/05/01.AuraTechNotes/04.Android/27.Android%E4%B9%8BGradle%E7%BC%96%E8%AF%91/05.Gradle%E7%BC%96%E8%AF%91%E6%88%90APK%E7%9A%84%E6%B5%81%E7%A8%8B/#post-comment" itemprop="discussionUrl"><span class="valine-comment-count" data-xid="/2022/01/05/01.AuraTechNotes/04.Android/27.Android%E4%B9%8BGradle%E7%BC%96%E8%AF%91/05.Gradle%E7%BC%96%E8%AF%91%E6%88%90APK%E7%9A%84%E6%B5%81%E7%A8%8B/" itemprop="commentCount"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>[TOC]</p>
+<p>文章参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/luoshengyang/article/details/8744683">https://blog.csdn.net/luoshengyang/article/details/8744683</a></p>
+<p>文章参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/huxin1875/article/details/87816465">https://blog.csdn.net/huxin1875/article/details/87816465</a></p>
+<p>文章参考：<a target="_blank" rel="noopener" href="https://www.kaedea.com/2015/09/02/android/enable-multidex/">https://www.kaedea.com/2015/09/02/android/enable-multidex/</a></p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>我们知道，Android进行发布的时候，都要进行编译成APK。那么Android Studio 按下编译按钮后发生了什么？</p>
+<p>我们下面大概总结一下：</p>
+<ol>
+<li>打包资源文件，生成R.java文件（使用工具AAPT）</li>
+<li>处理AIDL文件，生成java代码（没有AIDL则忽略）</li>
+<li>编译 java 文件，生成对应.class文件（java compiler）</li>
+<li>.class 文件转换成dex文件（dex）</li>
+<li>打包成没有签名的apk（使用工具apkBuilder）</li>
+<li>使用签名工具给apk签名（使用工具JarSigner）</li>
+<li>对签名后的.apk文件进行对齐处理，不进行对齐处理不能发布到Google Market（使用工具zipAlign）</li>
+</ol>
+<p>下面我们就详细的根据自己浅显的理解来讲解一下这几个步骤：</p>
+<h2 id="class-文件转换成dex文件（dex）"><a href="#class-文件转换成dex文件（dex）" class="headerlink" title=".class 文件转换成dex文件（dex）"></a>.class 文件转换成dex文件（dex）</h2><h3 id="多Dex打包"><a href="#多Dex打包" class="headerlink" title="多Dex打包"></a>多Dex打包</h3><p>文章参考：<a target="_blank" rel="noopener" href="https://developer.android.com/studio/build/multidex?hl=zh-cn">https://developer.android.com/studio/build/multidex?hl=zh-cn</a></p>
+<p>将class文件转换成dex文件，默认只会生成一个dex文件，当您的应用及其引用的库包含的方法数超过 65536 时，您会遇到一个构建错误，指明您的应用已达到 Android 构建架构规定的引用限制：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">trouble writing <span class="attr">output:</span></span><br><span class="line">Too many field <span class="attr">references:</span> <span class="number">131000</span>; max is <span class="number">65536.</span></span><br><span class="line">You may <span class="keyword">try</span> using --multi-dex option.</span><br></pre></td></tr></table></figure>
+
+<p>较低版本的构建系统会报告一个不同的错误，但指示的是同一问题：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Conversion to Dalvik format <span class="attr">failed:</span></span><br><span class="line">Unable to execute <span class="attr">dex:</span> method ID not <span class="keyword">in</span> [<span class="number">0</span>, <span class="number">0xffff</span>]: <span class="number">65536</span></span><br></pre></td></tr></table></figure>
+
+<p>这两种错误情况会显示一个共同的数字：65536。此数字是单个 Dalvik Executable (DEX) 字节码文件内的代码可调用的引用总数。这就是著名的65535问题。</p>
+<p>怎么解决呢？</p>
+<h4 id="关于-64K-引用限制"><a href="#关于-64K-引用限制" class="headerlink" title="关于 64K 引用限制"></a>关于 64K 引用限制</h4><p>Android 应用 (APK) 文件包含 <a target="_blank" rel="noopener" href="https://source.android.com/devices/tech/dalvik/?hl=zh-cn">Dalvik</a> Executable (DEX) 文件形式的可执行字节码文件，这些文件包含用来运行应用的已编译代码。Dalvik Executable 规范将可在单个 DEX 文件内引用的方法总数限制为 65536，其中包括 Android 框架方法、库方法以及您自己的代码中的方法。在计算机科学领域内，术语<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Kilo-">千（简称 K）</a>表示 1024（即 2^10）。由于 65536 等于 64 X 1024，因此这一限制称为“64K 引用限制”。</p>
+<h4 id="Android-5-0-之前版本的-MultiDex-支持"><a href="#Android-5-0-之前版本的-MultiDex-支持" class="headerlink" title="Android 5.0 之前版本的 MultiDex 支持"></a>Android 5.0 之前版本的 MultiDex 支持</h4><p>Android 5.0（API 级别 21）之前的平台版本使用 Dalvik 运行时执行应用代码。默认情况下，Dalvik 将应用限制为每个 APK 只能使用一个 <code>classes.dex</code> 字节码文件。为了绕过这一限制，您可以向模块级 <code>build.gradle</code> 文件中添加 MultiDex 库：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    <span class="keyword">def</span> multidex_version = <span class="string">&quot;2.0.1&quot;</span></span><br><span class="line">    implementation <span class="string">&quot;androidx.multidex:multidex:$multidex_version&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如需查看此库的当前版本，请参阅<a target="_blank" rel="noopener" href="https://developer.android.com/jetpack/androidx/versions?hl=zh-cn">版本</a>页面中有关 MultiDex 的信息。</p>
+<p>如果您使用的不是 AndroidX，请改为添加以下已弃用的支持库依赖项：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    implementation <span class="string">&#x27;com.android.support:multidex:1.0.3&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此库会成为应用的主 DEX 文件的一部分，然后管理对其他 DEX 文件及其所包含代码的访问。如需了解详情，请参阅下面有关如何<a target="_blank" rel="noopener" href="https://developer.android.com/studio/build/multidex?hl=zh-cn#mdex-gradle">针对 MultiDex 配置应用</a>的部分。</p>
+<h4 id="Android-5-0-及更高版本的-MultiDex-支持"><a href="#Android-5-0-及更高版本的-MultiDex-支持" class="headerlink" title="Android 5.0 及更高版本的 MultiDex 支持"></a>Android 5.0 及更高版本的 MultiDex 支持</h4><p>Android 5.0（API 级别 21）及更高版本使用名为 ART 的运行时，它本身支持从 APK 文件加载多个 DEX 文件。ART 在应用安装时执行预编译，这会扫描查找 <code>classesN.dex</code> 文件，并将它们编译成单个 <code>.oat</code> 文件，以供 Android 设备执行。因此，如果您的 <code>minSdkVersion</code> 为 21 或更高版本，系统会默认启用 MultiDex，并且您不需要 MultiDex 库。</p>
+<p>如需详细了解 Android 5.0 运行时，请阅读 <a target="_blank" rel="noopener" href="https://source.android.com/devices/tech/dalvik/?hl=zh-cn">ART 和 Dalvik</a>。</p>
+<h4 id="规避-64K-限制"><a href="#规避-64K-限制" class="headerlink" title="规避 64K 限制"></a>规避 64K 限制</h4><p>在将您的应用配置为支持使用 64K 或更多方法引用之前，您应该采取措施以减少应用代码调用的引用总数，包括由您的应用代码或包含的库定义的方法。以下策略可帮助您避免达到 DEX 引用限制：</p>
+<ul>
+<li><strong>检查应用的直接依赖项和传递依赖项</strong> - 确保您在应用中使用任何庞大依赖库所带来的好处多于为应用添加大量代码所带来的弊端。一种常见的反面模式是，仅仅为了使用几个实用方法就在应用中加入非常庞大的库。减少应用代码依赖项往往能够帮助您规避 DEX 引用限制。</li>
+<li><strong>通过 R8 移除未使用的代码</strong> - <a target="_blank" rel="noopener" href="https://developer.android.com/studio/build/shrink-code?hl=zh-cn">启用代码缩减</a>以针对发布 build 运行 R8。启用缩减可确保您交付的 APK 不含有未使用的代码。</li>
+</ul>
+<p>使用这些技巧使您不必在应用中启用 MultiDex，同时还会减小 APK 的总体大小。</p>
+<h4 id="针对-MultiDex-配置应用"><a href="#针对-MultiDex-配置应用" class="headerlink" title="针对 MultiDex 配置应用"></a>针对 MultiDex 配置应用</h4><p>因此，如果您的 <code>minSdkVersion</code> 设为 21 或更高版本，系统会默认启用 MultiDex，并且您不需要 MultiDex 库。</p>
+<p>不过，如果您的 <code>minSdkVersion</code> 设为 20 或更低版本，您必须使用 <a target="_blank" rel="noopener" href="https://developer.android.com/jetpack/androidx/releases/multidex?hl=zh-cn">MultiDex 库</a>并对应用项目进行以下修改：</p>
+<p>修改模块级 <code>build.gradle</code> 文件以启用 MultiDex，并将 MultiDex 库添加为依赖项，如下所示：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    defaultConfig &#123;</span><br><span class="line">        ...</span><br><span class="line">        minSdkVersion <span class="number">15</span></span><br><span class="line">        targetSdkVersion <span class="number">28</span></span><br><span class="line">        multiDexEnabled <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dependencies &#123;</span><br><span class="line">    implementation <span class="string">&quot;androidx.multidex:multidex:2.0.1&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>根据您是否替换 <a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/app/Application?hl=zh-cn"><code>Application</code></a> 类，执行以下某项操作：</p>
+<p>如果您不替换 <a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/app/Application?hl=zh-cn"><code>Application</code></a> 类，请修改清单文件以设置 <code>&lt;application&gt;</code> 标记中的 <code>android:name</code>，如下所示：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;utf-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">manifest</span> <span class="attr">xmlns:android</span>=<span class="string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">package</span>=<span class="string">&quot;com.example.myapp&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">application</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:name</span>=<span class="string">&quot;androidx.multidex.MultiDexApplication&quot;</span> &gt;</span></span><br><span class="line">        ...</span><br><span class="line">    <span class="tag">&lt;/<span class="name">application</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">manifest</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果您替换 <a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/app/Application?hl=zh-cn"><code>Application</code></a> 类，请对其进行更改以扩展 <code>MultiDexApplication</code>（如果可能），如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyApplication</span> <span class="keyword">extends</span> <span class="title class_">MultiDexApplication</span> &#123; ... &#125;</span><br></pre></td></tr></table></figure>
+
+<p>或者，如果您替换 <a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/app/Application?hl=zh-cn"><code>Application</code></a> 类，但无法更改基类，则可以改为替换 <a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/content/ContextWrapper?hl=zh-cn#attachBaseContext(android.content.Context)"><code>attachBaseContext()</code></a> 方法并调用 <code>MultiDex.install(this)</code> 以启用 MultiDex：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyApplication</span> <span class="keyword">extends</span> <span class="title class_">SomeOtherApplication</span> &#123;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">attachBaseContext</span><span class="params">(Context base)</span> &#123;</span><br><span class="line">     <span class="built_in">super</span>.attachBaseContext(base);</span><br><span class="line">     MultiDex.install(<span class="built_in">this</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h4><p>目前来说，使用 MultiDex 可能存在以下问题。</p>
+<h5 id="NoClassDefFoundError"><a href="#NoClassDefFoundError" class="headerlink" title="NoClassDefFoundError"></a>NoClassDefFoundError</h5><p>如果你在调用 MultiDex#install(Context) 做了别的工作，而这些工作需要用到的类却存在于别的 dex 文件里面（Secondary Dexes），就会出现类找不到的运行时异常。</p>
+<p>正确的做法是把这些需要用到的类标记在 multidex.keep 清单文件里面，再在 build.gradle 里面启用该清单文件。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line"></span><br><span class="line">  defaultConfig &#123;</span><br><span class="line">    multiDexEnabled <span class="literal">true</span></span><br><span class="line">    multiDexKeepProguard file(<span class="string">&#x27;multidex.pro&#x27;</span>)</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dependencies &#123;</span><br><span class="line">  compile<span class="string">&#x27;com.android.support:multidex:1.0.1&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>multiDexKeepProguard</code>使用的是类似于混淆文件的过滤规则，出了这个配置项之外还有<code>multiDexKeepFile</code>，这个要求你在清单文件里把所有的类都罗列出来。</p>
+<h5 id="卡顿问题"><a href="#卡顿问题" class="headerlink" title="卡顿问题"></a>卡顿问题</h5><p>通过阅读源码，我们可以看出，目前 Android 5.0 以上的设备已经自身支持了 MultiDex 功能，也就是说在安装 apk 的时候，系统已经会帮我们把 apk 里面的所有 dex 文件都做好 Optimize 处理，所以不需要我们在代码里启用 MultiDex 了。但是对于 Android 5.0 以下的设置，则依然要求我们启用 MultiDex。而这些系统的设备在第一次运行 App 的时候，需要对所有的 Secondary Dexes 文件都进行一次解压以及 Optimize 处理（生成 odex 文件），这段时间会有明显的耗时（大概 5000 毫秒左右，dex 越多越大越明显），所有会产生明显的卡顿现象。</p>
+<p>不过好在，在 Application#attachBaseContext(Context) 中，UI 线程的阻塞是不会引发 ANR 的，只不过这段长时间的卡顿（白屏）还是会影响用户体验，解决方案能想到的有两种。</p>
+<p>第一种，在安装一个新的 apk 的时候，先在 Worker 线程里做好 MultiDex 的 Optimize 工作，安装 apk 并启动后，直接使用之前 Optimize 产生的 odex 文件，这样就可以避免第一次启动时候的 Optimize 工作。</p>
+<p>第二种，启动 App 的时候，先显示一个简单的 Splash 闪屏界面，然后启动 Worker 线程执行 MultiDex#install(Context) 工作，就可以避免 UI 线程阻塞。不过要确保启动以及启动 MultiDex#install(Context) 所需要的类都在 Main Dex 里面。</p>
+<h5 id="多进程同步"><a href="#多进程同步" class="headerlink" title="多进程同步"></a>多进程同步</h5><p>参考 Google 的 MultiDex 的源码，可以发现 Google 并没有考虑多进程同步的问题，如果 App 是多进程的，并且刚好同时有两个进程出发了 MultiDex#install(Context) 工作，可以会有多进程冲突的风险。</p>
+<p>如果你采用了上面解决卡顿问题时说到的第二种方法，你也应该考虑多进程的问题，因为这种方法并不是在进程一启动就在主线程里面去做 MultiDex 初始化了，可能存在同步问题的风险。</p>
+<h5 id="其他问题"><a href="#其他问题" class="headerlink" title="其他问题"></a>其他问题</h5><p>早期在使用 MultiDex 的时候，Android Studio 会出现 apk 编译后无法安装的问题，然而使用命令行编译出来的 apk 文件又可以安装了，这个问题现在基本没有出现了，不再追究原因了。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://www.frewen.wang">Frewen.Wang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://www.frewen.wang/2022/01/05/01.AuraTechNotes/04.Android/27.Android%E4%B9%8BGradle%E7%BC%96%E8%AF%91/05.Gradle%E7%BC%96%E8%AF%91%E6%88%90APK%E7%9A%84%E6%B5%81%E7%A8%8B/">http://www.frewen.wang/2022/01/05/01.AuraTechNotes/04.Android/27.Android%E4%B9%8BGradle%E7%BC%96%E8%AF%91/05.Gradle%E7%BC%96%E8%AF%91%E6%88%90APK%E7%9A%84%E6%B5%81%E7%A8%8B/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://www.frewen.wang" target="_blank">麦溪·在路上</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Android/">Android</a><a class="post-meta__tags" href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">性能优化</a><a class="post-meta__tags" href="/tags/%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7/">性能监控</a></div><div class="post_share"><div class="social-share" data-image="/img/frewen_tech.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat_square.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat_square.jpg" alt="微信打赏"/></a><div class="post-qr-code-desc">微信打赏</div></li><li class="reward-item"><a href="/img/alipay_square.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay_square.jpg" alt="支付宝打赏"/></a><div class="post-qr-code-desc">支付宝打赏</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/01/05/01.AuraTechNotes/04.Android/19.Android%E4%B9%8B%E6%8F%92%E6%A1%A9%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/03.Android%E6%8F%92%E6%A1%A9%E4%B9%8BASM%E5%AD%A6%E4%B9%A0/" title="Android插桩之ASM学习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Android插桩之ASM学习</div></div></a></div><div class="next-post pull-right"><a href="/2022/01/05/01.AuraTechNotes/15.CLang/01.C++%E9%9D%A2%E8%AF%95%E9%A2%98/01.C++%E4%B8%AD%E9%AB%98%E7%BA%A7%E9%9D%A2%E8%AF%95%E9%A2%98%E9%9B%86%E9%94%A6/" title="C++中高级面试题集锦"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">C++中高级面试题集锦</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/01/05/01.AuraTechNotes/04.Android/01.Android%E4%B9%8B%E9%9D%A2%E8%AF%95%E9%A2%98%E7%9B%B8%E5%85%B3/01.Android%E4%B8%AD%E9%AB%98%E7%BA%A7%E9%9D%A2%E8%AF%95%E9%A2%98%E5%A4%A7%E7%BA%B2/" title="Android中高级面试题大纲"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-05</div><div class="title">Android中高级面试题大纲</div></div></a></div><div><a href="/2022/01/05/01.AuraTechNotes/04.Android/02.Android%E4%B9%8B%E5%9F%BA%E7%A1%80%E7%BB%84%E4%BB%B6%E5%AD%A6%E4%B9%A0/01.ADB%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE/" title="Android之BroadcastReceiver基础学习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-05</div><div class="title">Android之BroadcastReceiver基础学习</div></div></a></div><div><a href="/2022/01/05/01.AuraTechNotes/04.Android/07.Android%E4%B9%8BAnimation%E5%AD%A6%E4%B9%A0/05.AnimationDrawable%E7%9A%84%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0/" title="AnimationDrawable的源码学习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-05</div><div class="title">AnimationDrawable的源码学习</div></div></a></div><div><a href="/2022/01/05/01.AuraTechNotes/04.Android/08.Android%E4%B9%8B%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0/03.leakcanary2.0%E7%9A%84%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/" title="leakcanary2.0的学习与使用"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-05</div><div class="title">leakcanary2.0的学习与使用</div></div></a></div><div><a href="/2022/01/05/01.AuraTechNotes/04.Android/12.Android%E4%B9%8B%E7%B3%BB%E7%BB%9FAPI%E5%AD%A6%E4%B9%A0/01.Android%E4%B9%8B%E6%9F%A5%E7%9C%8BAndroid%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3%E7%9A%84%E5%B1%9E%E6%80%A7/" title="Android之查看Android系统相关的属性"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-05</div><div class="title">Android之查看Android系统相关的属性</div></div></a></div><div><a href="/2022/01/05/01.AuraTechNotes/04.Android/13.Android%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%A4%9A%E5%AA%92%E4%BD%93%E5%AD%A6%E4%B9%A0/01.Android%E9%9F%B3%E8%A7%86%E9%A2%91%E5%A4%9A%E5%AA%92%E4%BD%93%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/" title="Android音视频多媒体学习路线"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-05</div><div class="title">Android音视频多媒体学习路线</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Valine</span><span id="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/frewen_tech.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Frewen.Wang</div><div class="author-info__description">在青麦地上跑着,雪和太阳的光芒</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">858</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">146</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/FrewenWang"><i class="fab fa-github"></i><span>关注我</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/FrewenWang" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:frewen1225@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://plus.google.com/FrewenWong" target="_blank" title="Google"><i class="fa-brands fa-google"></i></a><a class="social-icon" href="https://twitter.com/FrewenWong" target="_blank" title="Twitter"><i class="fa-brands fa-twitter"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#class-%E6%96%87%E4%BB%B6%E8%BD%AC%E6%8D%A2%E6%88%90dex%E6%96%87%E4%BB%B6%EF%BC%88dex%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">.class 文件转换成dex文件（dex）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9ADex%E6%89%93%E5%8C%85"><span class="toc-number">2.1.</span> <span class="toc-text">多Dex打包</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E-64K-%E5%BC%95%E7%94%A8%E9%99%90%E5%88%B6"><span class="toc-number">2.1.1.</span> <span class="toc-text">关于 64K 引用限制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Android-5-0-%E4%B9%8B%E5%89%8D%E7%89%88%E6%9C%AC%E7%9A%84-MultiDex-%E6%94%AF%E6%8C%81"><span class="toc-number">2.1.2.</span> <span class="toc-text">Android 5.0 之前版本的 MultiDex 支持</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Android-5-0-%E5%8F%8A%E6%9B%B4%E9%AB%98%E7%89%88%E6%9C%AC%E7%9A%84-MultiDex-%E6%94%AF%E6%8C%81"><span class="toc-number">2.1.3.</span> <span class="toc-text">Android 5.0 及更高版本的 MultiDex 支持</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%84%E9%81%BF-64K-%E9%99%90%E5%88%B6"><span class="toc-number">2.1.4.</span> <span class="toc-text">规避 64K 限制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%92%88%E5%AF%B9-MultiDex-%E9%85%8D%E7%BD%AE%E5%BA%94%E7%94%A8"><span class="toc-number">2.1.5.</span> <span class="toc-text">针对 MultiDex 配置应用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">2.1.6.</span> <span class="toc-text">存在的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#NoClassDefFoundError"><span class="toc-number">2.1.6.1.</span> <span class="toc-text">NoClassDefFoundError</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8D%A1%E9%A1%BF%E9%97%AE%E9%A2%98"><span class="toc-number">2.1.6.2.</span> <span class="toc-text">卡顿问题</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A4%9A%E8%BF%9B%E7%A8%8B%E5%90%8C%E6%AD%A5"><span class="toc-number">2.1.6.3.</span> <span class="toc-text">多进程同步</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E9%97%AE%E9%A2%98"><span class="toc-number">2.1.6.4.</span> <span class="toc-text">其他问题</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/28/01.AuraTechNotes/09.Python/12.python%E7%9A%84pycharm%E7%9A%84%E4%BD%BF%E7%94%A8/01.pycharm%E7%9A%84%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="无题">无题</a><time datetime="2023-07-28T11:06:28.000Z" title="发表于 2023-07-28 19:06:28">2023-07-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/27/01.AuraTechNotes/09.Python/11.python%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/01.python%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="无题">无题</a><time datetime="2023-07-27T02:02:00.000Z" title="发表于 2023-07-27 10:02:00">2023-07-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/20/01.AuraTechNotes/16.Linux/01.Linux%E4%B9%8B%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85/01.%E5%9F%BA%E4%BA%8EWindows11%E5%AE%89%E8%A3%85Ubuntu%E5%8F%8C%E7%B3%BB%E7%BB%9F/" title="基于Windows11安装Ubuntu双系统">基于Windows11安装Ubuntu双系统</a><time datetime="2023-07-19T16:00:00.000Z" title="发表于 2023-07-20 00:00:00">2023-07-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/17/01.AuraTechNotes/09.Python/01.python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E5%AD%A6%E4%B9%A0/12.%E6%90%AD%E5%BB%BAbaidu%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" title="无题">无题</a><time datetime="2023-07-17T12:35:38.000Z" title="发表于 2023-07-17 20:35:38">2023-07-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/06/13/01.AuraTechNotes/20.AILearning/06.%E6%B7%B1%E5%BA%A6%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E9%87%8F%E5%8C%96%E5%8A%A0%E9%80%9F/08.QNN%E6%8E%A8%E7%90%86%E9%87%8F%E5%8C%96%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" title="无题">无题</a><time datetime="2023-06-13T14:28:06.000Z" title="发表于 2023-06-13 22:28:06">2023-06-13</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By Frewen.Wang</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const initValine = () => {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  const loadValine = async () => {
+    if (typeof Valine === 'function') initValine()
+    else {
+      await getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js')
+      initValine()
+    }
+  }
+
+  if ('Valine' === 'Valine' || !false) {
+    if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+    else setTimeout(loadValine, 0)
+  } else {
+    window.loadOtherComment = loadValine
+  }
+})()</script><script>(() => {
+  const disqus_config = function () {
+    this.page.url = 'http://www.frewen.wang/2022/01/05/01.AuraTechNotes/04.Android/27.Android%E4%B9%8BGradle%E7%BC%96%E8%AF%91/05.Gradle%E7%BC%96%E8%AF%91%E6%88%90APK%E7%9A%84%E6%B5%81%E7%A8%8B/'
+    this.page.identifier = '/2022/01/05/01.AuraTechNotes/04.Android/27.Android%E4%B9%8BGradle%E7%BC%96%E8%AF%91/05.Gradle%E7%BC%96%E8%AF%91%E6%88%90APK%E7%9A%84%E6%B5%81%E7%A8%8B/'
+    this.page.title = 'Gradle编译成APK的流程'
+  }
+
+  const disqusReset = () => {
+    window.DISQUS && window.DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addGlobalFn('themeChange', disqusReset, 'disqus')
+
+  const loadDisqus = () =>{
+    if (window.DISQUS) disqusReset()
+    else {
+      const script = document.createElement('script')
+      script.src = 'https://.disqus.com/embed.js'
+      script.setAttribute('data-timestamp', +new Date())
+      document.head.appendChild(script)
+    }
+  }
+
+  const getCount = async() => {
+    try {
+      const eleGroup = document.querySelector('#post-meta .disqus-comment-count')
+      if (!eleGroup) return
+      const cleanedLinks = eleGroup.href.replace(/#post-comment$/, '')
+
+      const res = await fetch(`https://disqus.com/api/3.0/threads/set.json?forum=&api_key=&thread:link=${cleanedLinks}`,{
+        method: 'GET'
+      })
+      const result = await res.json()
+
+      const count = result.response.length ? result.response[0].posts : 0
+      eleGroup.textContent = count
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  if ('Valine' === 'Disqus' || !false) {
+    if (false) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+    else {
+      loadDisqus()
+      GLOBAL_CONFIG_SITE.isPost && getCount()
+    }
+  } else {
+    window.loadOtherComment = loadDisqus
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

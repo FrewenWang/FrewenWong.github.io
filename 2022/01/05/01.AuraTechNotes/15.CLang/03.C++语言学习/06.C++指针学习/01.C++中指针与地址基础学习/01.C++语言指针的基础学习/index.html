@@ -1,0 +1,326 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>C++语言指针的基础学习 | 麦溪·在路上</title><meta name="author" content="Frewen.Wang"><meta name="copyright" content="Frewen.Wang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="页面描述"><link rel="shortcut icon" href="/img/frewen_tech.png"><link rel="canonical" href="http://www.frewen.wang/2022/01/05/01.AuraTechNotes/15.CLang/03.C++%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/06.C++%E6%8C%87%E9%92%88%E5%AD%A6%E4%B9%A0/01.C++%E4%B8%AD%E6%8C%87%E9%92%88%E4%B8%8E%E5%9C%B0%E5%9D%80%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/01.C++%E8%AF%AD%E8%A8%80%E6%8C%87%E9%92%88%E7%9A%84%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script async="async" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: '',
+  enable_page_level_ads: 'true'
+});</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'C++语言指针的基础学习',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-01-05 00:00:00'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/frewen_tech.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">858</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">146</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 文章标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 文章归类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 文章列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/page_img.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="麦溪·在路上"><span class="site-name">麦溪·在路上</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 文章标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 文章归类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 文章列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">C++语言指针的基础学习</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-01-04T16:00:00.000Z" title="发表于 2022-01-05 00:00:00">2022-01-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-01-04T16:00:00.000Z" title="更新于 2022-01-05 00:00:00">2022-01-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>13分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="C++语言指针的基础学习"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2022/01/05/01.AuraTechNotes/15.CLang/03.C++%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/06.C++%E6%8C%87%E9%92%88%E5%AD%A6%E4%B9%A0/01.C++%E4%B8%AD%E6%8C%87%E9%92%88%E4%B8%8E%E5%9C%B0%E5%9D%80%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/01.C++%E8%AF%AD%E8%A8%80%E6%8C%87%E9%92%88%E7%9A%84%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/#post-comment" itemprop="discussionUrl"><span class="valine-comment-count" data-xid="/2022/01/05/01.AuraTechNotes/15.CLang/03.C++%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/06.C++%E6%8C%87%E9%92%88%E5%AD%A6%E4%B9%A0/01.C++%E4%B8%AD%E6%8C%87%E9%92%88%E4%B8%8E%E5%9C%B0%E5%9D%80%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/01.C++%E8%AF%AD%E8%A8%80%E6%8C%87%E9%92%88%E7%9A%84%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/" itemprop="commentCount"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>[TOC]</p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>​		C++中除了指定变量名称来存取数据之外，在计算机的运行中也有针对内存地址存取的工具，即指针（Pointer）。指针本身是一种变量类型，存储的内容就是内存的地址。大家可以想象把身份证号码当成变量的地址，有了身份证号码，自然就可以知道该位人士的个人资料（变量内容）了。通过指针变量，程序就可以直接存取该指针变量所指向的地址内容。</p>
+<p>在C++中，定义变量之后，系统就会开始为此变量分配内存空间，以供程序使用。当需要使用某个数据时，存取那一个地址的内存空间即可。如果我们要更清楚地了解变量所在内存的地址，可以通过&amp;（取址运算符）来得到变量所在的地址，语法格式如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&amp;变量名称；</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">01</span>  <span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="number">02</span>  <span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdlib&gt;</span></span></span><br><span class="line"><span class="number">03</span></span><br><span class="line"><span class="number">04</span>  <span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="number">05</span></span><br><span class="line"><span class="number">06</span>  <span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function">07  </span>&#123;</span><br><span class="line"><span class="number">08</span>       <span class="type">int</span> num1 = <span class="number">10</span>;</span><br><span class="line"><span class="number">09</span>      <span class="type">char</span> ch1[<span class="number">2</span>] = <span class="string">&quot;A&quot;</span>; <span class="comment">//声明变量num1、ch1</span></span><br><span class="line"><span class="number">10</span></span><br><span class="line"><span class="number">11</span>      cout&lt;&lt;<span class="string">&quot;变量名称 变量值 内存地址&quot;</span>&lt;&lt;endl;</span><br><span class="line"><span class="number">12</span>       cout&lt;&lt; <span class="string">&quot;----------------------------&quot;</span>&lt;&lt;endl;</span><br><span class="line"><span class="number">13</span>       cout&lt;&lt;<span class="string">&quot;num1 &quot;</span>&lt;&lt;<span class="string">&quot;\t &quot;</span>&lt;&lt;num1&lt;&lt;<span class="string">&#x27;\t&#x27;</span>&lt;&lt;&amp;num1&lt;&lt;endl;</span><br><span class="line"><span class="number">14</span>       cout&lt;&lt;<span class="string">&quot;ch1  &quot;</span>&lt;&lt;<span class="string">&quot;\t &quot;</span>&lt;&lt;ch1&lt;&lt;<span class="string">&#x27;\t&#x27;</span>&lt;&lt;&amp;ch1&lt;&lt;endl;</span><br><span class="line"><span class="number">15</span>      <span class="comment">//使用&amp;运算符打印变量num1、ch1的数值与地址</span></span><br><span class="line"><span class="number">16</span></span><br><span class="line"><span class="number">17</span>       <span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line"><span class="number">18</span>       <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"><span class="number">19</span>  &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="指针变量的声明"><a href="#指针变量的声明" class="headerlink" title="指针变量的声明"></a>指针变量的声明</h2><p>​		所谓指针变量，就是一种用来存储内存地址的变量，当指针变量指向目标地址后，可以通过程序来移动指针（包括将指针变量值进行数值运算），取得该地址所代表的内存区块的数据值。</p>
+<p>​		由于指针也是一种变量，命名规则与一般变量相同，因此当程序声明一个指针时，内存分配的情况与一般的变量声明相同。声明指针时，首先必须定义指针的数据类型，并在数据类型后加上“*”符号，再赋予指针名称，即可声明一个指针变量。特别补充一点，一旦确定指针所指向的数据类型，就不能再更改了。另外，指针变量也不能指向不同数据类型的指针变量。</p>
+<p>​		指针变量声明方式如下：</p>
+<pre><code>数据类型＊ 指针名称； // 第一种声明方式
+
+// 也可以如下方式声明：
+数据类型 ＊指针名称； // 第二种声明方式，＊字号位置不同
+
+// 例如：
+int＊ piVal;
+</code></pre>
+<p>​		以上声明的意义为一个指向int的指针类型变量，其名称为piVal。通常好的指针命名习惯会在变量名称前加上小写p。若是整数类型的指针，则可在变量名称前加上“pi”两个小写字母，“i”代表整数类型（int）。在此要再提醒大家一下，良好的命名规则对于程序日后的判读与维护会有莫大帮助。</p>
+<p>​		由于指针属于系统底层的存取功能，因此通过指针可以存取内存中所指向的内存区内容。假如赋予指针错误的地址，而该地址又刚好是系统数据存储的内存区，此时若覆盖（override）该内存区的内容，很可能会造成系统不稳定或者宕机的情况。另外，如果声明指针时未指定初值，就经常会让指针指向未知的内存地址。</p>
+<p>​		因此，在编写程序时，指针变量务必确实指向合法地址，才不会造成非预期的运行结果。所谓合法地址，通常是指系统分配给程序的地址，如程序已声明或定义的变量（或数组），然后将指针变量指向该变量的地址，也就是为指针设置初值。声明方式如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">数据类型 ＊指针变量；</span><br><span class="line">指针变量=&amp;变量名称；// 变量名称已定义或声明</span><br><span class="line">或</span><br><span class="line">数据类型 ＊指针变量=&amp;变量名称；</span><br></pre></td></tr></table></figure>
+
+<p>​		或者也可以在指针变量声明时先设置初值为0（或是NULL），声明方式如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">数据类型 ＊指针变量=0;</span><br><span class="line">(或 数据类型 ＊指针变量=NULL; )</span><br><span class="line">数据类型 ＊指针变量=&amp;变量名称；</span><br></pre></td></tr></table></figure>
+
+<p>​		第一种方式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int Value=10;</span><br><span class="line">int＊ piVal=&amp;Value;</span><br></pre></td></tr></table></figure>
+
+<p>​	</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">01  #include &lt;iostream&gt;</span><br><span class="line">02  #include &lt;cstdlib&gt;</span><br><span class="line">03</span><br><span class="line">04  using namespace std;</span><br><span class="line">05</span><br><span class="line">06  int main()</span><br><span class="line">07  &#123;</span><br><span class="line">08      int iVal=10;         // 整数变量</span><br><span class="line">09      double dVal=123.45;   //双精度实数变量</span><br><span class="line">10</span><br><span class="line">11      int＊ piVal=NULL; // 声明为空指针</span><br><span class="line">12      piVal= &amp;iVal;   //整数类型的指针变量，指向iVal变量的地址</span><br><span class="line">13</span><br><span class="line">14      double＊ pdVal=&amp;dVal;    //实数类型的指针变量，指向dVal变量的地址</span><br><span class="line">15</span><br><span class="line">16      cout&lt;&lt;&quot;piVal变量地址为&quot;&lt;&lt;piVal&lt;&lt;endl;</span><br><span class="line">17      cout&lt;&lt;&quot;piVal变量所指向地址的数据内容为&quot;&lt;&lt;＊piVal&lt;&lt;endl;</span><br><span class="line">18</span><br><span class="line">19     ＊piVal=20; // 重新设置piVal指针变量的数据内容为20</span><br><span class="line">20      cout&lt;&lt;&quot;piVal指针变量重新设置后，iVal的数据内容同步更改为&quot;&lt;&lt;iVal&lt;&lt;endl;</span><br><span class="line">21      cout&lt;&lt;&quot;整数iVal所占用的内存空间为：&quot;&lt;&lt;sizeof(iVal)&lt;&lt;&quot;位&quot;&lt;&lt;endl;</span><br><span class="line">22      cout&lt;&lt;&quot;整数指针变量piVal所占用的内存空间为：&quot;&lt;&lt;sizeof(piVal)&lt;&lt;&quot;位&quot;&lt;&lt;endl&lt;&lt;endl;</span><br><span class="line">23</span><br><span class="line">24      cout&lt;&lt;&quot;pdVal变量地址为&quot;&lt;&lt;pdVal&lt;&lt;endl;</span><br><span class="line">25      cout&lt;&lt;&quot;pdVal变量所指向地址的数据内容为&quot;&lt;&lt;＊pdVal&lt;&lt;endl;</span><br><span class="line">26</span><br><span class="line">27      ＊pdVal=67.1234; //重新设置pdVal指针变量的数据内容为67.1234</span><br><span class="line">28      cout&lt;&lt;&quot;pdVal指针变量重新设置后，dVal的数据内容同步更改为&quot;&lt;&lt;dVal&lt;&lt;endl;</span><br><span class="line">29      cout&lt;&lt;&quot;双精度实数dVal所占用的内存空间为：&quot;&lt;&lt;sizeof(dVal)&lt;&lt;&quot;位&quot;&lt;&lt;endl;</span><br><span class="line">30      cout&lt;&lt;&quot;双精度实数指针变量pdVal所占用的内存空间为：&quot;&lt;&lt;sizeof(pdVal)&lt;&lt;endl;</span><br><span class="line">31</span><br><span class="line">32       system(&quot;pause&quot;);</span><br><span class="line">33       return 0;</span><br><span class="line">34  &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="指针与数组"><a href="#指针与数组" class="headerlink" title="指针与数组"></a>指针与数组</h3><p>在C++中，我们知道当声明数组时会由系统分配一段连续的内存空间。事实上，“数组名”就是指向数组中第一个元素的内存地址，也可以代表该数组在内存中的起始地址。“下标值”其实就是其他元素相对于第一个元素的内存地址的“偏移量”（offset）。</p>
+<p>因此，对于已定义好的数组，也可以直接使用数组名来进行指针加法运算，也就是数组名可以直接当成一种指针常数来用，并能使用指针的各种运算。例如，只要在数组名上加1，表示移动一个数组元素内存的偏移量。或者通过取址运算符“&amp;”取得该数组元素的地址，并以指针方式直接存取数组内的元素值。两种语法如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">数组名[下标值]= ＊数组名(+下标值)</span><br><span class="line">或</span><br><span class="line">数组名[下标值]= ＊(&amp;数组名[下标值])</span><br></pre></td></tr></table></figure>
+
+
+
+<p>数组可以直接当成指针常数来用，而数组名地址则是数组第一个元素的地址。不过由于数组的地址是只读的，因此不能改变其值，这点是和指针变量最大的不同。例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int  arr[2][3], value=100;</span><br><span class="line">int  ＊ptr=&amp;value;</span><br><span class="line">arr=ptr;  //此行不合法，因为arr是只读的，不能重新设置其值</span><br></pre></td></tr></table></figure>
+
+
+
+<p>下面，我们看一个例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">01  #include &lt;iostream&gt;</span><br><span class="line">02  #include &lt;cstdlib&gt;</span><br><span class="line">03</span><br><span class="line">04  using namespace std;</span><br><span class="line">05</span><br><span class="line">06  int main()</span><br><span class="line">07  &#123;</span><br><span class="line">08      int arr[] = &#123; 10, 20, 30, 40, 50&#125;; //声明数组arr及其元素</span><br><span class="line">09       int i;</span><br><span class="line">10</span><br><span class="line">11       for ( i = 0; i &lt; 5; i++ )</span><br><span class="line">12           cout&lt;&lt;&quot;arr[&quot;&lt;&lt;i&lt;&lt;&quot;] = &quot;&lt;&lt;arr[i]&lt;&lt;&quot;  ＊(arr+&quot;&lt;&lt; i&lt;&lt;&quot;)=&quot;&lt;&lt;＊(arr+i)&lt;&lt;&quot;</span><br><span class="line">＊(&amp;arr[&quot;&lt;&lt;i&lt;&lt;&quot;])=&quot;&lt;&lt;＊(&amp;arr[i])&lt;&lt;endl;</span><br><span class="line">13      //打印数组与指针常数的替代运算</span><br><span class="line">14       system(&quot;pause&quot;);</span><br><span class="line">15       return 0;</span><br><span class="line">16  &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="动态分配功能"><a href="#动态分配功能" class="headerlink" title="动态分配功能"></a>动态分配功能</h2><p>动态分配内存（Dynamic Allocation）是指当程序在运行时才提出分配内存的要求，主要目的是让内存运用更有弹性。从程序本身的角度来看，动态分配机制可以使数据声明的操作在程序运行时再做决定。</p>
+<p>对于编写程序而言，通常声明变量都采用“静态分配”（Static Allocation）的方式，也就是所有变量声明必须在编译阶段完成，这也往往会造成某些不便之处。例如，许多程序员往往会苦恼该如何事先声明适当的数组大小，如果事先声明的长度过大，内存使用的效率就不高，声明得过小，则容易面临存储空间不足的问题。</p>
+<h3 id="动态分配与静态分配"><a href="#动态分配与静态分配" class="headerlink" title="动态分配与静态分配"></a>动态分配与静态分配</h3><p>这时如果通过动态分配方式，程序中不确定的使用空间（如数组长度）即可在程序运行时再按照用户的设置与需求适当分配所需要的内存空间。特别是内存容量不充足时，如果程序运行都以静态声明方式分配内存，很容易造成程序无法运行的窘境。虽然动态分配内存的方式比一般静态分配更具有弹性，不过还是有一些意想不到的缺点，例如动态分配内存后必须在程序结束前完成释放内存的操作。</p>
+<p>如果程序运行期间分配的内存未释放，就会造成内存空间的浪费，形成所谓的内存泄漏（memory leak），这种情况对于需要一次使用海量内存的程序而言将有可能无法运行或导致系统运行越来越缓慢等情况发生。静态及动态分配内存两种方式的比较如表6-1所示。</p>
+<p><img src="https://gitee.com/frewen1225/ImageUploader/raw/master/img/20210215155719.png"></p>
+<h3 id="动态分配变量"><a href="#动态分配变量" class="headerlink" title="动态分配变量"></a>动态分配变量</h3><p>在C++中，可以分别使用new与delete运算符在程序运行期间动态分配与释放内存空间。其中，new运算符会根据所要求的内存大小在内存中分配足够的空间，并返回所分配内存的指针值，也就是内存地址。</p>
+<p>由于使用new运算符所分配的内存空间在程序运行期间将会一直占据内存，因此当不再使用时必须使用delete运算符来释放内存空间。</p>
+<p>接着就来介绍C++动态分配变量的方式，也就是在运行时按照数据类型来动态分配一个内存空间，并将分配的内存空间地址返回并赋值给指针变量。这个数据类型除了C++的基本数据类型外，也可以包括结构（structure）等自定义数据类型，声明格式如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">数据类型 ＊指针变量=new数据类型(初值);</span><br></pre></td></tr></table></figure>
+
+<p>​		声明完毕时，new运算符会向系统申请分配内存，如果分配成功就返回该内存的地址，如分配失败就返回NULL值。使用new运算符动态分配内存时，可同时设置其初值。若不设置初值，可将小括号省略，如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int ＊p_I=new int(77);   // 动态分配int数据类型，且＊p_I=77</span><br><span class="line">float ＊p_F=new float;  // 动态分配float数据类型，且未设置初值</span><br></pre></td></tr></table></figure>
+
+<p>​		另外，因为使用new运算符分配的内存空间将会保留到程序运行结束时才归还给系统，所以当分配的内存不再使用时就要用delete运算符来释放该内存空间，否则分配的内存过多时将会影响到程序可用的内存空间，从而降低程序运行的效率。释放内存空间的语句如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">delete指针名称；</span><br></pre></td></tr></table></figure>
+
+<p>​		使用delete运算符释放内存时，该指针变量所指的内存地址必须是原来new运算符所分配的地址，否则将会造成无法预期的运行结果，如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">delete指针名称；</span><br></pre></td></tr></table></figure>
+
+<p>​		使用delete运算符释放内存时，该指针变量所指的内存地址必须是原来new运算符所分配的地址，否则将会造成无法预期的运行结果，如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int ＊ptr=new int;  // 分配内存，并赋值给＊ptr指针变量</span><br><span class="line">ptr++;     // 指针变量所指向的地址递增1，即往后位移4byte(int类型)</span><br><span class="line">delete ptr;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>​	下面，我们看一个例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">01  #include &lt;iostream&gt;</span><br><span class="line">02  #include &lt;cstdlib&gt;</span><br><span class="line">03</span><br><span class="line">04  using namespace std;</span><br><span class="line">05</span><br><span class="line">06  int main()</span><br><span class="line">07  &#123;</span><br><span class="line">08        int ＊ptr_1=new int;    // 定义 ＊ptr_1 指针，并由new分配内存</span><br><span class="line">09        int ＊ptr_2=new int;    // 定义 ＊ptr_2 指针，并由new分配内存</span><br><span class="line">10</span><br><span class="line">11        cout &lt;&lt; &quot;输入被加数：&quot;;</span><br><span class="line">12        cin &gt;&gt; ＊ptr_1;                        // ＊ptr_1 存储被加数</span><br><span class="line">13        cout &lt;&lt; &quot;输入加数  :&quot;;</span><br><span class="line">14        cin &gt;&gt; ＊ptr_2;                       // ＊ptr_2 存储加数</span><br><span class="line">15</span><br><span class="line">16         cout &lt;&lt; ＊ptr_1 &lt;&lt; &quot; + &quot; &lt;&lt; ＊ptr_2 &lt;&lt; &quot; = &quot;;</span><br><span class="line">17        cout &lt;&lt; ＊ptr_1+＊ptr_2;             // 计算总和</span><br><span class="line">18</span><br><span class="line">19        cout &lt;&lt; endl;                     // 换行</span><br><span class="line">20</span><br><span class="line">21        delete ptr_1;              // 释放分配给ptr_1 的内存空间</span><br><span class="line">22        delete ptr_2;          // 释放分配给ptr_2 的内存空间</span><br><span class="line">23</span><br><span class="line">24         system(&quot;pause&quot;);</span><br><span class="line">25         return 0;</span><br><span class="line">26  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>​		</p>
+<ol>
+<li>面试题-简述指针常量与常量指针区别</li>
+</ol>
+<p>指针常量是指定义了一个指针，这个指针的值只能在定义时初始化，其他地方不能改变。常量指针是指定义了一个指针，这个指针指向一个只读的对象，不能通过常量指针来改变这个对象的值。</p>
+<p>指针常量强调的是指针的不可改变性，而常量指针强调的是指针对其所指对象的不可改变性。</p>
+<p>注意：无论是指针常量还是常量指针，其最大的用途就是作为函数的形式参数，保证实参在被调用函数中的不可改变特性。</p>
+<p>举例如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">       <span class="type">int</span> ival =<span class="number">55</span>;</span><br><span class="line">       <span class="type">int</span> jval =<span class="number">38</span>;</span><br><span class="line"></span><br><span class="line">       <span class="comment">//pa为指向常量的指针,不能通过pa改变其指向的ival的值；但pa可以指向其他变量.[常量指针==指针指向的值为常量]</span></span><br><span class="line"></span><br><span class="line">       <span class="type">const</span> <span class="type">int</span> *pa= &amp;ival;</span><br><span class="line"></span><br><span class="line">       <span class="comment">//*pa =88;           //报错：l-valuespecifies const object</span></span><br><span class="line"></span><br><span class="line">       pa =&amp;jval;</span><br><span class="line"></span><br><span class="line">       cout &lt;&lt;*pa &lt;&lt; endl;  <span class="comment">//正确. 38</span></span><br><span class="line"></span><br><span class="line">       <span class="comment">//pb为常量，指向变量的指针,pb不能修改,但可以修改pb指向的值。[指针常量==指针本身是个常量]</span></span><br><span class="line"></span><br><span class="line">       <span class="type">int</span>* <span class="type">const</span> pb= &amp;ival;</span><br><span class="line"></span><br><span class="line">       <span class="comment">//     pb = &amp;jval;</span></span><br><span class="line"></span><br><span class="line">       <span class="comment">//     cout &lt;&lt; *pb &lt;&lt; endl;  //l-value specifies const object</span></span><br><span class="line"></span><br><span class="line">       *pb = <span class="number">2012</span>;</span><br><span class="line"></span><br><span class="line">       cout &lt;&lt;*pb &lt;&lt; <span class="string">&quot;\t&quot;</span> &lt;&lt; ival &lt;&lt; endl; <span class="comment">//2012 2012</span></span><br><span class="line"></span><br><span class="line">       <span class="comment">//pc针对上述两种修改都不可以。</span></span><br><span class="line"></span><br><span class="line">       <span class="type">const</span> <span class="type">int</span>*<span class="type">const</span> pc = &amp;ival;</span><br><span class="line"></span><br><span class="line">       cout &lt;&lt;*pc &lt;&lt; endl;      <span class="comment">//2012</span></span><br><span class="line"></span><br><span class="line">       <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://www.frewen.wang">Frewen.Wang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://www.frewen.wang/2022/01/05/01.AuraTechNotes/15.CLang/03.C++%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/06.C++%E6%8C%87%E9%92%88%E5%AD%A6%E4%B9%A0/01.C++%E4%B8%AD%E6%8C%87%E9%92%88%E4%B8%8E%E5%9C%B0%E5%9D%80%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/01.C++%E8%AF%AD%E8%A8%80%E6%8C%87%E9%92%88%E7%9A%84%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/">http://www.frewen.wang/2022/01/05/01.AuraTechNotes/15.CLang/03.C++%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/06.C++%E6%8C%87%E9%92%88%E5%AD%A6%E4%B9%A0/01.C++%E4%B8%AD%E6%8C%87%E9%92%88%E4%B8%8E%E5%9C%B0%E5%9D%80%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/01.C++%E8%AF%AD%E8%A8%80%E6%8C%87%E9%92%88%E7%9A%84%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://www.frewen.wang" target="_blank">麦溪·在路上</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/img/frewen_tech.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat_square.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat_square.jpg" alt="微信打赏"/></a><div class="post-qr-code-desc">微信打赏</div></li><li class="reward-item"><a href="/img/alipay_square.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay_square.jpg" alt="支付宝打赏"/></a><div class="post-qr-code-desc">支付宝打赏</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/01/05/01.AuraTechNotes/15.CLang/03.C++%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/06.C++%E6%8C%87%E9%92%88%E5%AD%A6%E4%B9%A0/01.C++%E4%B8%AD%E6%8C%87%E9%92%88%E4%B8%8E%E5%9C%B0%E5%9D%80%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/03.C++%E5%BC%95%E7%94%A8%E5%92%8C%E6%8C%87%E9%92%88%E7%9A%84%E5%8C%BA%E5%88%AB/" title="Android之性能监控框架"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Android之性能监控框架</div></div></a></div><div class="next-post pull-right"><a href="/2022/01/05/01.AuraTechNotes/15.CLang/03.C++%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/06.C++%E6%8C%87%E9%92%88%E5%AD%A6%E4%B9%A0/03.C++%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%E5%AD%A6%E4%B9%A0/01.C++%E4%B9%8B%E6%8C%87%E9%92%88%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/" title="Android之性能监控框架"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Android之性能监控框架</div></div></a></div></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Valine</span><span id="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/frewen_tech.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Frewen.Wang</div><div class="author-info__description">在青麦地上跑着,雪和太阳的光芒</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">858</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">146</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/FrewenWang"><i class="fab fa-github"></i><span>关注我</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/FrewenWang" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:frewen1225@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://plus.google.com/FrewenWong" target="_blank" title="Google"><i class="fa-brands fa-google"></i></a><a class="social-icon" href="https://twitter.com/FrewenWong" target="_blank" title="Twitter"><i class="fa-brands fa-twitter"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%87%E9%92%88%E5%8F%98%E9%87%8F%E7%9A%84%E5%A3%B0%E6%98%8E"><span class="toc-number">2.</span> <span class="toc-text">指针变量的声明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%87%E9%92%88%E4%B8%8E%E6%95%B0%E7%BB%84"><span class="toc-number">2.1.</span> <span class="toc-text">指针与数组</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E5%88%86%E9%85%8D%E5%8A%9F%E8%83%BD"><span class="toc-number">3.</span> <span class="toc-text">动态分配功能</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E5%88%86%E9%85%8D%E4%B8%8E%E9%9D%99%E6%80%81%E5%88%86%E9%85%8D"><span class="toc-number">3.1.</span> <span class="toc-text">动态分配与静态分配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E5%88%86%E9%85%8D%E5%8F%98%E9%87%8F"><span class="toc-number">3.2.</span> <span class="toc-text">动态分配变量</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/28/01.AuraTechNotes/09.Python/12.python%E7%9A%84pycharm%E7%9A%84%E4%BD%BF%E7%94%A8/01.pycharm%E7%9A%84%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="无题">无题</a><time datetime="2023-07-28T11:06:28.000Z" title="发表于 2023-07-28 19:06:28">2023-07-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/27/01.AuraTechNotes/09.Python/11.python%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/01.python%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="无题">无题</a><time datetime="2023-07-27T02:02:00.000Z" title="发表于 2023-07-27 10:02:00">2023-07-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/20/01.AuraTechNotes/16.Linux/01.Linux%E4%B9%8B%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85/01.%E5%9F%BA%E4%BA%8EWindows11%E5%AE%89%E8%A3%85Ubuntu%E5%8F%8C%E7%B3%BB%E7%BB%9F/" title="基于Windows11安装Ubuntu双系统">基于Windows11安装Ubuntu双系统</a><time datetime="2023-07-19T16:00:00.000Z" title="发表于 2023-07-20 00:00:00">2023-07-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/17/01.AuraTechNotes/09.Python/01.python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E5%AD%A6%E4%B9%A0/12.%E6%90%AD%E5%BB%BAbaidu%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" title="无题">无题</a><time datetime="2023-07-17T12:35:38.000Z" title="发表于 2023-07-17 20:35:38">2023-07-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/06/13/01.AuraTechNotes/20.AILearning/06.%E6%B7%B1%E5%BA%A6%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E9%87%8F%E5%8C%96%E5%8A%A0%E9%80%9F/08.QNN%E6%8E%A8%E7%90%86%E9%87%8F%E5%8C%96%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" title="无题">无题</a><time datetime="2023-06-13T14:28:06.000Z" title="发表于 2023-06-13 22:28:06">2023-06-13</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By Frewen.Wang</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const initValine = () => {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  const loadValine = async () => {
+    if (typeof Valine === 'function') initValine()
+    else {
+      await getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js')
+      initValine()
+    }
+  }
+
+  if ('Valine' === 'Valine' || !false) {
+    if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+    else setTimeout(loadValine, 0)
+  } else {
+    window.loadOtherComment = loadValine
+  }
+})()</script><script>(() => {
+  const disqus_config = function () {
+    this.page.url = 'http://www.frewen.wang/2022/01/05/01.AuraTechNotes/15.CLang/03.C++%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/06.C++%E6%8C%87%E9%92%88%E5%AD%A6%E4%B9%A0/01.C++%E4%B8%AD%E6%8C%87%E9%92%88%E4%B8%8E%E5%9C%B0%E5%9D%80%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/01.C++%E8%AF%AD%E8%A8%80%E6%8C%87%E9%92%88%E7%9A%84%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/'
+    this.page.identifier = '/2022/01/05/01.AuraTechNotes/15.CLang/03.C++%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/06.C++%E6%8C%87%E9%92%88%E5%AD%A6%E4%B9%A0/01.C++%E4%B8%AD%E6%8C%87%E9%92%88%E4%B8%8E%E5%9C%B0%E5%9D%80%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/01.C++%E8%AF%AD%E8%A8%80%E6%8C%87%E9%92%88%E7%9A%84%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/'
+    this.page.title = 'C++语言指针的基础学习'
+  }
+
+  const disqusReset = () => {
+    window.DISQUS && window.DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addGlobalFn('themeChange', disqusReset, 'disqus')
+
+  const loadDisqus = () =>{
+    if (window.DISQUS) disqusReset()
+    else {
+      const script = document.createElement('script')
+      script.src = 'https://.disqus.com/embed.js'
+      script.setAttribute('data-timestamp', +new Date())
+      document.head.appendChild(script)
+    }
+  }
+
+  const getCount = async() => {
+    try {
+      const eleGroup = document.querySelector('#post-meta .disqus-comment-count')
+      if (!eleGroup) return
+      const cleanedLinks = eleGroup.href.replace(/#post-comment$/, '')
+
+      const res = await fetch(`https://disqus.com/api/3.0/threads/set.json?forum=&api_key=&thread:link=${cleanedLinks}`,{
+        method: 'GET'
+      })
+      const result = await res.json()
+
+      const count = result.response.length ? result.response[0].posts : 0
+      eleGroup.textContent = count
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  if ('Valine' === 'Disqus' || !false) {
+    if (false) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+    else {
+      loadDisqus()
+      GLOBAL_CONFIG_SITE.isPost && getCount()
+    }
+  } else {
+    window.loadOtherComment = loadDisqus
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

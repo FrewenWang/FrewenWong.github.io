@@ -1,0 +1,458 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>ARM平台上的NEON加速基础 | 麦溪·在路上</title><meta name="author" content="Frewen.Wang"><meta name="copyright" content="Frewen.Wang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="[TOC] 概述NEON加速指令介绍汇编指令格式AArch64 与AArch32 &amp;#x2F; Armv7-A 的 NEON 汇编指令除了种类上存在差异，格式上也存在很大差异。 其中指令中有一些通用的书写格式, 含义如下:  {}, 表示可选项 &amp;lt;&amp;gt;, 表示必选项  AArch64汇编指"><link rel="shortcut icon" href="/img/frewen_tech.png"><link rel="canonical" href="http://www.frewen.wang/2021/12/20/01.AuraTechNotes/20.AILearning/19.ARM%E5%B9%B3%E5%8F%B0%E4%B8%8A%E7%9A%84NEON%E5%8A%A0%E9%80%9F%E5%AD%A6%E4%B9%A0/02.NEON%E5%B9%B3%E5%8F%B0NEON%E5%8A%A0%E9%80%9F%E6%8C%87%E4%BB%A4%E4%BB%8B%E7%BB%8D/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script async="async" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: '',
+  enable_page_level_ads: 'true'
+});</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'ARM平台上的NEON加速基础',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-12-05 00:00:00'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/frewen_tech.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">858</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">146</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 文章标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 文章归类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 文章列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/page_img.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="麦溪·在路上"><span class="site-name">麦溪·在路上</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 文章标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 文章归类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 文章列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">ARM平台上的NEON加速基础</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-12-19T16:00:00.000Z" title="发表于 2021-12-20 00:00:00">2021-12-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-12-04T16:00:00.000Z" title="更新于 2021-12-05 00:00:00">2021-12-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="ARM平台上的NEON加速基础"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2021/12/20/01.AuraTechNotes/20.AILearning/19.ARM%E5%B9%B3%E5%8F%B0%E4%B8%8A%E7%9A%84NEON%E5%8A%A0%E9%80%9F%E5%AD%A6%E4%B9%A0/02.NEON%E5%B9%B3%E5%8F%B0NEON%E5%8A%A0%E9%80%9F%E6%8C%87%E4%BB%A4%E4%BB%8B%E7%BB%8D/#post-comment" itemprop="discussionUrl"><span class="valine-comment-count" data-xid="/2021/12/20/01.AuraTechNotes/20.AILearning/19.ARM%E5%B9%B3%E5%8F%B0%E4%B8%8A%E7%9A%84NEON%E5%8A%A0%E9%80%9F%E5%AD%A6%E4%B9%A0/02.NEON%E5%B9%B3%E5%8F%B0NEON%E5%8A%A0%E9%80%9F%E6%8C%87%E4%BB%A4%E4%BB%8B%E7%BB%8D/" itemprop="commentCount"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>[TOC]</p>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><h1 id="NEON加速指令介绍"><a href="#NEON加速指令介绍" class="headerlink" title="NEON加速指令介绍"></a>NEON加速指令介绍</h1><h2 id="汇编指令格式"><a href="#汇编指令格式" class="headerlink" title="汇编指令格式"></a>汇编指令格式</h2><p>AArch64 与AArch32 &#x2F; Armv7-A 的 NEON 汇编指令除了种类上存在差异，格式上也存在很大差异。</p>
+<p>其中指令中有一些通用的书写格式, 含义如下:</p>
+<ul>
+<li>{}, 表示可选项</li>
+<li>&lt;&gt;, 表示必选项</li>
+</ul>
+<h3 id="AArch64汇编指令格式"><a href="#AArch64汇编指令格式" class="headerlink" title="AArch64汇编指令格式"></a>AArch64汇编指令格式</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&lt;prefix&gt;&#125;&lt;op&gt;&#123;&lt;suffix&gt;&#125; Vd.&lt;T&gt;, Vn.&lt;T&gt;, Vm.&lt;T&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>&lt;prefix&gt;</strong> 表示前缀名字，包括以下几类：</p>
+<ul>
+<li><strong>S&#x2F;U&#x2F;F&#x2F;P</strong>：表示数据类型，分别为 <strong>有符号整型&#x2F;无符号整型&#x2F;浮点型&#x2F;布尔型</strong>。</li>
+<li><strong>Q</strong>：表示饱和（Saturating）计算。</li>
+<li><strong>R</strong>：表示舍入（Rounding）计算, Rounding 操作等价于加上 0.5 之后再截断。</li>
+<li>H：表示折半（Halving）计算。</li>
+<li><strong>D</strong>：表示翻倍（Doubling）算。</li>
+</ul>
+<p><strong>&lt;op&gt;</strong> 表示具体的操作，例如 <code>ADD</code>，<code>SUB</code> 等等</p>
+<p><strong>&lt;suffix&gt;</strong> 表示后缀名字，包括以下几类：</p>
+<ul>
+<li><p><strong>V</strong>：表示 Reduction 计算。</p>
+</li>
+<li><p><strong>P</strong>：表示 Pairwise 计算。</p>
+</li>
+<li><p><strong>H</strong>：表示结果只取每个通道的高半部分（High）。</p>
+</li>
+<li><p><strong>L&#x2F;N&#x2F;W&#x2F;L2&#x2F;N2&#x2F;W</strong>2：表示数据长度的变化</p>
+</li>
+<li><ul>
+<li><strong>L &#x2F; L2 ：</strong>表示输出向量是输入向量长度的 2 倍，其中 L 表示输入寄存器的低 64bit 数据有效，L2 表示输入寄存器的高 64bit 数据有效。</li>
+</ul>
+</li>
+</ul>
+<p><img src="/./images/02.NEON%E5%B9%B3%E5%8F%B0NEON%E5%8A%A0%E9%80%9F%E6%8C%87%E4%BB%A4%E4%BB%8B%E7%BB%8D/v2-591cd5c7cc2d50531ef3ebccfb23a8ba_1440w.webp" alt="img"></p>
+<p>​																						L&#x2F;L2</p>
+<ul>
+<li><ul>
+<li><strong>N&#x2F;N2：</strong>表示输出向量是输入向量的 1&#x2F;2 倍，N 表示输出向量只有低 64bit 有效，N2 则表示输出向量只有高 64bit 有效。</li>
+</ul>
+</li>
+</ul>
+<p><img src="/./images/02.NEON%E5%B9%B3%E5%8F%B0NEON%E5%8A%A0%E9%80%9F%E6%8C%87%E4%BB%A4%E4%BB%8B%E7%BB%8D/v2-addcf0a41674664a3fd73b1d0849fa68_1440w.webp" alt="img"></p>
+<p>​																						N&#x2F;N2</p>
+<ul>
+<li><ul>
+<li><strong>W&#x2F;W2：</strong>表示输出向量和第一个输入向量长度相等，且这两个向量是第二个向量长度的 2 倍，其中 W 表示第二个输入向量的低 64bit 有效，W2 表示第二输入向量的高 64bit 有效。</li>
+</ul>
+</li>
+</ul>
+<p><img src="/./images/02.NEON%E5%B9%B3%E5%8F%B0NEON%E5%8A%A0%E9%80%9F%E6%8C%87%E4%BB%A4%E4%BB%8B%E7%BB%8D/v2-b037d8e0b6b4c59061ec2f6423e98cce_1440w.webp" alt="img"></p>
+<p>​																									W&#x2F;W2</p>
+<p><strong>4）&lt;T&gt;</strong> 表示单个通道的数据类型，<strong>8B&#x2F;16B&#x2F;4H&#x2F;8H&#x2F;2S&#x2F;4S&#x2F;2D</strong>，B 表示 8bit，H 表示 16bit，S 表示 32bit，D 表示 64bit。</p>
+<h4 id="汇编指令示例"><a href="#汇编指令示例" class="headerlink" title="汇编指令示例"></a>汇编指令示例</h4><p><code>SQRSHRN2</code> 表示对向量进行 Rouding 类型的右移操作，并对结果做饱和计算，最后将结果赋给目的向量的高半部分，并保持低半部分不改变，具体示例如下</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 指令语句作用：</span></span><br><span class="line"><span class="comment">//             将 V2 向量中每个元素按照 Rounding 方式右移动 2 位，然后对结果做饱和操作, </span></span><br><span class="line"><span class="comment">//             并将结果保存到V0上半部分，而且保证V0的下半部分保持不变</span></span><br><span class="line"><span class="comment">// 指令格式说明：</span></span><br><span class="line"><span class="comment">//                 S -- 表示有符号操作</span></span><br><span class="line"><span class="comment">//                 Q -- 表示饱和操作</span></span><br><span class="line"><span class="comment">//                 R -- 表示舍入操作</span></span><br><span class="line"><span class="comment">//               SHR -- 表示向右位移</span></span><br><span class="line"><span class="comment">//                N2 -- 表示将结果保存到输出向量的高 64bit</span></span><br><span class="line"><span class="comment">//             V2.2D -- 表示输入向量寄存器，长度为 128bit，一共两个通道，每个通道 64bit</span></span><br><span class="line"><span class="comment">//             V0.4S -- 表示输出向量寄存器，长度为 128bit，一共四个通道，每个通道 32bit</span></span><br><span class="line"></span><br><span class="line">SQRSHRN2 V0<span class="number">.4</span>S,V2<span class="number">.2</span>D,<span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 伪代码如下:</span></span><br><span class="line"><span class="type">int</span> shift = <span class="number">2</span>;</span><br><span class="line"><span class="type">int</span> round_const = (<span class="number">1</span> &lt;&lt; (shift - <span class="number">1</span>));</span><br><span class="line">V0[<span class="number">2</span>] = <span class="built_in">SAT</span>((V2[<span class="number">0</span>] + round_const) &gt;&gt; shift)</span><br><span class="line">V0[<span class="number">3</span>] = <span class="built_in">SAT</span>((V2[<span class="number">1</span>] + round_const) &gt;&gt; shift)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/./images/02.NEON%E5%B9%B3%E5%8F%B0NEON%E5%8A%A0%E9%80%9F%E6%8C%87%E4%BB%A4%E4%BB%8B%E7%BB%8D/v2-8567b5289121b491616d3b0a642bf4da_1440w.webp" alt="img"></p>
+<h3 id="AArch32-x2F-Armv7汇编指令格式"><a href="#AArch32-x2F-Armv7汇编指令格式" class="headerlink" title="AArch32 &#x2F; Armv7汇编指令格式"></a><strong>AArch32 &#x2F; Armv7汇编指令格式</strong></h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">V&#123;&lt;mod&gt;&#125;&lt;op&gt;&#123;&lt;shape&gt;&#125;&#123;&lt;cond&gt;&#125;&#123;.&lt;dt&gt;&#125;&lt;dest1&gt;&#123;,&lt;dest2&gt;&#125;,&lt;src1&gt;&#123;,&lt;src2&gt;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>1）V</strong> AArch32 &#x2F; Armv7 的汇编指令以”V”开头</p>
+<p><strong>2）&lt;mod&gt;</strong> 该修饰字可以表示为以下类型：</p>
+<ul>
+<li>Q, 表示饱和（Saturating）计算。</li>
+<li>R, 表示舍入（Rounding）计算，Rounding 操作等价于加上 0.5 之后再截断。</li>
+<li>H, 表示折半（Halving）计算。</li>
+<li>D, 表示翻倍（Doubling）计算。</li>
+</ul>
+<p><strong>3）&lt;op&gt;</strong> 表示具体的操作，例如 <code>ADD</code>，<code>SUB</code>等等</p>
+<p><strong>4）&lt;shape&gt;</strong> 表示数据长度的变化，L&#x2F;N&#x2F;W。</p>
+<p><strong>5）&lt;cond&gt;</strong> 表示指令执行的条件</p>
+<p><strong>6）.&lt;dt&gt;</strong> 表示数据类型，默认为第二个操作数的数据类型。如果第二个操作数不存在，为第一个操作数类型，仍不存在为结果操作数类型。</p>
+<p><strong>7）&lt;dest&gt;</strong> 表示输出操作数</p>
+<p>**8）&lt;src1&gt; &lt;src2&gt;**表示两个输入操作数</p>
+<h4 id="汇编指令示例-1"><a href="#汇编指令示例-1" class="headerlink" title="汇编指令示例"></a><strong>汇编指令</strong>示例</h4><p><code>VQDMULL</code> 表示两向量相乘，结果乘以 2<em>。</em></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 指令语句作用：</span></span><br><span class="line"><span class="comment">//              64bit 向量 D1 和 D3 中每个元素对应相乘，并将结果乘以 2 </span></span><br><span class="line"><span class="comment">//              最后的结果做饱和之后赋值给 128bit 向量 Q0</span></span><br><span class="line"><span class="comment">//             </span></span><br><span class="line"><span class="comment">// 指令格式说明:</span></span><br><span class="line"><span class="comment">//              Q -- 表示饱和操作</span></span><br><span class="line"><span class="comment">//              D -- 表示 doubling 操作，即乘以 2</span></span><br><span class="line"><span class="comment">//            MUL -- 表示乘法操作</span></span><br><span class="line"><span class="comment">//              L -- 输出向量是输入向量长度的 2 倍</span></span><br><span class="line"><span class="comment">//           .S16 -- 表示操作元素的数据类型为有符号 16bit</span></span><br><span class="line"><span class="comment">//             Q0 -- 表示输出向量寄存器，长度为 128bit</span></span><br><span class="line"><span class="comment">//             D1 -- 表示输入向量寄存器，长度为 64bit</span></span><br><span class="line"><span class="comment">//             D3 -- 表示输入向量寄存器，长度为 64bit</span></span><br><span class="line"></span><br><span class="line">VQDMULL.S16 Q0, D1, D3</span><br><span class="line"></span><br><span class="line"><span class="comment">// 伪代码</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++)</span><br><span class="line">&#123;</span><br><span class="line">    q0[i] = <span class="built_in">SAT</span>(d1[i] * d3[i] * <span class="number">2</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/./images/02.NEON%E5%B9%B3%E5%8F%B0NEON%E5%8A%A0%E9%80%9F%E6%8C%87%E4%BB%A4%E4%BB%8B%E7%BB%8D/v2-5f42dddea603d073831ca2e8aedb9f1c_1440w.webp" alt="img"></p>
+<h2 id="intrinsics指令格式"><a href="#intrinsics指令格式" class="headerlink" title="intrinsics指令格式"></a>intrinsics指令格式</h2><p>相比于汇编指令，NEON Intrinsics 是一种更简单的编写 NEON 代码的方法，NEON Intrinsics 类似于 C 函数调用，在编译时由编译器替换为相应的汇编指令，使用时需要包含头文件<code>arm_neon.h</code>。</p>
+<h3 id="向量类型格式"><a href="#向量类型格式" class="headerlink" title="向量类型格式"></a><strong>向量类型格式</strong></h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 非数组向量格式</span></span><br><span class="line">&lt;type&gt;&lt;size&gt;x&lt;number_of_lanes&gt;<span class="type">_t</span></span><br><span class="line"><span class="comment">// float32x4_t</span></span><br><span class="line">  </span><br><span class="line"><span class="comment">// 数组向量格式</span></span><br><span class="line">&lt;type&gt;&lt;size&gt;x&lt;number_of_lanes&gt;x&lt;length_of_array&gt;<span class="type">_t</span></span><br><span class="line"><span class="comment">// float32x4x2t</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>1）&lt;type&gt;</strong> 数据类型，如 <code>int</code>&#x2F;<code>uint</code>&#x2F;<code>float</code>&#x2F;<code>poly</code>。</p>
+<p><strong>2）&lt;size&gt;</strong> 元素数据大小，如8位、16位、32位、64位。</p>
+<p><strong>3) <number_of_lanes></strong>  通道数。由于NEON提供了64位和128位寄存器，所以size * lanes 应为64或128。</p>
+<p><strong>4) <length_of_array></strong> 数组中元素个数。</p>
+<p><img src="/./images/02.NEON%E5%B9%B3%E5%8F%B0NEON%E5%8A%A0%E9%80%9F%E6%8C%87%E4%BB%A4%E4%BB%8B%E7%BB%8D/v2-a8e58ef3a019e231ac093b463499f452_r.jpg" alt="img"></p>
+<p>NEON向量数据类型</p>
+<p>以128位寄存器为例，数据类型如：int8x16_t，int16x8_t，int32x4_t，int64x2_t，uint8x16_t，uint168_t，uint32x4_t，uint64x2_t，float16x8_t，float32x4_t</p>
+<table>
+<thead>
+<tr>
+<th>数据类型</th>
+<th>64-bit type(D-register)</th>
+<th>128-bit type(Q-register)</th>
+<th>类型说明</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td>int8x8_t</td>
+<td>int8x16_t</td>
+<td>8位int类型数据，8个通道&#x2F;8位int类型数据，16个通道</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>int16x4_t</td>
+<td>int16x8_t</td>
+<td>16位int类型数据，4个通道&#x2F;16位int类型数据，8个通道</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>int32x2_t</td>
+<td>int32x4_t</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>int64x1_t</td>
+<td>int64x2_t</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>uint8x8_t</td>
+<td>uint8x16_t</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>uint16x4_t</td>
+<td>uint16x8_t</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>uint32x2_t</td>
+<td>uint32x4_t</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>uint64x1_t</td>
+<td>uint64x2_t</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>float16x4_t</td>
+<td>float16x8_t</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>float32x2_t</td>
+<td>float32x4_t</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>poly8x8_t</td>
+<td>poly8x16_t</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>poly16x4_t</td>
+<td>poly16x8_t</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>从上表可以看成，NEON 指令集的向量是由基本上就是常见的数据类型组成，根据 D 寄存器和 Q 寄存器以及数据类型形成多种向量类型。这些向量类型将作为 NEON 指令集的输入输出参数参与计算。</p>
+<h3 id="NEON-函数格式"><a href="#NEON-函数格式" class="headerlink" title="NEON 函数格式"></a><strong>NEON 函数格式</strong></h3><h4 id="v-lt-mod-gt-lt-opname-gt-lt-shape-gt-lt-flags-gt-lt-type-gt"><a href="#v-lt-mod-gt-lt-opname-gt-lt-shape-gt-lt-flags-gt-lt-type-gt" class="headerlink" title="v&lt;mod&gt;&lt;opname&gt;&lt;shape&gt;&lt;flags&gt;_&lt;type&gt;"></a>v&lt;mod&gt;&lt;opname&gt;&lt;shape&gt;&lt;flags&gt;_&lt;type&gt;</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">v&lt;mod&gt;&lt;opname&gt;&lt;shape&gt;&lt;flags&gt;_&lt;type&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="1）-lt-mod-gt"><a href="#1）-lt-mod-gt" class="headerlink" title="1）&lt;mod&gt;"></a><strong>1）&lt;mod&gt;</strong></h4><p><strong>q</strong>：表示饱和计算，即当计算结果溢出时，结果取类型范围内的最大值或最小值，例如</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// a加b的结果做饱和计算</span></span><br><span class="line"><span class="function"><span class="type">int8x8_t</span> <span class="title">vqadd_s8</span><span class="params">(<span class="type">int8x8_t</span> a, <span class="type">int8x8_t</span> b)</span></span>; </span><br></pre></td></tr></table></figure>
+
+<p><strong>h</strong>：表示折半计算，例如</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// a减b的结果右移一位</span></span><br><span class="line"><span class="function"><span class="type">int8x8_t</span> <span class="title">vhsub_s8</span><span class="params">(<span class="type">int8x8_t</span> a, <span class="type">int8x8_t</span> b)</span></span>; </span><br></pre></td></tr></table></figure>
+
+<p><strong>d</strong>：表示加倍计算，例如</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// a乘b的结果扩大一倍, 最后做饱和操作</span></span><br><span class="line"><span class="function"><span class="type">int32x4_t</span> <span class="title">vqdmull_s16</span><span class="params">(<span class="type">int16x4_t</span> a, <span class="type">int16x4_t</span> b)</span></span>; </span><br></pre></td></tr></table></figure>
+
+<p><strong>r</strong>：表示舍入计算，例如</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 将a与b的和减半,同时做rounding 操作, 每个通道可以表达为: (ai + bi + 1) &gt;&gt; 1</span></span><br><span class="line"><span class="function"><span class="type">int8x8_t</span> <span class="title">vrhadd_s8</span><span class="params">(<span class="type">int8x8_t</span> a, <span class="type">int8x8_t</span> b)</span></span>; </span><br></pre></td></tr></table></figure>
+
+<p><strong>p</strong>：表示pairwise计算。例如</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 将a, b向量的相邻数据进行两两和操作</span></span><br><span class="line"><span class="function"><span class="type">int8x8_t</span> <span class="title">vpadd_s8</span><span class="params">(<span class="type">int8x8_t</span> a, <span class="type">int8x8_t</span> b)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-lt-opname-gt"><a href="#2-lt-opname-gt" class="headerlink" title="2) &lt;opname&gt;"></a><strong>2) &lt;opname&gt;</strong></h4><p>表示具体操作，如加法：add；减法：sub；乘法：mul；加载数据：ld；读取数据：st</p>
+<h4 id="3-lt-shape-gt"><a href="#3-lt-shape-gt" class="headerlink" title="3) &lt;shape&gt;"></a><strong>3) &lt;shape&gt;</strong></h4><p>计算形式</p>
+<p><strong>l</strong>：表示long，输出向量的元素长度是输入长度的2倍，例如</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">uint16x8_t</span> <span class="title">vaddl_u8</span><span class="params">(<span class="type">uint8x8_t</span> a, <span class="type">uint8x8_t</span> b)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>n</strong>：表示 narrow，输出向量的元素长度是输入长度的1&#x2F;2倍，例如</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">uint32x2_t</span> <span class="title">vmovn_u64</span><span class="params">(<span class="type">uint64x2_t</span> a)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>w</strong>：表示 wide，第一个输入向量和输出向量类型一样，且是第二个输入向量元素长度的2倍，例如</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">uint16x8_t</span> <span class="title">vsubw_u8</span><span class="params">(<span class="type">uint16x8_t</span> a, <span class="type">uint8x8_t</span> b)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>_high</strong>：AArch64专用，而且和 <strong>l&#x2F;n</strong> 配合使用。</p>
+<ul>
+<li>当使用 <strong>l(Long)</strong> 时，表示输入向量只有高 64bit 有效；</li>
+<li>当使用 <strong>n(Narrow)</strong> 时，表示输出只有高 64bit 有效。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// a 和 b 只有高 64bit 参与运算</span></span><br><span class="line"><span class="function"><span class="type">int16x8_t</span> <span class="title">vsubl_high_s8</span><span class="params">(<span class="type">int8x16_t</span> a, <span class="type">int8x16_t</span> b)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>_n</strong>：表示有标量参与向量计算，例如</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 向量 a 中的每个元素右移 n 位</span></span><br><span class="line"><span class="function"><span class="type">int8x8_t</span> <span class="title">vshr_n_s8</span><span class="params">(<span class="type">int8x8_t</span> a, <span class="type">const</span> <span class="type">int</span> n)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>_lane</strong>： 指定向量中某个通道参与向量计算，例如</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 取向量 v 中下标为 lane 的元素与向量 a 做乘法计算</span></span><br><span class="line"><span class="function"><span class="type">int16x4_t</span> <span class="title">vmul_lane_s16</span><span class="params">(<span class="type">int16x4_t</span> a, <span class="type">int16x4_t</span> v, <span class="type">const</span> <span class="type">int</span> lane)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-lt-flags-gt"><a href="#4-lt-flags-gt" class="headerlink" title="4) &lt;flags&gt;"></a><strong>4) &lt;flags&gt;</strong></h4><p><strong>q</strong>：寄存器长度，若存在q时，表示使用128位的寄存器，否则使用64位寄存器。</p>
+<h4 id="5-lt-type-gt"><a href="#5-lt-type-gt" class="headerlink" title="5) &lt;type&gt;"></a><strong>5) &lt;type&gt;</strong></h4><p>表示单个通道的数据类型</p>
+<p>有<code>u8</code>、<code>s8</code>、<code>u16</code>、<code>s16</code>、<code>u32</code>、<code>s32</code>、<code>f32</code>、<code>f64</code>。（s表示int）</p>
+<p><img src="/./images/02.NEON%E5%B9%B3%E5%8F%B0NEON%E5%8A%A0%E9%80%9F%E6%8C%87%E4%BB%A4%E4%BB%8B%E7%BB%8D/v2-308349930d1582e2b000c0295e677156_r.jpg" alt="img"></p>
+<h4 id="解释说明"><a href="#解释说明" class="headerlink" title="解释说明"></a>解释说明</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vadd_u16：<span class="comment">// 两个uint16x4相加为一个uint16x4</span></span><br><span class="line"></span><br><span class="line">vaddq_u16：<span class="comment">// 两个uint16x8相加为一个uint16x8</span></span><br><span class="line"></span><br><span class="line">vaddl_u16： <span class="comment">// 两个uint8x8相加为一个uint16x8</span></span><br></pre></td></tr></table></figure>
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://www.frewen.wang">Frewen.Wang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://www.frewen.wang/2021/12/20/01.AuraTechNotes/20.AILearning/19.ARM%E5%B9%B3%E5%8F%B0%E4%B8%8A%E7%9A%84NEON%E5%8A%A0%E9%80%9F%E5%AD%A6%E4%B9%A0/02.NEON%E5%B9%B3%E5%8F%B0NEON%E5%8A%A0%E9%80%9F%E6%8C%87%E4%BB%A4%E4%BB%8B%E7%BB%8D/">http://www.frewen.wang/2021/12/20/01.AuraTechNotes/20.AILearning/19.ARM%E5%B9%B3%E5%8F%B0%E4%B8%8A%E7%9A%84NEON%E5%8A%A0%E9%80%9F%E5%AD%A6%E4%B9%A0/02.NEON%E5%B9%B3%E5%8F%B0NEON%E5%8A%A0%E9%80%9F%E6%8C%87%E4%BB%A4%E4%BB%8B%E7%BB%8D/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://www.frewen.wang" target="_blank">麦溪·在路上</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">神经网络</a><a class="post-meta__tags" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><a class="post-meta__tags" href="/tags/NEON/">NEON</a></div><div class="post_share"><div class="social-share" data-image="/img/frewen_tech.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat_square.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat_square.jpg" alt="微信打赏"/></a><div class="post-qr-code-desc">微信打赏</div></li><li class="reward-item"><a href="/img/alipay_square.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay_square.jpg" alt="支付宝打赏"/></a><div class="post-qr-code-desc">支付宝打赏</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/12/20/01.AuraTechNotes/20.AILearning/19.ARM%E5%B9%B3%E5%8F%B0%E4%B8%8A%E7%9A%84NEON%E5%8A%A0%E9%80%9F%E5%AD%A6%E4%B9%A0/01.ARM%E5%B9%B3%E5%8F%B0NEON%E5%8A%A0%E9%80%9F%E6%8C%87%E4%BB%A4%E7%AE%80%E4%BB%8B/" title="ARM平台上的NEON加速基础"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">ARM平台上的NEON加速基础</div></div></a></div><div class="next-post pull-right"><a href="/2021/12/20/01.AuraTechNotes/20.AILearning/19.ARM%E5%B9%B3%E5%8F%B0%E4%B8%8A%E7%9A%84NEON%E5%8A%A0%E9%80%9F%E5%AD%A6%E4%B9%A0/05.ARM%E5%B9%B3%E5%8F%B0%E4%B8%8A%E7%9A%84%E5%9B%BE%E5%83%8F%E6%A0%BC%E5%BC%8F%E8%BD%AC%E6%8D%A2%E7%9A%84NEON%E5%8A%A0%E9%80%9F%E5%87%BD%E6%95%B0%E5%AE%9E%E7%8E%B0/" title="ARM平台上的图像格式转换的NEON加速函数实现"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">ARM平台上的图像格式转换的NEON加速函数实现</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/12/20/01.AuraTechNotes/20.AILearning/19.ARM%E5%B9%B3%E5%8F%B0%E4%B8%8A%E7%9A%84NEON%E5%8A%A0%E9%80%9F%E5%AD%A6%E4%B9%A0/01.ARM%E5%B9%B3%E5%8F%B0NEON%E5%8A%A0%E9%80%9F%E6%8C%87%E4%BB%A4%E7%AE%80%E4%BB%8B/" title="ARM平台上的NEON加速基础"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-20</div><div class="title">ARM平台上的NEON加速基础</div></div></a></div><div><a href="/2021/12/20/01.AuraTechNotes/20.AILearning/19.ARM%E5%B9%B3%E5%8F%B0%E4%B8%8A%E7%9A%84NEON%E5%8A%A0%E9%80%9F%E5%AD%A6%E4%B9%A0/05.ARM%E5%B9%B3%E5%8F%B0%E4%B8%8A%E7%9A%84%E5%9B%BE%E5%83%8F%E6%A0%BC%E5%BC%8F%E8%BD%AC%E6%8D%A2%E7%9A%84NEON%E5%8A%A0%E9%80%9F%E5%87%BD%E6%95%B0%E5%AE%9E%E7%8E%B0/" title="ARM平台上的图像格式转换的NEON加速函数实现"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-20</div><div class="title">ARM平台上的图像格式转换的NEON加速函数实现</div></div></a></div><div><a href="/2021/12/20/01.AuraTechNotes/20.AILearning/19.ARM%E5%B9%B3%E5%8F%B0%E4%B8%8A%E7%9A%84NEON%E5%8A%A0%E9%80%9F%E5%AD%A6%E4%B9%A0/04.ARM%E5%B9%B3%E5%8F%B0NEON%20instrinsics%E6%8C%87%E4%BB%A4%E5%AD%A6%E4%B9%A0/" title="ARM平台NEON instrinsics指令学习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-20</div><div class="title">ARM平台NEON instrinsics指令学习</div></div></a></div><div><a href="/2021/12/20/01.AuraTechNotes/20.AILearning/19.ARM%E5%B9%B3%E5%8F%B0%E4%B8%8A%E7%9A%84NEON%E5%8A%A0%E9%80%9F%E5%AD%A6%E4%B9%A0/06.ARM%E5%B9%B3%E5%8F%B0%E4%B8%8A%E4%BD%BF%E7%94%A8NEON%E5%8A%A0%E9%80%9F%E5%AE%8C%E6%88%903X3%20max%20pool%E5%AE%9E%E7%8E%B0/" title="ARM平台上使用NEON加速完成3X3 max pool实现"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-20</div><div class="title">ARM平台上使用NEON加速完成3X3 max pool实现</div></div></a></div><div><a href="/2021/12/20/01.AuraTechNotes/20.AILearning/19.ARM%E5%B9%B3%E5%8F%B0%E4%B8%8A%E7%9A%84NEON%E5%8A%A0%E9%80%9F%E5%AD%A6%E4%B9%A0/07.ARM%E5%B9%B3%E5%8F%B0NEON%E5%8A%A0%E9%80%9F%E5%B8%B8%E7%94%A8%E7%9A%84%E5%87%BD%E6%95%B0/" title="ARM平台上NEON加速常用的函数"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-20</div><div class="title">ARM平台上NEON加速常用的函数</div></div></a></div><div><a href="/2021/12/20/01.AuraTechNotes/20.AILearning/19.ARM%E5%B9%B3%E5%8F%B0%E4%B8%8A%E7%9A%84NEON%E5%8A%A0%E9%80%9F%E5%AD%A6%E4%B9%A0/09.ARM%E5%B9%B3%E5%8F%B0%E4%B8%8AYUV420SP%E8%BD%ACRGB%E5%AE%9E%E8%B7%B5%E4%BC%98%E5%8C%96/" title="ARM平台上YUV420SP转RGB实践优化"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-20</div><div class="title">ARM平台上YUV420SP转RGB实践优化</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Valine</span><span id="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/frewen_tech.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Frewen.Wang</div><div class="author-info__description">在青麦地上跑着,雪和太阳的光芒</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">858</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">146</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/FrewenWang"><i class="fab fa-github"></i><span>关注我</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/FrewenWang" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:frewen1225@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://plus.google.com/FrewenWong" target="_blank" title="Google"><i class="fa-brands fa-google"></i></a><a class="social-icon" href="https://twitter.com/FrewenWong" target="_blank" title="Twitter"><i class="fa-brands fa-twitter"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#NEON%E5%8A%A0%E9%80%9F%E6%8C%87%E4%BB%A4%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.</span> <span class="toc-text">NEON加速指令介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4%E6%A0%BC%E5%BC%8F"><span class="toc-number">2.1.</span> <span class="toc-text">汇编指令格式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#AArch64%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4%E6%A0%BC%E5%BC%8F"><span class="toc-number">2.1.1.</span> <span class="toc-text">AArch64汇编指令格式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4%E7%A4%BA%E4%BE%8B"><span class="toc-number">2.1.1.1.</span> <span class="toc-text">汇编指令示例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AArch32-x2F-Armv7%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4%E6%A0%BC%E5%BC%8F"><span class="toc-number">2.1.2.</span> <span class="toc-text">AArch32 &#x2F; Armv7汇编指令格式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4%E7%A4%BA%E4%BE%8B-1"><span class="toc-number">2.1.2.1.</span> <span class="toc-text">汇编指令示例</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#intrinsics%E6%8C%87%E4%BB%A4%E6%A0%BC%E5%BC%8F"><span class="toc-number">2.2.</span> <span class="toc-text">intrinsics指令格式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%91%E9%87%8F%E7%B1%BB%E5%9E%8B%E6%A0%BC%E5%BC%8F"><span class="toc-number">2.2.1.</span> <span class="toc-text">向量类型格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NEON-%E5%87%BD%E6%95%B0%E6%A0%BC%E5%BC%8F"><span class="toc-number">2.2.2.</span> <span class="toc-text">NEON 函数格式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#v-lt-mod-gt-lt-opname-gt-lt-shape-gt-lt-flags-gt-lt-type-gt"><span class="toc-number">2.2.2.1.</span> <span class="toc-text">v&lt;mod&gt;&lt;opname&gt;&lt;shape&gt;&lt;flags&gt;_&lt;type&gt;</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1%EF%BC%89-lt-mod-gt"><span class="toc-number">2.2.2.2.</span> <span class="toc-text">1）&lt;mod&gt;</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-lt-opname-gt"><span class="toc-number">2.2.2.3.</span> <span class="toc-text">2) &lt;opname&gt;</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-lt-shape-gt"><span class="toc-number">2.2.2.4.</span> <span class="toc-text">3) &lt;shape&gt;</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-lt-flags-gt"><span class="toc-number">2.2.2.5.</span> <span class="toc-text">4) &lt;flags&gt;</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-lt-type-gt"><span class="toc-number">2.2.2.6.</span> <span class="toc-text">5) &lt;type&gt;</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E9%87%8A%E8%AF%B4%E6%98%8E"><span class="toc-number">2.2.2.7.</span> <span class="toc-text">解释说明</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/28/01.AuraTechNotes/09.Python/12.python%E7%9A%84pycharm%E7%9A%84%E4%BD%BF%E7%94%A8/01.pycharm%E7%9A%84%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="无题">无题</a><time datetime="2023-07-28T11:06:28.000Z" title="发表于 2023-07-28 19:06:28">2023-07-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/27/01.AuraTechNotes/09.Python/11.python%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/01.python%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="无题">无题</a><time datetime="2023-07-27T02:02:00.000Z" title="发表于 2023-07-27 10:02:00">2023-07-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/20/01.AuraTechNotes/16.Linux/01.Linux%E4%B9%8B%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85/01.%E5%9F%BA%E4%BA%8EWindows11%E5%AE%89%E8%A3%85Ubuntu%E5%8F%8C%E7%B3%BB%E7%BB%9F/" title="基于Windows11安装Ubuntu双系统">基于Windows11安装Ubuntu双系统</a><time datetime="2023-07-19T16:00:00.000Z" title="发表于 2023-07-20 00:00:00">2023-07-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/17/01.AuraTechNotes/09.Python/01.python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E5%AD%A6%E4%B9%A0/12.%E6%90%AD%E5%BB%BAbaidu%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" title="无题">无题</a><time datetime="2023-07-17T12:35:38.000Z" title="发表于 2023-07-17 20:35:38">2023-07-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/06/13/01.AuraTechNotes/20.AILearning/06.%E6%B7%B1%E5%BA%A6%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E9%87%8F%E5%8C%96%E5%8A%A0%E9%80%9F/08.QNN%E6%8E%A8%E7%90%86%E9%87%8F%E5%8C%96%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" title="无题">无题</a><time datetime="2023-06-13T14:28:06.000Z" title="发表于 2023-06-13 22:28:06">2023-06-13</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By Frewen.Wang</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const initValine = () => {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  const loadValine = async () => {
+    if (typeof Valine === 'function') initValine()
+    else {
+      await getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js')
+      initValine()
+    }
+  }
+
+  if ('Valine' === 'Valine' || !false) {
+    if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+    else setTimeout(loadValine, 0)
+  } else {
+    window.loadOtherComment = loadValine
+  }
+})()</script><script>(() => {
+  const disqus_config = function () {
+    this.page.url = 'http://www.frewen.wang/2021/12/20/01.AuraTechNotes/20.AILearning/19.ARM%E5%B9%B3%E5%8F%B0%E4%B8%8A%E7%9A%84NEON%E5%8A%A0%E9%80%9F%E5%AD%A6%E4%B9%A0/02.NEON%E5%B9%B3%E5%8F%B0NEON%E5%8A%A0%E9%80%9F%E6%8C%87%E4%BB%A4%E4%BB%8B%E7%BB%8D/'
+    this.page.identifier = '/2021/12/20/01.AuraTechNotes/20.AILearning/19.ARM%E5%B9%B3%E5%8F%B0%E4%B8%8A%E7%9A%84NEON%E5%8A%A0%E9%80%9F%E5%AD%A6%E4%B9%A0/02.NEON%E5%B9%B3%E5%8F%B0NEON%E5%8A%A0%E9%80%9F%E6%8C%87%E4%BB%A4%E4%BB%8B%E7%BB%8D/'
+    this.page.title = 'ARM平台上的NEON加速基础'
+  }
+
+  const disqusReset = () => {
+    window.DISQUS && window.DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addGlobalFn('themeChange', disqusReset, 'disqus')
+
+  const loadDisqus = () =>{
+    if (window.DISQUS) disqusReset()
+    else {
+      const script = document.createElement('script')
+      script.src = 'https://.disqus.com/embed.js'
+      script.setAttribute('data-timestamp', +new Date())
+      document.head.appendChild(script)
+    }
+  }
+
+  const getCount = async() => {
+    try {
+      const eleGroup = document.querySelector('#post-meta .disqus-comment-count')
+      if (!eleGroup) return
+      const cleanedLinks = eleGroup.href.replace(/#post-comment$/, '')
+
+      const res = await fetch(`https://disqus.com/api/3.0/threads/set.json?forum=&api_key=&thread:link=${cleanedLinks}`,{
+        method: 'GET'
+      })
+      const result = await res.json()
+
+      const count = result.response.length ? result.response[0].posts : 0
+      eleGroup.textContent = count
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  if ('Valine' === 'Disqus' || !false) {
+    if (false) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+    else {
+      loadDisqus()
+      GLOBAL_CONFIG_SITE.isPost && getCount()
+    }
+  } else {
+    window.loadOtherComment = loadDisqus
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

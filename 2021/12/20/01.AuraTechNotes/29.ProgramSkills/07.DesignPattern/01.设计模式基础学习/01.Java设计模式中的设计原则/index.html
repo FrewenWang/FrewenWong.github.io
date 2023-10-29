@@ -1,0 +1,312 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Java设计模式中的设计原则 | 麦溪·在路上</title><meta name="author" content="Frewen.Wang"><meta name="copyright" content="Frewen.Wang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="[TOC] 文章参考：https:&amp;#x2F;&amp;#x2F;www.cnblogs.com&amp;#x2F;zuoxiaolong&amp;#x2F;p&amp;#x2F;pattern26.html 概述我们在学习设计模式的时候，我们都知道有23种设计模式，7种设计原则。那么设计模式和设计原则到底有什么对应关系呢？或者说你清楚的知道一直在用的每种设计模式都遵循哪些设计原"><link rel="shortcut icon" href="/img/frewen_tech.png"><link rel="canonical" href="http://www.frewen.wang/2021/12/20/01.AuraTechNotes/29.ProgramSkills/07.DesignPattern/01.%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/01.Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%AD%E7%9A%84%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script async="async" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: '',
+  enable_page_level_ads: 'true'
+});</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Java设计模式中的设计原则',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-12-05 00:00:00'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/frewen_tech.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">858</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">146</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 文章标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 文章归类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 文章列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/page_img.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="麦溪·在路上"><span class="site-name">麦溪·在路上</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 文章标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 文章归类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 文章列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Java设计模式中的设计原则</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-12-19T16:00:00.000Z" title="发表于 2021-12-20 00:00:00">2021-12-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-12-04T16:00:00.000Z" title="更新于 2021-12-05 00:00:00">2021-12-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Java设计模式中的设计原则"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2021/12/20/01.AuraTechNotes/29.ProgramSkills/07.DesignPattern/01.%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/01.Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%AD%E7%9A%84%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/#post-comment" itemprop="discussionUrl"><span class="valine-comment-count" data-xid="/2021/12/20/01.AuraTechNotes/29.ProgramSkills/07.DesignPattern/01.%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/01.Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%AD%E7%9A%84%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/" itemprop="commentCount"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>[TOC]</p>
+<p>文章参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/zuoxiaolong/p/pattern26.html">https://www.cnblogs.com/zuoxiaolong/p/pattern26.html</a></p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>我们在学习设计模式的时候，我们都知道有23种设计模式，7种设计原则。那么设计模式和设计原则到底有什么对应关系呢？或者说你清楚的知道一直在用的每种设计模式都遵循哪些设计原则，破坏了哪些设计原则吗？ 下面，我们将会一一来分析一下。</p>
+<p>下面，我们依次来回顾一下，这23种设计模式</p>
+<p><strong>设计原则：</strong>  设计模式（总纲）</p>
+<p><strong>创建型：</strong>  单例模式、简单工厂模式、工厂方法模式、抽象工厂模式、建造者模式、原型模式</p>
+<p><strong>结构型：</strong>  代理模式、适配器模式、装饰器模式、桥接模式、组合模式   享元模式、外观模式</p>
+<p><strong>行为型：</strong>  观察者模式、模板方法模式、命令模式、状态模式、职责链模式、   解释器模式、中介者模式、访问者模式、策略模式、备忘录模式、迭代器模式</p>
+<p>以上便是设计模式的分类，以及每个分类下的设计模式，可以看到其中行为型模式的个数为最多，结构型次之，创建型设计模式最少。</p>
+<p>好的，我们再回顾一下设计原则：</p>
+<ul>
+<li><strong>1、单一职责原则</strong>: 每个类应该有且只有一个职责。(类不应该承担多个职责)</li>
+<li><strong>2、开闭原则</strong>: 对类的扩展是开放，对修改关闭。(通过继承实现扩展，而非修改类的代码)</li>
+<li><strong>3、里氏替换原则</strong>: 子类继承父类时，可以实现父类的抽象方法，不要重写父类的方法，子类增加自己特有的方法。</li>
+<li><strong>4、接口隔离原则</strong>: 接口拆分成更小的和更具体的接口，一个接口只用于一个业务逻辑。(接口避免大而全、做到解耦、高内聚、低耦合)</li>
+<li><strong>5、迪米特原则</strong>:一个对象应当对其他对象尽可能少的了解 (如果依赖其他对象提供服务，不要直接依赖，而是通过第三者转发)</li>
+<li><strong>6、合成复用原则</strong>：使用对象组合，而不是继承来达到复用的目的。（少用继承、多用组合, 降低耦合。）</li>
+<li><strong>7、依赖倒置原则</strong>：程序要依赖于抽象接口，不要依赖于具体实现(简单一句话：面向接口编程)</li>
+</ul>
+<h2 id="设计模式中的设计原则"><a href="#设计模式中的设计原则" class="headerlink" title="设计模式中的设计原则"></a>设计模式中的设计原则</h2><p>我们这篇文章主要是讲解设计模式中的设计原则。所以我们不会去重点讲解每个设计模式的具体细节。所以，笔者将会从以下几个方面去分别介绍每种设计模式。</p>
+<p>设计原则：描述每个设计模式都遵循了哪些设计原则，破坏了哪些设计原则。</p>
+<p>使用场景：描述这种设计模式的使用场景</p>
+<p>相关设计模式：与其它设计模式的关系。</p>
+<h3 id="创建型设计模式"><a href="#创建型设计模式" class="headerlink" title="创建型设计模式"></a>创建型设计模式</h3><h4 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h4><p><strong>设计原则</strong>：违背单一职责、开闭原则。</p>
+<p><strong>使用场景</strong>：应用中有对象需要是全局的且唯一 。一个对象在应用中出现多个实例是否会引起逻辑上或者是程序上的错误</p>
+<p><strong>相关设计模式</strong>：</p>
+<p>原型模式：单例模式是只有一个实例，原型模式每拷贝一次都会创造一个新的实例。</p>
+<p><strong>归纳总结</strong>：这一条其实很有争议，就是单例类是否是破坏单一职责。只不过从现实来讲，单例类无法扩展必不可免会做到大而全的一个对象，从而破坏单一职责。</p>
+<h4 id="简单工厂模式"><a href="#简单工厂模式" class="headerlink" title="简单工厂模式"></a>简单工厂模式</h4><p><strong>设计原则</strong>：遵循单一职责；违背开闭原则。</p>
+<p><strong>使用场景</strong>：对于我们某个产品类我们需要从大量的产品类中去获取，则设计工厂方法通过配置参数来进行实例化生成返回。</p>
+<p><strong>相关设计模式</strong>：</p>
+<p>工厂方法模式：工厂方法模式是简单工厂模式的进一步抽象化，在这两者之间做选择，主要看将工厂进一步抽象化是否有必要，通常情况下，如果工厂的作用仅仅是用来制造产品，则没必要使用工厂方法模式。</p>
+<p><strong>归纳总结</strong>：毫无疑问，简单工厂类肯定遵循单一职责，他的职责就是生成对应的产品类。但是麻烦的是，如果我们需要增加一盒产品类的时候，就需要修改原有的工厂方法，违背开闭原则。</p>
+<h4 id="建造者模式"><a href="#建造者模式" class="headerlink" title="建造者模式"></a>建造者模式</h4><p><strong>设计原则</strong>：遵循单一职责；违背开闭原则。 </p>
+<p><strong>使用场景</strong>：需要构建一批构建过程相同但表示不同的产品，而构建过程非常复杂</p>
+<p><strong>归纳总结</strong>：建造者类肯定是遵循单一职责的。但是当我们所建造的对象需要新增功能的时候。就需要给建造这类新增建造方法，从而外被开闭原则。</p>
+<h4 id="原型模式"><a href="#原型模式" class="headerlink" title="原型模式"></a>原型模式</h4><p><strong>设计原则</strong>：无</p>
+<p><strong>使用场景</strong>：需要在运行时动态的创建指定实例种类的对象，或是需要复用其状态。</p>
+<p><strong>相关设计模式</strong>：无</p>
+<p><strong>归纳总结</strong>：</p>
+<p>需要注意创建出来的对象是够可以立即投入使用，容易的错误点：在以为是深度拷贝的情况下，却未实现深度拷贝</p>
+<h3 id="结构型设计模式"><a href="#结构型设计模式" class="headerlink" title="结构型设计模式"></a>结构型设计模式</h3><h4 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式</h4><p><strong>设计原则</strong>：遵循迪米特法则、合成复用原则</p>
+<p><strong>使用场景</strong>：当我们需要修改或者屏蔽某一个或者若干个类的部分功能，复用另一部分功能，可以使用静态代理，若是需要拦截一批类中的</p>
+<p><strong>相关设计模式</strong>：</p>
+<p>适配器模式：对于适配器模式当中的定制适配器，它与静态代理有着相似的部分，二者都有复用功能的作用，不同的是，静态代理会修改一部分原有的功能，而适配器往往是全部复用，而且在复用的同时，适配器还会将复用的类适配一个接口</p>
+<p><strong>归纳总结</strong>：代理模式侧重点是不让客户端直接访问被代理类。而是通过代理类进行访问。所以这样其实是遵循的迪米特原则（最少知道原则）。而代理类和被代理类之前又是通过组合实现的。所以遵循合成复用原则。</p>
+<h4 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式</h4><p><strong>设计原则</strong>：遵循开闭原则、合成复用原则。</p>
+<p><strong>使用场景</strong>：需要使用一个类的功能，但是该类的接口不符合使用场合要求的接口，可使用定制适配器，又或者是有一个接口定义的行为过多，则可以定义一个缺省适配器，让子类选择性的覆盖适配器的方法。</p>
+<p><strong>相关设计模式</strong>：</p>
+<p>装饰器模式：对于适配器模式中的定制适配器与装饰器模式，二者都是使用组合加继承的手段，不同的是，适配器模式的目的在于适配接口，装饰器模式的目的在于动态的添加功能，且可以叠加。</p>
+<p><strong>归纳总结</strong>：</p>
+<p>适配器模式，我们知道有类适配器、对象适配器。</p>
+<p>其中类适配器通过继承被适配的类。从而达到适配原有对象的目的，其实就是利用开闭原则，从而扩展被适配对象，增加适配方法。</p>
+<p>对象适配器，则是通过适配器类对象与被适配类对象组合的方法，遵循了合成复用的原则。</p>
+<h4 id="装饰器模式"><a href="#装饰器模式" class="headerlink" title="装饰器模式"></a>装饰器模式</h4><p><strong>设计原则</strong>：遵循迪米特法则、单一职责、开闭原则、合成复用原则; 破坏里氏替换原则。</p>
+<p><strong>使用场景</strong>：一个类需要动态的添加功能，且这些功能可以相互叠加，可以通过组合装饰器对象进行扩展。</p>
+<p><strong>相关设计模式</strong>：</p>
+<p>​	适配器模式：</p>
+<p><strong>归纳总结</strong>：</p>
+<p>装饰器通过继承</p>
+<h4 id="装饰器模式-1"><a href="#装饰器模式-1" class="headerlink" title="装饰器模式"></a>装饰器模式</h4><p><strong>设计原则</strong>：遵循迪米特法则、单一职责、开闭原则、合成复用原则; 破坏里氏替换原则。</p>
+<p><strong>使用场景</strong>：一个类需要动态的添加功能，且这些功能可以相互叠加，可以通过组合装饰器对象进行扩展。</p>
+<p><strong>相关设计模式</strong>：</p>
+<p>​	适配器模式：</p>
+<p><strong>归纳总结</strong>：</p>
+<p>装饰器通过继承</p>
+<h4 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h4><p><strong>设计原则</strong>：遵循迪米特法则、单一职责、开闭原则、合成复用原则; 破坏里氏替换原则。</p>
+<p><strong>使用场景</strong>：一个类需要动态的添加功能，且这些功能可以相互叠加</p>
+<p><strong>相关设计模式</strong>：</p>
+<p><strong>归纳总结</strong>：</p>
+<h3 id="行为型设计模式"><a href="#行为型设计模式" class="headerlink" title="行为型设计模式"></a>行为型设计模式</h3><h4 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h4><p><strong>设计原则</strong>：遵循迪米特法则、开闭原则</p>
+<p><strong>使用场景</strong>：需要将观察者与被观察者进行解耦或者是观察者的种类不确定。</p>
+<p><strong>相关设计模式</strong>：无</p>
+<p><strong>归纳总结</strong>：</p>
+<p>观察者模式，只要注册监听被观察者的触发行为事件，对被观察者并不清晰知晓，所以是遵循迪米特法则的。至于开闭原则，</p>
+<h4 id="模板方法模式"><a href="#模板方法模式" class="headerlink" title="模板方法模式"></a>模板方法模式</h4><p><strong>设计原则</strong>：遵循里式替换原则。</p>
+<p><strong>使用场景</strong>：一批子类的功能有可提取的公共算法骨架。</p>
+<p><strong>相关设计模式</strong>：无</p>
+<p><strong>归纳总结</strong>：</p>
+<p>观察者模式，只要注册监听被观察者的触发行为事件，对被观察者并不清晰知晓，所以是遵循迪米特法则的。至于开闭原则，</p>
+<h4 id="策略模式-1"><a href="#策略模式-1" class="headerlink" title="策略模式"></a>策略模式</h4><p><strong>设计原则</strong>：遵循单一职责、依赖倒置原则、迪米特法则、开闭原则。</p>
+<p><strong>使用场景</strong>：算法或者策略需要经常替换</p>
+<p><strong>相关设计模式</strong>：无</p>
+<p><strong>归纳总结</strong>：</p>
+<p>客户端是否依赖于某一个或若干个具体的策略。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://www.frewen.wang">Frewen.Wang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://www.frewen.wang/2021/12/20/01.AuraTechNotes/29.ProgramSkills/07.DesignPattern/01.%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/01.Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%AD%E7%9A%84%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/">http://www.frewen.wang/2021/12/20/01.AuraTechNotes/29.ProgramSkills/07.DesignPattern/01.%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/01.Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%AD%E7%9A%84%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://www.frewen.wang" target="_blank">麦溪·在路上</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a><a class="post-meta__tags" href="/tags/%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/">设计原则</a></div><div class="post_share"><div class="social-share" data-image="/img/frewen_tech.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat_square.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat_square.jpg" alt="微信打赏"/></a><div class="post-qr-code-desc">微信打赏</div></li><li class="reward-item"><a href="/img/alipay_square.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay_square.jpg" alt="支付宝打赏"/></a><div class="post-qr-code-desc">支付宝打赏</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/12/20/01.AuraTechNotes/29.ProgramSkills/18.%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/02.LiDAR%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5%E4%BB%8B%E7%BB%8D/" title="LiDAR基础概念介绍"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">LiDAR基础概念介绍</div></div></a></div><div class="next-post pull-right"><a href="/2021/12/20/01.AuraTechNotes/29.ProgramSkills/07.DesignPattern/02.Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%85%A8%E8%A7%A3%E6%9E%90/01.%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%B8%83%E5%A4%A7%E5%8E%9F%E5%88%99/" title="Java设计模式中的设计原则"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Java设计模式中的设计原则</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/12/20/01.AuraTechNotes/29.ProgramSkills/09.%E7%BC%96%E7%A8%8B%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E5%99%A8%E5%AD%A6%E4%B9%A0/02.VSCode%E9%85%8D%E7%BD%AERemote-SSH%E7%9B%B8%E5%85%B3/" title="VSCode配置Remote-SSH相关"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-20</div><div class="title">VSCode配置Remote-SSH相关</div></div></a></div><div><a href="/2021/12/20/01.AuraTechNotes/29.ProgramSkills/12.%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E5%AD%A6%E4%B9%A0/01.%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/" title="VSCode配置Remote-SSH相关"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-20</div><div class="title">VSCode配置Remote-SSH相关</div></div></a></div><div><a href="/2021/12/20/01.AuraTechNotes/29.ProgramSkills/17.Docker%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/10.Docker%E4%B9%8B%E5%AE%9A%E5%88%B6%E9%95%9C%E5%83%8F%E5%AD%A6%E4%B9%A0/" title="Java设计模式中的设计原则"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-20</div><div class="title">Java设计模式中的设计原则</div></div></a></div><div><a href="/2021/12/20/01.AuraTechNotes/29.ProgramSkills/17.Docker%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/20.Docker%E4%B9%8B%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/" title="Java设计模式中的设计原则"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-20</div><div class="title">Java设计模式中的设计原则</div></div></a></div><div><a href="/2021/12/20/01.AuraTechNotes/29.ProgramSkills/17.Docker%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/21.Docker%E5%AE%9E%E8%B7%B5%E4%B9%8B%E5%AE%89%E8%A3%85Mongodb/" title="Java设计模式中的设计原则"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-20</div><div class="title">Java设计模式中的设计原则</div></div></a></div><div><a href="/2021/12/20/01.AuraTechNotes/29.ProgramSkills/17.Docker%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/23.docker%E5%AE%9E%E8%B7%B5%E4%B9%8B%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" title="Java设计模式中的设计原则"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-20</div><div class="title">Java设计模式中的设计原则</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Valine</span><span id="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/frewen_tech.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Frewen.Wang</div><div class="author-info__description">在青麦地上跑着,雪和太阳的光芒</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">858</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">146</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/FrewenWang"><i class="fab fa-github"></i><span>关注我</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/FrewenWang" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:frewen1225@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://plus.google.com/FrewenWong" target="_blank" title="Google"><i class="fa-brands fa-google"></i></a><a class="social-icon" href="https://twitter.com/FrewenWong" target="_blank" title="Twitter"><i class="fa-brands fa-twitter"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%AD%E7%9A%84%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="toc-number">2.</span> <span class="toc-text">设计模式中的设计原则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%9E%8B%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.1.</span> <span class="toc-text">创建型设计模式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.1.1.</span> <span class="toc-text">单例模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.1.2.</span> <span class="toc-text">简单工厂模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.1.3.</span> <span class="toc-text">建造者模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.1.4.</span> <span class="toc-text">原型模式</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%93%E6%9E%84%E5%9E%8B%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.2.</span> <span class="toc-text">结构型设计模式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.2.1.</span> <span class="toc-text">代理模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.2.2.</span> <span class="toc-text">适配器模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.2.3.</span> <span class="toc-text">装饰器模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F-1"><span class="toc-number">2.2.4.</span> <span class="toc-text">装饰器模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.2.5.</span> <span class="toc-text">策略模式</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A1%8C%E4%B8%BA%E5%9E%8B%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.3.</span> <span class="toc-text">行为型设计模式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.3.1.</span> <span class="toc-text">观察者模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.3.2.</span> <span class="toc-text">模板方法模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F-1"><span class="toc-number">2.3.3.</span> <span class="toc-text">策略模式</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/28/01.AuraTechNotes/09.Python/12.python%E7%9A%84pycharm%E7%9A%84%E4%BD%BF%E7%94%A8/01.pycharm%E7%9A%84%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="无题">无题</a><time datetime="2023-07-28T11:06:28.000Z" title="发表于 2023-07-28 19:06:28">2023-07-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/27/01.AuraTechNotes/09.Python/11.python%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/01.python%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="无题">无题</a><time datetime="2023-07-27T02:02:00.000Z" title="发表于 2023-07-27 10:02:00">2023-07-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/20/01.AuraTechNotes/16.Linux/01.Linux%E4%B9%8B%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85/01.%E5%9F%BA%E4%BA%8EWindows11%E5%AE%89%E8%A3%85Ubuntu%E5%8F%8C%E7%B3%BB%E7%BB%9F/" title="基于Windows11安装Ubuntu双系统">基于Windows11安装Ubuntu双系统</a><time datetime="2023-07-19T16:00:00.000Z" title="发表于 2023-07-20 00:00:00">2023-07-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/17/01.AuraTechNotes/09.Python/01.python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E5%AD%A6%E4%B9%A0/12.%E6%90%AD%E5%BB%BAbaidu%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" title="无题">无题</a><time datetime="2023-07-17T12:35:38.000Z" title="发表于 2023-07-17 20:35:38">2023-07-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/06/13/01.AuraTechNotes/20.AILearning/06.%E6%B7%B1%E5%BA%A6%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E9%87%8F%E5%8C%96%E5%8A%A0%E9%80%9F/08.QNN%E6%8E%A8%E7%90%86%E9%87%8F%E5%8C%96%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" title="无题">无题</a><time datetime="2023-06-13T14:28:06.000Z" title="发表于 2023-06-13 22:28:06">2023-06-13</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By Frewen.Wang</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const initValine = () => {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  const loadValine = async () => {
+    if (typeof Valine === 'function') initValine()
+    else {
+      await getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js')
+      initValine()
+    }
+  }
+
+  if ('Valine' === 'Valine' || !false) {
+    if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+    else setTimeout(loadValine, 0)
+  } else {
+    window.loadOtherComment = loadValine
+  }
+})()</script><script>(() => {
+  const disqus_config = function () {
+    this.page.url = 'http://www.frewen.wang/2021/12/20/01.AuraTechNotes/29.ProgramSkills/07.DesignPattern/01.%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/01.Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%AD%E7%9A%84%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/'
+    this.page.identifier = '/2021/12/20/01.AuraTechNotes/29.ProgramSkills/07.DesignPattern/01.%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/01.Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%AD%E7%9A%84%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/'
+    this.page.title = 'Java设计模式中的设计原则'
+  }
+
+  const disqusReset = () => {
+    window.DISQUS && window.DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addGlobalFn('themeChange', disqusReset, 'disqus')
+
+  const loadDisqus = () =>{
+    if (window.DISQUS) disqusReset()
+    else {
+      const script = document.createElement('script')
+      script.src = 'https://.disqus.com/embed.js'
+      script.setAttribute('data-timestamp', +new Date())
+      document.head.appendChild(script)
+    }
+  }
+
+  const getCount = async() => {
+    try {
+      const eleGroup = document.querySelector('#post-meta .disqus-comment-count')
+      if (!eleGroup) return
+      const cleanedLinks = eleGroup.href.replace(/#post-comment$/, '')
+
+      const res = await fetch(`https://disqus.com/api/3.0/threads/set.json?forum=&api_key=&thread:link=${cleanedLinks}`,{
+        method: 'GET'
+      })
+      const result = await res.json()
+
+      const count = result.response.length ? result.response[0].posts : 0
+      eleGroup.textContent = count
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  if ('Valine' === 'Disqus' || !false) {
+    if (false) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+    else {
+      loadDisqus()
+      GLOBAL_CONFIG_SITE.isPost && getCount()
+    }
+  } else {
+    window.loadOtherComment = loadDisqus
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
