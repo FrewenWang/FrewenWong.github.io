@@ -1,0 +1,313 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>鸿蒙开发之HelloWorld | 麦溪·在路上</title><meta name="author" content="Frewen.Wang"><meta name="copyright" content="Frewen.Wang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="[TOC] 概述文章参考：https:&amp;#x2F;&amp;#x2F;developer.harmonyos.com&amp;#x2F;cn&amp;#x2F;documentation&amp;#x2F;teaching-video&amp;#x2F; 文章参考：https:&amp;#x2F;&amp;#x2F;developer.huawei.com&amp;#x2F;consumer&amp;#x2F;cn&amp;#x2F;training&amp;#x2F;course&amp;#x2F;slightMooc"><link rel="shortcut icon" href="/img/frewen_tech.png"><link rel="canonical" href="http://www.frewen.wang/2020/07/20/01.AuraTechNotes/22.OpenHarmony/01.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/02.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E4%B9%8BHelloWorld/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script async="async" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: '',
+  enable_page_level_ads: 'true'
+});</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '鸿蒙开发之HelloWorld',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-01-05 00:00:00'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/frewen_tech.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">864</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">158</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 文章标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 文章归类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 文章列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/page_img.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="麦溪·在路上"><span class="site-name">麦溪·在路上</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 文章标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 文章归类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 文章列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">鸿蒙开发之HelloWorld</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-07-19T16:00:00.000Z" title="发表于 2020-07-20 00:00:00">2020-07-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-01-04T16:00:00.000Z" title="更新于 2022-01-05 00:00:00">2022-01-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">742</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>2分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="鸿蒙开发之HelloWorld"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2020/07/20/01.AuraTechNotes/22.OpenHarmony/01.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/02.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E4%B9%8BHelloWorld/#post-comment" itemprop="discussionUrl"><span class="valine-comment-count" data-xid="/2020/07/20/01.AuraTechNotes/22.OpenHarmony/01.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/02.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E4%B9%8BHelloWorld/" itemprop="commentCount"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>[TOC]</p>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>文章参考：<a target="_blank" rel="noopener" href="https://developer.harmonyos.com/cn/documentation/teaching-video/">https://developer.harmonyos.com/cn/documentation/teaching-video/</a></p>
+<p>文章参考：<a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/training/course/slightMooc/C101667303102887820?ha_linker=eyJ0cyI6MTcwMDc4NzE2ODY4OSwiaWQiOiIzNzg5M2MyYmY4NjRhMGU3MzliN2I2NjY4ZjZiYjg5NSJ9">https://developer.huawei.com/consumer/cn/training/course/slightMooc/C101667303102887820?ha_linker=eyJ0cyI6MTcwMDc4NzE2ODY4OSwiaWQiOiIzNzg5M2MyYmY4NjRhMGU3MzliN2I2NjY4ZjZiYjg5NSJ9</a></p>
+<img src="./images/02.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E5%88%9D%E5%A7%8B%E5%88%9B%E5%BB%BA%E9%A1%B5%E9%9D%A2/image-20231123224112851.png" alt="image-20231123224112851" style="zoom: 25%;" />
+
+<p>创建CategoryAbility</p>
+<img src="./images/02.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E5%88%9D%E5%A7%8B%E5%88%9B%E5%BB%BA%E9%A1%B5%E9%9D%A2/image-20231123224249491.png" alt="image-20231123224249491" style="zoom:25%;" />
+
+
+
+<p>开始运行程序：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">11/24 08:55:18: Launching com.frewen.harmony</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">hdc shell am force-stop com.frewen.harmony</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">hdc shell bm uninstall com.frewen.harmony</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">hdc file send /Users/frewen/03.ProgramSpace/22.OpenHarmony/AliceOpenHarmony/entry/build/default/outputs/default/entry-default-unsigned.hap /sdcard/f24598e15ca546d9a6988a8b6fa4e611/entry-default-unsigned.hap</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">hdc shell bm install -p /sdcard/f24598e15ca546d9a6988a8b6fa4e611/</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">hdc shell <span class="built_in">rm</span> -rf /sdcard/f24598e15ca546d9a6988a8b6fa4e611</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">hdc shell aa start -a EntryAbility -b com.frewen.harmony</span></span><br></pre></td></tr></table></figure>
+
+
+
+<img src="./images/02.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E5%88%9D%E5%A7%8B%E5%88%9B%E5%BB%BA%E9%A1%B5%E9%9D%A2/image-20231123224419216.png" alt="image-20231123224419216" style="zoom:25%;" />
+
+
+
+
+
+
+
+<h1 id="HelloWorld工程界面"><a href="#HelloWorld工程界面" class="headerlink" title="HelloWorld工程界面"></a>HelloWorld工程界面</h1><img src="./images/02.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E4%B9%8BHelloWorld/image-20231123225509785.png" alt="image-20231123225509785" style="zoom:33%;" />
+
+
+
+<p>其中详细如下：</p>
+<ul>
+<li>AppScope中存放应用全局所需要的资源文件。</li>
+<li>entry是应用的主模块，存放HarmonyOS应用的代码、资源等。</li>
+<li>oh_modules是工程的依赖包，存放工程依赖的源文件。</li>
+<li>build-profile.json5是工程级配置信息，包括签名、产品配置等。</li>
+<li>hvigorfile.ts是工程级编译构建任务脚本，hvigor是基于任务管理机制实现的一款全新的自动化构建工具，主要提供任务注册编排，工程模型管理、配置管理等核心能力。</li>
+<li>oh-package.json5是工程级依赖配置文件，用于记录引入包的配置信息。</li>
+</ul>
+<h2 id="AppScope"><a href="#AppScope" class="headerlink" title="AppScope"></a>AppScope</h2><p>在AppScope，其中有resources文件夹和配置文件app.json5。AppScope&gt;resources&gt;base中包含element和media两个文件夹，</p>
+<ul>
+<li>其中element文件夹主要存放公共的字符串、布局文件等资源。</li>
+<li>media存放全局公共的多媒体资源文件。</li>
+</ul>
+<p><img src="/./images/02.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E4%B9%8BHelloWorld/0000000000011111111.20231115144412.03714322301646789841958994738939:50001231000000:2800:3AFD2EF1D9B1D422D7BCEFB46C6B6F3F49DE6366F42DC5750346D36EFC1ECAB6.png" alt="0000000000011111111.20231115144412.03714322301646789841958994738939:50001231000000:2800:3AFD2EF1D9B1D422D7BCEFB46C6B6F3F49DE6366F42DC5750346D36EFC1ECAB6.png"></p>
+<h3 id="app-json5"><a href="#app-json5" class="headerlink" title="app.json5"></a>app.json5</h3><p>AppScope&gt;app.json5是应用的全局的配置文件，用于存放应用公共的配置信息。</p>
+<img src="./images/02.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E4%B9%8BHelloWorld/image-20231124093307949.png" alt="image-20231124093307949" style="zoom: 25%;" />
+
+<p>其中配置信息如下：</p>
+<ul>
+<li>bundleName是包名。</li>
+<li>vendor是应用程序供应商。</li>
+<li>versionCode是用于区分应用版本。</li>
+<li>versionName是版本号。</li>
+<li>icon对应于应用的显示图标。</li>
+<li>label是应用名。</li>
+</ul>
+<h2 id="entry"><a href="#entry" class="headerlink" title="entry"></a>entry</h2><p><img src="/./images/02.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E4%B9%8BHelloWorld/0000000000011111111.20231115144412.34309482847070706648961101277242:50001231000000:2800:390470D49241F873498DE7D80E549C9C6CCD6E0BE58F9FB25F79B89ED30AE8B5.png" alt="0000000000011111111.20231115144412.34309482847070706648961101277242:50001231000000:2800:390470D49241F873498DE7D80E549C9C6CCD6E0BE58F9FB25F79B89ED30AE8B5.png"></p>
+<p>entry&gt;src目录中主要包含总的main文件夹，单元测试目录ohosTest，以及模块级的配置文件。</p>
+<ul>
+<li>main文件夹中，ets文件夹用于存放ets代码，resources文件存放模块内的多媒体及布局文件等，module.json5文件为模块的配置文件。</li>
+<li>ohosTest是单元测试目录。</li>
+<li>build-profile.json5是模块级配置信息，包括编译构建配置项。</li>
+<li>hvigorfile.ts文件是模块级构建脚本。</li>
+<li>oh-package.json5是模块级依赖配置信息文件。</li>
+</ul>
+<p>进入src&gt;main&gt;ets目录中，其分为entryability、pages两个文件夹。</p>
+<ul>
+<li>entryability存放ability文件，用于当前ability应用逻辑和生命周期管理。</li>
+<li>pages存放UI界面相关代码文件，初始会生成一个Index页面。</li>
+</ul>
+<p><img src="/./images/02.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E4%B9%8BHelloWorld/0000000000011111111.20231115144412.73608988464089318427855932764223:50001231000000:2800:A0096EB75914DA16FC1740821512E7B332894C71855A28C2E538B036C9E589C6.png" alt="0000000000011111111.20231115144412.73608988464089318427855932764223:50001231000000:2800:A0096EB75914DA16FC1740821512E7B332894C71855A28C2E538B036C9E589C6.png"></p>
+<p>resources目录下存放模块公共的多媒体、字符串及布局文件等资源，分别存放在element、media文件夹中。</p>
+<img src="./images/02.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E4%B9%8BHelloWorld/image-20231124093125867.png" alt="image-20231124093125867" style="zoom:33%;" />
+
+
+
+<p>entry&gt;src&gt;main&gt;module.json5是模块的配置文件，包含当前模块的配置信息。</p>
+<p><img src="/./images/02.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E4%B9%8BHelloWorld/image-20231124093454234.png" alt="image-20231124093454234"></p>
+<h3 id="main-pages-json"><a href="#main-pages-json" class="headerlink" title="main_pages.json"></a>main_pages.json</h3><p>src&#x2F;main&#x2F;resources&#x2F;base&#x2F;profile&#x2F;main_pages.json文件保存的是页面page的路径配置信息，所有需要进行路由跳转的page页面都要在这里进行配置。</p>
+<p><img src="/./images/02.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E4%B9%8BHelloWorld/0000000000011111111.20231115144412.63435157516883939809172231253911:50001231000000:2800:E8A3BFA9549EE1DDE9EAEEC5B84F0323EBA73F8BF7DEBDAFAD728C5810F0DE98.png" alt="点击放大"></p>
+<img src="./images/02.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E4%B9%8BHelloWorld/image-20231124085858741.png" alt="image-20231124085858741" style="zoom: 25%;" />
+
+
+
+
+
+
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://www.frewen.wang">Frewen.Wang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://www.frewen.wang/2020/07/20/01.AuraTechNotes/22.OpenHarmony/01.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/02.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E4%B9%8BHelloWorld/">http://www.frewen.wang/2020/07/20/01.AuraTechNotes/22.OpenHarmony/01.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/02.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E4%B9%8BHelloWorld/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://www.frewen.wang" target="_blank">麦溪·在路上</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Activity/">Activity</a><a class="post-meta__tags" href="/tags/Harmony/">Harmony</a><a class="post-meta__tags" href="/tags/%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91/">鸿蒙开发</a></div><div class="post_share"><div class="social-share" data-image="/img/frewen_tech.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat_square.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat_square.jpg" alt="微信打赏"/></a><div class="post-qr-code-desc">微信打赏</div></li><li class="reward-item"><a href="/img/alipay_square.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay_square.jpg" alt="支付宝打赏"/></a><div class="post-qr-code-desc">支付宝打赏</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/07/20/01.AuraTechNotes/22.OpenHarmony/01.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/01.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" title="鸿蒙开发环境搭建"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">鸿蒙开发环境搭建</div></div></a></div><div class="next-post pull-right"><a href="/2020/07/20/01.AuraTechNotes/29.ProgramSkills/08.VSCode%E7%BC%96%E8%AF%91%E5%99%A8%E4%BD%BF%E7%94%A8/01.VSCode%E7%9A%84%E6%8F%92%E4%BB%B6%E5%AE%89%E8%A3%85%E6%8E%A8%E8%8D%90/" title="VSCode的插件安装推荐"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">VSCode的插件安装推荐</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2020/07/20/01.AuraTechNotes/22.OpenHarmony/01.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/01.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" title="鸿蒙开发环境搭建"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-07-20</div><div class="title">鸿蒙开发环境搭建</div></div></a></div><div><a href="/2014/07/20/01.AuraTechNotes/12.ffmpeg/01.ffmpeg%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" title="ffmpeg环境搭建"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2014-07-20</div><div class="title">ffmpeg环境搭建</div></div></a></div><div><a href="/2016/07/20/01.AuraTechNotes/05.Kotlin/06.Kotlin%E4%B9%8B%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0/02.Kotlin%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6%E4%B9%8BAnko%E7%9A%84%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0/" title="Kotlin开源框架之Anko的框架学习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2016-07-20</div><div class="title">Kotlin开源框架之Anko的框架学习</div></div></a></div><div><a href="/2014/07/20/01.AuraTechNotes/07.JavaWeb/01.JavaWeb%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/01.MacOS%E7%9A%84%E5%AE%89%E8%A3%85Tomcat10%E7%8E%AF%E5%A2%83/" title="MacOS的安装Tomcat10环境"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2014-07-20</div><div class="title">MacOS的安装Tomcat10环境</div></div></a></div><div><a href="/2014/07/20/01.AuraTechNotes/07.JavaWeb/02.JavaSpringBoot%E7%94%B5%E5%95%86%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0/01.Spring%E7%9A%84%E7%94%B5%E5%95%86%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0/" title="Spring的电商系统学习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2014-07-20</div><div class="title">Spring的电商系统学习</div></div></a></div><div><a href="/2014/07/20/01.AuraTechNotes/07.JavaWeb/02.JavaWeb%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/01.Java%E4%B8%AD%E5%90%84%E7%A7%8D%E6%9C%AF%E8%AF%AD%E7%9A%84%E5%AD%A6%E4%B9%A0/" title="Java中各种术语的学习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2014-07-20</div><div class="title">Java中各种术语的学习</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Valine</span><span id="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/frewen_tech.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Frewen.Wang</div><div class="author-info__description">在青麦地上跑着,雪和太阳的光芒</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">864</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">158</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/FrewenWang"><i class="fab fa-github"></i><span>关注我</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/FrewenWang" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:frewen1225@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://plus.google.com/FrewenWong" target="_blank" title="Google"><i class="fa-brands fa-google"></i></a><a class="social-icon" href="https://twitter.com/FrewenWong" target="_blank" title="Twitter"><i class="fa-brands fa-twitter"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HelloWorld%E5%B7%A5%E7%A8%8B%E7%95%8C%E9%9D%A2"><span class="toc-number">2.</span> <span class="toc-text">HelloWorld工程界面</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#AppScope"><span class="toc-number">2.1.</span> <span class="toc-text">AppScope</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#app-json5"><span class="toc-number">2.1.1.</span> <span class="toc-text">app.json5</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#entry"><span class="toc-number">2.2.</span> <span class="toc-text">entry</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#main-pages-json"><span class="toc-number">2.2.1.</span> <span class="toc-text">main_pages.json</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/22/01.AuraTechNotes/16.Linux/03.Linux%E4%B9%8Bshell%E8%84%9A%E6%9C%AC%E5%AD%A6%E4%B9%A0/18.shell%E8%84%9A%E6%9C%AC%E5%B8%B8%E7%94%A8%E5%AE%9E%E4%BE%8B%E5%A4%87%E4%BB%BD/" title="无题">无题</a><time datetime="2023-12-22T13:48:40.121Z" title="发表于 2023-12-22 21:48:40">2023-12-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/28/01.AuraTechNotes/09.Python/12.python%E7%9A%84pycharm%E7%9A%84%E4%BD%BF%E7%94%A8/01.pycharm%E7%9A%84%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="无题">无题</a><time datetime="2023-07-28T11:06:28.000Z" title="发表于 2023-07-28 19:06:28">2023-07-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/27/01.AuraTechNotes/09.Python/11.python%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/01.python%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="无题">无题</a><time datetime="2023-07-27T02:02:00.000Z" title="发表于 2023-07-27 10:02:00">2023-07-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/20/01.AuraTechNotes/16.Linux/01.Linux%E4%B9%8B%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85/01.%E5%9F%BA%E4%BA%8EWindows11%E5%AE%89%E8%A3%85Ubuntu%E5%8F%8C%E7%B3%BB%E7%BB%9F/" title="基于Windows11安装Ubuntu双系统">基于Windows11安装Ubuntu双系统</a><time datetime="2023-07-19T16:00:00.000Z" title="发表于 2023-07-20 00:00:00">2023-07-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/17/01.AuraTechNotes/09.Python/01.python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E5%AD%A6%E4%B9%A0/12.%E6%90%AD%E5%BB%BAbaidu%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" title="无题">无题</a><time datetime="2023-07-17T12:35:38.000Z" title="发表于 2023-07-17 20:35:38">2023-07-17</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By Frewen.Wang</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const initValine = () => {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  const loadValine = async () => {
+    if (typeof Valine === 'function') initValine()
+    else {
+      await getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js')
+      initValine()
+    }
+  }
+
+  if ('Valine' === 'Valine' || !false) {
+    if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+    else setTimeout(loadValine, 0)
+  } else {
+    window.loadOtherComment = loadValine
+  }
+})()</script><script>(() => {
+  const disqus_config = function () {
+    this.page.url = 'http://www.frewen.wang/2020/07/20/01.AuraTechNotes/22.OpenHarmony/01.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/02.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E4%B9%8BHelloWorld/'
+    this.page.identifier = '/2020/07/20/01.AuraTechNotes/22.OpenHarmony/01.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/02.%E9%B8%BF%E8%92%99%E5%BC%80%E5%8F%91%E4%B9%8BHelloWorld/'
+    this.page.title = '鸿蒙开发之HelloWorld'
+  }
+
+  const disqusReset = () => {
+    window.DISQUS && window.DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addGlobalFn('themeChange', disqusReset, 'disqus')
+
+  const loadDisqus = () =>{
+    if (window.DISQUS) disqusReset()
+    else {
+      const script = document.createElement('script')
+      script.src = 'https://.disqus.com/embed.js'
+      script.setAttribute('data-timestamp', +new Date())
+      document.head.appendChild(script)
+    }
+  }
+
+  const getCount = async() => {
+    try {
+      const eleGroup = document.querySelector('#post-meta .disqus-comment-count')
+      if (!eleGroup) return
+      const cleanedLinks = eleGroup.href.replace(/#post-comment$/, '')
+
+      const res = await fetch(`https://disqus.com/api/3.0/threads/set.json?forum=&api_key=&thread:link=${cleanedLinks}`,{
+        method: 'GET'
+      })
+      const result = await res.json()
+
+      const count = result.response.length ? result.response[0].posts : 0
+      eleGroup.textContent = count
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  if ('Valine' === 'Disqus' || !false) {
+    if (false) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+    else {
+      loadDisqus()
+      GLOBAL_CONFIG_SITE.isPost && getCount()
+    }
+  } else {
+    window.loadOtherComment = loadDisqus
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
